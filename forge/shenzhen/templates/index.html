@@ -79,8 +79,8 @@
 		}
 		.cont-tips-wrap .cha{
 			display: block;
-			width: 32px;
-			height: 32px;
+			width: 24px;
+			height: 24px;
 			background: url("../static/cha.png") no-repeat center center;
 			position: absolute;
 			right: 10px;
@@ -175,7 +175,11 @@
 		// 			}
 		// }
 
-		const BB = [160337,31791,31302]
+		const BB = [160337,31791,31302,28430,29112,29645,30251,30825,157890,158335]
+// 前三个是 幕墙与水泥板。 其次五个是行政服务中心， 其次7个是行政办公楼,剩下的是商务A
+		const BA = [32280,99863,157680,10101,12499,14606,17344,18917,20138,20836,21658,22223,22937,23504,24024,24294,25011,25730,27000,26449,27722,28224]
+
+		const BS = [2249,4036,7870,158602]
 
 		$("body").ready(setup);
 
@@ -221,14 +225,23 @@
 					var dbid = NOP_VIEWER.getSelection()[0];
 					while(dbid && dbid != tree.getRootId()){
 						dbid= tree.getNodeParentId(dbid)
-						if (config.includes(dbid)){
-							viewer.select(config)
+						if (BB.includes(dbid)){
+							viewer.select(BB)
 							// alert("商务办公B栋,地上八层,建筑面积 9906.68平方米");
 							$(".cont-tips-wrap").show()
-							$(".cont-tips").html("商务办公B栋,地上八层,建筑面积 9906.68平方米")
-							break;
+							$(".cont-tips").html("商务办公B栋,地上八层,建筑面积 9906.68 平方米")
+							break;}
+						if (BA.includes(dbid)){
+							viewer.select(BA)
+							$(".cont-tips-wrap").show()
+							$(".cont-tips").html("商务办公A栋,地上十层,建筑面积 9609.03 平方米<br><br><br>行政服务办公楼，地上十层,建筑面积 9609.03 平方米<br><br><br>政服务中心，地上五层,建筑面积 30125.46 平方米")
+							break;}
+						if (BS.includes(dbid)){
+							viewer.select(BS)
+							$(".cont-tips-wrap").show()
+							$(".cont-tips").html("地下室二层，局部三层，建筑面积 32010.72 平方米")
+							break;}
 
-						}
 					}
 				});
 			});
