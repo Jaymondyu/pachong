@@ -49,7 +49,16 @@ app = flask.Flask(__name__)
 @app.route("/")
 def index():
 	return flask.render_template("index.html")
-
+@app.route("/1")
+def index1():
+	return flask.render_template("index1.html")
+@app.route("/select")
+def select():
+	id = flask.request.args.get("id")
+	if id == "1":
+		return '[{"url": "%s"}]' % 'http://183.66.213.82:8888/jiangjin/1'
+	else:
+		return '[{"url": "%s"}]' % 'http://183.66.213.82:8888/jiangjin/'
 
 @app.route("/token")
 def AccessToken():

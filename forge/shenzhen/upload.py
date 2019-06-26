@@ -19,7 +19,7 @@ def _GetToken(scope):
 
 CHUNK = 5
 bucketKey = 'plokijuh12345678'
-objectName = 'OMG.nwd'
+objectName = 'BIG.nwd'
 # file to upload
 fn = objectName
 

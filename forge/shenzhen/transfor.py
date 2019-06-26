@@ -10,7 +10,7 @@ client_secret = "bvbwXbwI7HxO0lQ2"
 
 cache = {}
 
-urn = "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6cGxva2lqdWgxMjM0NTY3OC9PTUcubndk"
+urn = "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6cGxva2lqdWgxMjM0NTY3OC9CSUcubndk"
 # urn3 = "urn:adsk.objects:os.object:drtnhxdwgh/project1.rvt"
 # dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6ZHJ0bmh4ZHdnaC9wcm9qZWN0MS5ydnQ
 # bucketKey = "drtnhxdwgh"
@@ -119,7 +119,7 @@ def TransObjectToSvf(accessToken, urn):
     res = requests.post(url, headers = headers, data = body)
     # print res
     return res.text
-
+# 先运行
 # print TransObjectToSvf(GetInternalToken(), urn)
 
 objTrees = {}
@@ -193,7 +193,7 @@ def GetDocumentMenifest(urn):
 	r.raise_for_status()
 	res = json.loads(r.text)
 	return res
-
+#再运行
 print GetDocumentMenifest(urn)
 exit(0)
 
