@@ -81,7 +81,7 @@
 			display: block;
 			width: 24px;
 			height: 24px;
-			background: url("../static/cha.png") no-repeat center center;
+			background: url("/jiangjin/static/cha.png") no-repeat center center;
 			position: absolute;
 			right: 10px;
 			top:10px;
@@ -186,7 +186,7 @@
 		function setup() {
 			/* 初始化 Viewer */
 			$.ajax({
-			url: '/token',
+			url: 'jiangjin/token',
 			dataType: "json"
 			}).done(function (data) {
 				launchViewer(data.access_token);
