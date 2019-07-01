@@ -2,6 +2,7 @@ import urllib.request
 import urllib.parse
 import string
 
+# 此为get方法
 def get_params():
     url = 'http://www.baidu.com/s?'
 
