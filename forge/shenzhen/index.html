@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=no" charset="utf-8"/>
+	<title>深圳龙华书城形象进度</title>
+	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	<!-- Viewer 必须的CSS文件 -->
+	<link rel="stylesheet" type="text/css" href="https://developer.api.autodesk.com/modelderivative/v2/viewers/6.*/style.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<style type="text/css">
+		body{
+			margin: 0px;
+			background-color: #f5f5f5;
+		}
+
+		#forgeViewer {
+			width: 100%;
+			height: 100%;
+		}
+
+		#selectionBar{
+			padding: 10px;
+			background: rgba(0,0,0,0.7);
+			position: absolute;
+			left: 5px;
+			top: 5px;
+			z-index: 999;
+			border-radius: 5px;
+		}
+
+		.legend {
+			background: rgba(0,0,0,0.7);
+			position: absolute;
+			padding: 5px;
+			bottom: 5px;
+			right: 5px;
+			color: white;
+			border-radius: 5px;
+			z-index: 998
+		}
+
+
+		.myrow {
+			padding: 5px;
+			display: inline-block;
+		}
+
+		.color{
+			height: 12px;
+			width: 20px;
+			opacity: 0.9;
+			border: 1px lightgrey solid
+		}
+
+		.cont-tips-wrap{
+			width: 450px;
+			height: 370px;
+			padding: 10px;
+			border-radius: 5px;
+			background-color: rgba(0,0,0,0.7);
+			color:#fff;
+			position: absolute;
+			left: 5px;
+			bottom: 7px;
+			z-index: 997;
+		}
+
+		.title{
+			font-size: 22px;
+			font-weight: bolder;
+		}
+
+		.cont-tips{
+			font-size: 20px;
+			padding-top: 8px;
+			line-height: 20px;
+			font-weight: bold;
+		}
+
+		.cont-tips li{
+			font-size: 20px;
+			line-height: 1.3em;
+			font-weight: bold;
+		}
+
+	</style>
+</head>
+<body>
+	<div id="forgeViewer"></div>
+	<div id="selectionBar">
+		<div>
+			<a class="btn btn-primary" id="clear" role="button">原始模型</a>
+			<a class="btn btn-default" id="jggc" role="button">结构进度</a>
+			<a class="btn btn-default" id="jzgc" role="button">建筑进度</a>
+			<a class="btn btn-default" id="jdgc" role="button">机电进度</a>
+			<a class="btn btn-default" id="wmq" role="button">外幕墙进度</a>
+			<a class="btn btn-default" id="jzx" role="button">精装修进度</a>
+		</div>
+	</div>
+
+	<div class="cont-tips-wrap" style="display: none">
+		<div class="title" id="title">各层进度展示</div>
+		<div class="cont-tips"></div>
+	</div>
+
+
+	<div class="legend">
+		<div class="title">图例</div>
+		<div><div style="background: red" class="color myrow"></div><div class="myrow">&nbsp;未开始</div></div>
+		<div><div style="background: blue" class="color myrow"></div><div class="myrow">&nbsp;进行中</div></div>
+		<div><div style="background: green" class="color myrow"></div><div class="myrow">&nbsp;已完成</div></div>
+	</div>
+	<!-- Viewer 必须的JS文件 -->
+	<!-- 最新版的API在BIM Walk上会报错，建议使用v6.0 -->
+	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/three.js/r83/three.min.js"></script>
+	<script type="text/javascript" src="https://developer.api.autodesk.com/modelderivative/v2/viewers/6.*/viewer3D.min.js"></script>
+	<script type="text/javascript">
+		var urn = "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6dHlsaW4tbmV3LW9mZmljZS10ZXN0LWJ1Y2tldC9MSFNDLVdTQ0wtQVIyLnJ2dA";
+		var viewerApp;
+		var viewables;
+
+		const config = {
+			"jggc": {
+						name: "结构专业",
+						done: ['B2','B1','1F','2F','3F','4F','5F','6F','7F'],
+						doing: [],
+						todo: [],
+						tips: "无"
+					},
+			"jzgc": {
+						name: "建筑专业",
+						done: ['B2','B1','1F','2F','3F','4F','5F'],
+						doing: ['6F','7F'],
+						todo: [],
+						tips: "<ol><li>楼层内砌筑收尾及清理完成85%，要求7月2日全部完成;</li><li>屋面、露台防水及保护层完成70%;</li><li>室外清理及防水完成55%；</li><li>地下室清理完成75%；</li><li>楼梯间及管井抹灰完成40%；</li><li>地下室设备房装修未开始；</li><li>屋面及露台覆土未开始；</li><li>下沉广场结构施工完成5%.</li></ol>"
+					},
+			"jdgc": {
+						name: "机电专业",
+						done: [],
+						doing: ['B2','B1','1F','2F','3F','4F','5F','6F','7F'],
+						todo: [],
+						tips: "<ol><li>二层油烟风管未开始施工，要求7月6日全部完成；</li><li>五层消防喷淋主管完成70%，要求6月30日全部完成，已滞后；</li><li>三层消防管内穿线完成50%，要求6月14日全部完成，已滞后；</li><li>弱电二层二次配管未开始，要求6月14日全部完成，已滞后；</li><li>六层强弱电消防桥架未开始，要求7月7日全部完成；</li><li>四层防排烟风管未开始安装，要求7月9日全部完成.</li></ol>"
+						// tips: "<ol><li>一至六层室内穿线未开始。</li><li>弱电线缆未进场未开始敷设。</li><li>消防水泵未进场。</li></ol>"
+					},
+			"wmq": {
+						name: "外幕墙专业",
+						done: [],
+						doing: ['1F','2F','3F','4F','5F','6F','7F'],
+						todo: [],
+						tips: "<ol><li>采光顶完成96%，要求全封闭保证不漏水，已滞后；</li><li>立面型材龙骨完成70%，要求吊篮尽快进场开始立面作业.</li></ol>"
+					},
+			"jzx": {
+						name: "精装修专业",
+						done: [],
+						doing: ['2F','3F','4F'],
+						todo: ['B2','B1','1F','5F','6F','7F'],
+						tips: "无"
+						// tips: "<ol><li>精装BIM样板未落实。</li></ol>"
+					}
+		}
+
+
+
+		$("body").ready(setup);
+
+		function setup() {
+			/* 初始化 Viewer */
+			$.ajax({
+			url: '/shenzhen/token',
+			dataType: "json"
+			}).done(function (data) {
+				launchViewer(data.access_token);
+			});
+		}
+
+
+		// 启动 Forge Viewer
+		function launchViewer(token) {
+			var options = {
+				env: 'AutodeskProduction',
+				accessToken: token
+			};
+			var documentId = 'urn:' + urn;
+			Autodesk.Viewing.Initializer(options, function onInitialized() {
+				// 生成一个forge viewer application，并将图形界面绑定至 $('#forgeViewer')
+				viewerApp = new Autodesk.Viewing.ViewingApplication('forgeViewer');
+				// 为viewer application注册一个3d viewer
+				viewerApp.registerViewer(viewerApp.k3D, Autodesk.Viewing.Viewer3D);
+				// viewerApp.registerViewer(viewerApp.k3D, Autodesk.Viewing.Private.GuiViewer3D);
+
+				// 加载文档
+				viewerApp.loadDocument(documentId, onDocumentLoadSuccess,
+					(viewerErrorCode)=>{console.error('onDocumentLoadFailure() - errorCode:' + viewerErrorCode)});
+			});
+		}
+
+		function onDocumentLoadSuccess(doc) {
+			viewables = viewerApp.bubble.search({ 'type': 'geometry' });
+			viewerApp.selectItem(viewables[0].data, onItemLoadSuccess, (errorCode)=>{console.error('onItemLoadFail() - errorCode:' + errorCode);});
+		}
+
+		function onItemLoadSuccess(viewer, item) {
+			function addOverlay(name, color) {
+				var material = new THREE.MeshPhongMaterial({
+					color: color,
+					transparent: true,
+					opacity: 0.7
+				});
+				viewer.impl.createOverlayScene(name, material);
+			}
+
+			function clearAll() {
+				viewer.impl.clearOverlay("doing");
+				viewer.impl.clearOverlay("done");
+				viewer.impl.clearOverlay("todo");
+			}
+
+
+			function setColorMaterial(overlayName, dbids) {
+				for (var i=0; i<dbids.length; i++) {
+					var dbid = dbids[i];
+					//from dbid to node, to fragid
+					var tree = viewer.model.getData().instanceTree;
+					tree.enumNodeFragments(dbid, function (fragId) {
+						try{
+							var renderProxy = viewer.impl.getRenderProxy(viewer.model, fragId);
+							renderProxy.meshProxy = new THREE.Mesh(renderProxy.geometry);
+							renderProxy.meshProxy.matrix.copy(renderProxy.matrixWorld);
+							renderProxy.meshProxy.matrixWorldNeedsUpdate = true;
+							renderProxy.meshProxy.matrixAutoUpdate = false;
+							renderProxy.meshProxy.frustumCulled = false;
+							viewer.impl.addOverlay(overlayName, renderProxy.meshProxy);
+							// viewer.impl.addOverlay(overlayName, renderProxy);
+							viewer.impl.invalidate(true);
+						}
+						catch{
+							console.warn("dbid", dbid, "fragid", fragId, "err in coloring");
+						}
+					}, true);
+				}
+			}
+
+
+			function addToOverlay(floor, overlayName){
+				viewer.setGhosting(true);
+				viewer.search(floor, (dbids)=>{
+					//console.log("length",dbids.length)
+					setColorMaterial(overlayName, dbids);
+				}, undefined, ["Base Constraint", "Level"])
+			}
+
+
+			addOverlay("doing", 0x0000ff);
+			addOverlay("done", 0x00ff00);
+			addOverlay("todo", 0xff0000);
+
+			function colorFloor(done, doing, todo){
+				if (done){
+					for (var i = 0; i < done.length; i++) {
+						addToOverlay(done[i], "done");
+					}
+				}
+
+				if (doing){
+					for (var i = 0; i < doing.length; i++) {
+						addToOverlay(doing[i], "doing");
+					}
+				}
+
+				if (todo){
+					for (var i = 0; i < todo.length; i++) {
+						addToOverlay(todo[i], "todo");
+					}
+				}
+			}
+
+
+			function hideAll() {
+				viewer.hide([39776, 39698, 39664])
+			}
+
+			var current = "#clear";
+			function changeTo(buttonId){
+				$(buttonId).addClass("btn btn-primary");
+				$(current).removeClass("btn-primary");
+				$(current).addClass("btn-default");
+				current = buttonId;
+			}
+
+			$('#clear').click(()=>{
+				$(".cont-tips-wrap").hide()
+				viewer.showAll();
+				clearAll();
+				if (current!="#clear") changeTo("#clear")
+			});
+
+			for (let part in config){
+				let id = '#' + part;
+				$(id).click(()=>{
+					if (current==id) return
+					clearAll();
+					hideAll();
+					colorFloor(config[part].done, config[part].doing, config[part].todo);
+
+					$(".cont-tips-wrap").show()
+					$("#title").text(config[part].name + "超前与滞后情况")
+					$(".cont-tips").html(config[part].tips)
+					changeTo(id)
+				});
+			}
+		}
+	</script>
+</body>
+</html>

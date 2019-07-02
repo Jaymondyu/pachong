@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=no" charset="utf-8"/>
-	<title>江津滨江新城形象进度</title>
+	<title>江津滨江新城形象展示</title>
 	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 	<!-- Viewer 必须的CSS文件 -->
 	<link rel="stylesheet" type="text/css" href="https://developer.api.autodesk.com/modelderivative/v2/viewers/6.*/style.min.css">
@@ -54,14 +54,14 @@
 
 		.cont-tips-wrap{
 			width: 450px;
-			height: 350px;
+			height: 150px;
 			padding: 10px;
 			border-radius: 5px;
 			background-color: rgba(0,0,0,0.7);
 			color:#fff;
 			position: absolute;
 			left: 5px;
-			bottom: 7px;
+			top: 7px;
 			z-index: 997;
 		}
 
@@ -131,7 +131,7 @@
 		})
 	</script>
 	<script type="text/javascript">
-		var urn = "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6cGxva2lqdWgxMjM0NTY3OC9CSUcubndk";
+		var urn = "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6cGxva2lqdWgxMjM0NTY3OC9TT0JJRy5ud2Q";
 		var viewerApp;
 		var viewables;
 
@@ -174,19 +174,22 @@
 						// tips: "<ol><li>精装BIM样板未落实。</li></ol>"
 		// 			}
 		// }
+		const config = {
+			155492: "商务办公B栋,地上八层,建筑面积 9906.68 平方米",
+			102026:"商务办公A栋,地上十层,建筑面积 9609.03 平方米",
+			47748:"行政服务办公楼，地上十层,建筑面积 9609.03 平方米",
+			11791:"政服务中心，地上五层,建筑面积 30125.46 平方米",
+			1793:"地下室二层,局部三层,建筑面积 32010.72 平方米"
 
-		const BB = [160337,31791,31302,28430,29112,29645,30251,30825,157890,158335]
-// 前三个是 幕墙与水泥板。 其次五个是行政服务中心， 其次7个是行政办公楼,剩下的是商务A
-		const BA = [32280,99863,157680,10101,12499,14606,17344,18917,20138,20836,21658,22223,22937,23504,24024,24294,25011,25730,27000,26449,27722,28224]
+		}
 
-		const BS = [2249,4036,7870,158602]
 
 		$("body").ready(setup);
 
 		function setup() {
 			/* 初始化 Viewer */
 			$.ajax({
-			url: 'jiangjin/token',
+			url: '/jiangjin/token',
 			dataType: "json"
 			}).done(function (data) {
 				launchViewer(data.access_token);
@@ -225,22 +228,35 @@
 					var dbid = NOP_VIEWER.getSelection()[0];
 					while(dbid && dbid != tree.getRootId()){
 						dbid= tree.getNodeParentId(dbid)
-						if (BB.includes(dbid)){
-							viewer.select(BB)
-							// alert("商务办公B栋,地上八层,建筑面积 9906.68平方米");
-							$(".cont-tips-wrap").show()
-							$(".cont-tips").html("商务办公B栋,地上八层,建筑面积 9906.68 平方米")
-							break;}
-						if (BA.includes(dbid)){
-							viewer.select(BA)
-							$(".cont-tips-wrap").show()
-							$(".cont-tips").html("商务办公A栋,地上十层,建筑面积 9609.03 平方米<br><br><br>行政服务办公楼，地上十层,建筑面积 9609.03 平方米<br><br><br>政服务中心，地上五层,建筑面积 30125.46 平方米")
-							break;}
-						if (BS.includes(dbid)){
-							viewer.select(BS)
-							$(".cont-tips-wrap").show()
-							$(".cont-tips").html("地下室二层，局部三层，建筑面积 32010.72 平方米")
-							break;}
+						// if (BB.includes(dbid)){
+						// 	viewer.select(BB)
+						// 	// alert("商务办公B栋,地上八层,建筑面积 9906.68平方米");
+						// 	$(".cont-tips-wrap").show()
+						// 	$(".cont-tips").html("商务办公B栋,地上八层,建筑面积 9906.68 平方米")
+						// 	break;}
+						// if (BA.includes(dbid)){
+						// 	viewer.select(BA)
+						// 	$(".cont-tips-wrap").show()
+						// 	$(".cont-tips").html("商务办公A栋,地上十层,建筑面积 9609.03 平方米 ")
+						// 	break;}
+						// if (ZA.includes(dbid)){
+						// 	viewer.select(ZA)
+						// 	$(".cont-tips-wrap").show()
+						// 	$(".cont-tips").html("行政服务办公楼，地上十层,建筑面积 9609.03 平方米")
+						// 	break;}
+						// if (XZ.includes(dbid)){
+						// 	viewer.select(XZ)
+						// 	$(".cont-tips-wrap").show()
+						// 	$(".cont-tips").html("商务办公A栋,地上十层,建筑面积 9609.03 平方米<br><br><br>行政服务办公楼，地上十层,建筑面积 9609.03 平方米<br><br><br>政服务中心，地上五层,建筑面积 30125.46 平方米")
+						// 	break;}
+
+								if (config[dbid]){
+									viewer.select(dbid)
+									$(".cont-tips-wrap").show()
+									$(".cont-tips").html(config[dbid])
+									break;
+								}
+
 
 					}
 				});

@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4840db6f-31f8-4e1c-a7e0-3df56a0de776" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../spider_study/04-request-header.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spider_study/05-request-header-2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spider_study/06-random-user-agent.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spider_study/07-handler-openner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UCL.py" beforeDir="false" afterPath="$PROJECT_DIR$/UCL.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ucl.html" beforeDir="false" afterPath="$PROJECT_DIR$/ucl.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../spider_study/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../spider_study/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../spider_study/03-get-params2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../spider_study/03-get-params2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../spider_study/search03.html" beforeDir="false" afterPath="$PROJECT_DIR$/../spider_study/search03.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../forge/jiangjin/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../forge/jiangjin/templates/index.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
