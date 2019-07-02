@@ -14,7 +14,7 @@ def auth_nei_wang():
     # 2.创建密码管理器
     pwd_manager = urllib.request.HTTPPasswordMgrWithDefaultRealm()
 
-    pwd_manager.add_password(None,bei_url,user,pwd)
+    pwd_manager.add_password(None,nei_url,user,pwd)
 
     # 3.创建认证处理器
     auth_handler = urllib.request.HTTPBasicAuthHandler(pwd_manager)
@@ -24,7 +24,5 @@ def auth_nei_wang():
 
     # 5.发送请求
     response = opener.open(nei_url)
-
-
 
 
