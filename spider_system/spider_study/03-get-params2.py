@@ -6,6 +6,8 @@ import string
 def get_params():
     url = 'http://www.baidu.com/s?'
 
+    # 字典传参
+
     parmas = {
         "wd":'中文',
         'key':"zhang",
@@ -22,6 +24,7 @@ def get_params():
 
     # 将包含汉字的url进行转译:
     result = urllib.parse.quote(final_url,safe=string.printable)
+
 
     # 使用代码发送网络请求
     response = urllib.request.urlopen(result)
