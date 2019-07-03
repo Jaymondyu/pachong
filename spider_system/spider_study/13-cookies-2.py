@@ -52,6 +52,7 @@ def spider():
 # 2.代码带着cookie去访问目标url
     target_url = 'http://www.tylinbim.com/weaver/weaver.common.util.taglib.SplitPageXmlServlet?tableInstanceId=&tableString=9FD12026ABC602B815CA09F52BB7E4F3&pageIndex=0&orderBy=null&otype=null&mode=run&customParams=null&selectedstrs=&pageId=Doc:list'
 
+    # 在Request这个方法中,如果有data= 那么就是post,如果没有data= 就是get.
     target_request = urllib.request.Request(target_url,headers=headers)
 
     respose = opener.open(target_url)
