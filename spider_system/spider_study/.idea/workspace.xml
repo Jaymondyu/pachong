@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fbd82d6a-0d06-4637-9584-e7d0d3344b03" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/14-requests-1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/13-cookies-2.py" beforeDir="false" afterPath="$PROJECT_DIR$/13-cookies-2.py" afterDir="false" />
-    </list>
+    <list default="true" id="fbd82d6a-0d06-4637-9584-e7d0d3344b03" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -212,12 +209,12 @@
       <workItem from="1561946565217" duration="1066000" />
       <workItem from="1561947645874" duration="36221000" />
       <workItem from="1562114134505" duration="2598000" />
-      <workItem from="1562124036304" duration="11982000" />
+      <workItem from="1562124036304" duration="12640000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="51892000" />
+    <option name="totallyTimeSpent" value="52550000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
@@ -228,7 +225,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32398754" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32398754" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3993576" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
