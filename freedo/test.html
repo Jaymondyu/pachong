@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>创建三维环境</title>
+  <link rel="stylesheet" href="http://forweb.gbim360.com/2.3.0/freedo/Freedo/Widgets/widgets.css">
+  <link rel="stylesheet" href="http://forweb.gbim360.com/2.3.0/freedox/Examples/static/bucket.css">
+    <style>
+        .cesium-viewer-toolbar {
+            left: 5px;
+        }
+    </style>
+</head>
+
+<body>
+  <script src="http://forweb.gbim360.com/2.3.0/freedo/Freedo/Freedo.js"></script>
+  <script src="http://forweb.gbim360.com/2.3.0/freedox/FreedoX/ThirdParty/1710_lodash/lodash.min.js"></script>
+  <script src="http://forweb.gbim360.com/2.3.0/freedox/FreedoX/FreedoX.js"></script>
+  <script src="http://forweb.gbim360.com/2.3.0/freedox/Examples/static/Sandcastle-header.js"></script>
+
+    <div id="freedoContainer" class="fullSize"></div>
+    <div id="loadingOverlay">
+        <h1>Loading...</h1>
+    </div>
+    <div id="toolbar"></div>
+
+    <!-- <script>
+        var viewer = Freedo.FdApp.createDefaultViewer('freedoContainer', {
+            homeButton: false // 是否展示Home按钮
+        }, {
+            hasProvinceBoundaries: true// 是否绘制中国省界
+        });
+
+        // var opt = ['创建三维环境'];
+        // Sandcastle.createTipsDOM(opt);
+
+        viewer.showLogo = false;
+    </script> -->
+
+    <script>
+      var viewer = Freedo.FdApp.createDefaultViewer('freedoContainer')//, {
+      //     homeButton: false // 是否展示Home按钮
+      // }, {
+      //     hasProvinceBoundaries: true// 是否绘制中国省界
+      // });
+      //
+      // viewer.showLogo = false;
+
+// 拉框放大
+      // var imageryManager = new Freedo.FdTools.FdImageryLayersManager(viewer);
+      // imageryManager.addDefaultImageryLayer();
+      //
+      // var zoomByRectangle = new Freedo.FdCamera.FdZoomByRectangle(viewer);
+      //
+      // Sandcastle.addToolbarButton('框选放大', function() {
+      //     zoomByRectangle.start();
+      // });
+
+// 修复视角
+    function flyAround() {
+        Freedo.FdCamera.aerialView(viewer.scene);
+    }
+    Sandcastle.addToolbarButton('中国', function() {
+        flyAround();
+    });
+
+//聚焦模式
+// var scene = viewer.scene;
+// var trackManager = new Freedo.FdCamera.FdTrackManager(viewer.scene);
+//
+// ////////////////////////////////////////////////////////////////////////////////////////////
+// var pmtsManager = new Freedo.FdTools.FdPMTSManager(viewer);
+// var url = 'https://cfgateway.gbim360.cn/freeserver-pmts/services/share/0ab675ef-72de-4b52-ae0a-96dae76a95b4/pmts/1.1.0/PMTSCapabilities.json?accesskey=a748d6c5-16c5-40af-95d6-cdb2ffa4cb64';
+//
+// //指定数据的位置，如果数据本身没有带位置
+// var pos = Freedo.Cartesian3.fromDegrees(116, 40, -15);
+// var modelMatrix = Freedo.Transforms.eastNorthUpToFixedFrame(pos);
+//
+// var pmtsID = pmtsManager.add({
+//     id: 'wenhuashi',
+//     url: url,
+//     modelMatrix: modelMatrix, //如果数据本身已经带了坐标则不需要指定本参数
+//     flytoOrGoto: true //是否跳入到PMTS数据，true为跳入，false为飞入，默认飞入
+// }, undefined);
+//
+// //加载完成后得到PModel
+// var pModel;
+// pmtsManager.on(function (en, ev) {
+//     if (en == 'PModelLoaded') {
+//         //pmtsManager.getPmts(pmtsID).pModelInfos变量存放了该PMTS服务中包含的所有数据信息
+//         //可以便利pModelInfos得到全部的PModel
+//         pModel = pmtsManager.getPmts(pmtsID).pModelInfos[0].pModel;
+//     }
+// });
+// ////////////////////////////////////////////////////////////////////////////////////////////
+//
+// // var tileset = viewer.scene.primitives.add(new Freedo.FreedoPModelset({
+// //     url: '../../sampleData/文化室2018z'
+// // }));
+//
+// // tileset.readyPromise.then(function (tileset) {
+// //     viewer.camera.flyToBoundingSphere(tileset.boundingSphere, {
+// //         duration: 2
+// //     });
+// // });
+//
+// Sandcastle.addToolbarButton('进入聚焦模式', function () {
+//     viewer.camera.flyToBoundingSphere(pModel.boundingSphere, {
+//         duration: 2
+//     });
+//     trackManager.trackByBoundingSphere(pModel.boundingSphere);
+// });
+//
+// Sandcastle.addToolbarButton('退出聚焦模式', function () {
+//     trackManager.cancelTrack();
+// });
+//
+// trackManager.on(function (eventType, param) {
+//     if (eventType === 'beginTrack') {
+//         console.log('进入聚焦模式，可以用左键旋转相机，中键按住平移相机！');
+//     } else if (eventType === 'cancelTrack') {
+//         console.log('进入非聚焦模式！');
+//     }
+// })
+
+
+//地形
+viewer.scene.requestRenderMode = false;
+
+var terrainManager = new Freedo.FdTools.FdTerrain(viewer);
+var imageryManager = new Freedo.FdTools.FdImageryLayersManager(viewer);
+
+imageryManager.addDefaultImageryLayer();
+
+function flyto() {
+    var temp = new Freedo.Cartesian3.fromDegrees((116.38276233172431 + 116.4435769419956) / 2.0, (40.24930710741285 + 40.30986161405765) / 2.0, 3000);
+    viewer.camera.flyTo({
+        destination: temp,
+        duration: 1.0,
+        orientation: {
+            heading: 0.0,
+            pitch: -Freedo.Math.PI_OVER_TWO,
+            roll: 0.0
+        }
+    });
+
+    if (Freedo.defined(entity)) {
+        viewer.entities.remove(entity);
+        entity = undefined;
+    }
+    entity = viewer.entities.add({
+        polygon: {
+            hierarchy: new Freedo.PolygonHierarchy(
+                Freedo.Cartesian3.fromDegreesArray([
+                    116.38276233172431, 40.24930710741285,
+                    116.4435769419956, 40.24930710741285,
+                    116.4435769419956, 40.30986161405765,
+                    116.38276233172431, 40.30986161405765
+                ])),
+            material: Freedo.Color.RED.withAlpha(0.1),
+            classificationType: Freedo.ClassificationType.TERRAIN
+        }
+    });
+}
+
+Sandcastle.addToolbarButton('多地形', function() {
+    //保证新老版本的freedo参数都能正确，新版本的freedo只需要capabilitiesUrl就可以了。
+    terrainManager.setTerrain([{
+        capabilitiesUrl: 'https://cfgateway.gbim360.cn/freeserver-wets/services/share/2cdc8c93-3ffb-404f-b851-22d2d6358b78/wets/1.0.0/WETSCapabilities.xml',
+        queryParameters: {
+            accesskey: '23a70df1-363a-4b51-96b0-d94bd2a901ac'
+        }
+    }, {
+        capabilitiesUrl: 'http://devmaps.gbim360.cn/services/wets?Service=WETS&Request=GetCapabilities&Version=1.0.0'
+    }]);
+    flyto();
+});
+    </script>
+
+</body>
+
+</html>
