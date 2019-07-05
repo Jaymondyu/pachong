@@ -1,12 +1,13 @@
 import re
-import urllib.request
-from urllib import parse
+
 
 f = open('modle_data.json','r',encoding='utf-8')
 data = f.read()
 
-all = re.findall(r'{.*?}', data,re.S)
+bottom = re.findall(r'底部高程\\",\\"attrValue\\":\\"(.*?)\\",\\"category\\":\\"尺寸标注\\',data,re.S)
+top = re.findall(r'顶部高程\\",\\"attrValue\\":\\"(.*?)\\",\\"category\\":\\"尺寸标注\\',data,re.S)
+id = re.findall(r'"description\\":\\"system\\",\\"entityId\\":\\"(.*?)\\",\\"id\\":\\"',data,re.S)
 
-
-with open('clear_data.txt','w',encoding='utf-8') as w:
-    w.write(str(all))
+print(bottom)
+print(top)
+print(id)
