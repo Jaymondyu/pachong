@@ -2,7 +2,7 @@
 
 import urllib.request
 from http import cookiejar
-from urllib import parse
+
 
 
 def spider():
@@ -60,7 +60,7 @@ def spider():
     target_url = 'http://www.tylinbim.com/4DAnalog/ModelAttributeExpand_getCustomAttrList.action'
 
     datas = ""
-    dbid = 0
+    dbid = 1
     while True:
         print("正在读取"+str(dbid))
         modle_data = {
@@ -78,7 +78,7 @@ def spider():
             datas += data
             dbid += 1
 
-            if data[-3] == "s":
+            if dbid == 2:
                 print("读取完成,正在写入")
                 print(dbid)
                 with open('modle_data', 'w', encoding='utf-8') as f:
