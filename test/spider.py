@@ -25,7 +25,7 @@ td = re.findall(r'<td class="p6">.*?</td>', html,re.S)[0]
 title_list = re.findall(r'href="(.*?)">(.*?)<',td)
 
 #新建一个文件，用来保存爬到的信息
-fb  = open("%s.txt" %name,'w',encoding='utf-8')
+fb  = open("%s.txt" %name,'w')
 
 # 循环获取新闻信息
 for news in title_list:
