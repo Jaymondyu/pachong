@@ -2,8 +2,8 @@
 
 import urllib.request
 from http import cookiejar
-
-
+from urllib import parse
+import json
 
 def spider():
 # 1.代码登录
@@ -54,7 +54,7 @@ def spider():
     login_request = urllib.request.Request(login_url,headers=headers,data=str_data)
 
     # 如果登陆成功,cookiejar自动保存cookie
-    opener.open(login_request)
+    # opener.open(login_request)
 
 # 2.代码带着cookie去访问目标url
     target_url = 'http://www.tylinbim.com/4DAnalog/ModelAttributeExpand_getCustomAttrList.action'
@@ -72,16 +72,16 @@ def spider():
         target_request = urllib.request.Request(target_url,headers=headers,data=modle_data)
 
         try:
-            respose = opener.open(target_url)
-            data = respose.read().decode('utf-8')
+            response = opener.open(target_url)
+            data = response.read().decode('utf-8')
             datas += ","
             datas += data
             dbid += 1
 
-            if dbid == 2:
+            if dbid == 11:
                 print("读取完成,正在写入")
                 print(dbid)
-                with open('modle_data', 'w', encoding='utf-8') as f:
+                with open('modle_data.csv', 'w', encoding='utf-8') as f:
                     f.write(datas)
                 print("写入完成")
                 break
