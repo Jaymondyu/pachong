@@ -53,8 +53,8 @@
 		}
 
 		.cont-tips-wrap{
-			width: 450px;
-			height: 370px;
+			width: 550px;
+			height: 470px;
 			padding: 10px;
 			border-radius: 5px;
 			background-color: rgba(0,0,0,0.7);
@@ -78,7 +78,7 @@
 		}
 
 		.cont-tips li{
-			font-size: 20px;
+			font-size: 19px;
 			line-height: 1.3em;
 			font-weight: bold;
 		}
@@ -141,7 +141,6 @@
 						doing: ['B2','B1','1F','2F','3F','4F','5F','6F','7F'],
 						todo: [],
 						tips: "<ol><li>二层油烟风管现做支架，监理要求7月6日全部完成，已滞后;</li><li>五层消防喷淋支管完成70%，已滞后；</li><li>二层空调风阀、消声器完成50%，已滞后；</li><li>三层空调水平管未开始，已滞后；</li><li>三层不锈钢给水管完成20%，已滞后；</li><li>四层防排烟分管先组装，要求7月9日全部完成。</li></ol>"
-						// tips: "<ol><li>一至六层室内穿线未开始。</li><li>弱电线缆未进场未开始敷设。</li><li>消防水泵未进场。</li></ol>"
 					},
 			"wmq": {
 						name: "外幕墙专业",
@@ -153,8 +152,8 @@
 			"jzx": {
 						name: "精装修专业",
 						done: [],
-						doing: ['2F','3F','4F'],
-						todo: ['B2','B1','1F','5F','6F','7F'],
+						doing: ['2F','3F','4F','5F','6F'],
+						todo: ['B2','B1','1F','7F'],
 						tips: "无"
 						// tips: "<ol><li>精装BIM样板未落实。</li></ol>"
 					}
@@ -167,7 +166,7 @@
 		function setup() {
 			/* 初始化 Viewer */
 			$.ajax({
-			url: '/token',
+			url: '/shenzhen/token',
 			dataType: "json"
 			}).done(function (data) {
 				launchViewer(data.access_token);
