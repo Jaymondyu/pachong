@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=no" charset="utf-8"/>
+	<title>重庆市残疾人康复中心(一期)形象展示</title>
+	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	<!-- Viewer 必须的CSS文件 -->
+	<link rel="stylesheet" type="text/css" href="https://developer.api.autodesk.com/modelderivative/v2/viewers/6.*/style.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<style type="text/css">
+		body{
+			margin: 0px;
+			background-color: #f5f5f5;
+		}
+
+		#forgeViewer {
+			width: 100%;
+			height: 100%;
+		}
+
+		#selectionBar{
+			padding: 10px;
+			background: rgba(0,0,0,0.7);
+			position: absolute;
+			left: 5px;
+			top: 5px;
+			z-index: 999;
+			border-radius: 5px;
+		}
+
+		.legend {
+			background: rgba(0,0,0,0.7);
+			position: absolute;
+			padding: 5px;
+			bottom: 5px;
+			right: 5px;
+			color: white;
+			border-radius: 5px;
+			z-index: 998
+		}
+
+
+		.myrow {
+			padding: 5px;
+			display: inline-block;
+		}
+
+		.color{
+			height: 12px;
+			width: 20px;
+			opacity: 0.9;
+			border: 1px lightgrey solid
+		}
+
+		.cont-tips-wrap{
+			width: 450px;
+			height: 100px;
+			padding: 10px;
+			border-radius: 5px;
+			background-color: rgba(0,0,0,0.7);
+			color:#fff;
+			position: absolute;
+			left: 5px;
+			top: 7px;
+			z-index: 997;
+		}
+
+		.title{
+			font-size: 22px;
+			font-weight: bolder;
+		}
+
+		.cont-tips{
+			font-size: 20px;
+			padding-top: 8px;
+			line-height: 20px;
+			font-weight: bold;
+
+		}
+		.cont-tips-wrap .cha{
+			display: block;
+			width: 24px;
+			height: 24px;
+			background: url("/canlian/static/cha.png") no-repeat center center;
+			position: absolute;
+			right: 10px;
+			top:10px;
+			cursor: pointer;
+		}
+		.cont-tips li{
+			line-height: 1.7em;
+			font-weight: bold;
+		}
+
+	</style>
+</head>
+<body>
+	<div id="forgeViewer"></div>
+	<!-- <div id="selectionBar">
+		<div>
+			<a class="btn btn-primary" id="clear" role="button">原始模型</a>
+			<a class="btn btn-default" id="jggc" role="button">结构进度</a>
+			<a class="btn btn-default" id="jzgc" role="button">建筑进度</a>
+			<a class="btn btn-default" id="jdgc" role="button">机电进度</a>
+			<a class="btn btn-default" id="wmq" role="button">外幕墙进度</a>
+			<a class="btn btn-default" id="jzx" role="button">精装修进度</a>
+		</div>
+	</div> -->
+
+	<div class="cont-tips-wrap" style="display: none">
+		<div class="title" id="title">区域信息</div>
+		<div class="cont-tips"></div>
+		<span class="cha"></span>
+	</div>
+
+
+	<!-- <div class="legend">
+		<div class="title">图例</div>
+		<div><div style="background: red" class="color myrow"></div><div class="myrow">&nbsp;未开始</div></div>
+		<div><div style="background: blue" class="color myrow"></div><div class="myrow">&nbsp;进行中</div></div>
+		<div><div style="background: green" class="color myrow"></div><div class="myrow">&nbsp;已完成</div></div>
+	</div> -->
+	<!-- Viewer 必须的JS文件 -->
+	<!-- 最新版的API在BIM Walk上会报错，建议使用v6.0 -->
+	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/three.js/r83/three.min.js"></script>
+	<script type="text/javascript" src="https://developer.api.autodesk.com/modelderivative/v2/viewers/6.*/viewer3D.min.js"></script>
+	<script type="text/javascript">
+		$('body').on('click','.cha',function(){
+			$(this).parents('.cont-tips-wrap').hide();
+		})
+	</script>
+	<script type="text/javascript">
+		var urn = "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6cGxva2lqdWgxMjM0NTY3OC9DYW5MaWFuLm53ZA";
+		var viewerApp;
+		var viewables;
+
+		// const config = {
+		// 	"jggc": {
+		// 				name: "结构专业",
+		// 				done: ['B2','B1','1F','2F','3F','4F','5F','6F','7F'],
+		// 				doing: [],
+		// 				todo: [],
+		// 				tips: "无"
+		// 			},
+		// 	"jzgc": {
+		// 				name: "建筑专业",
+		// 				done: ['B2','B1','1F','2F','3F','4F'],
+		// 				doing: ['5F','6F','7F'],
+		// 				todo: [],
+		// 				tips: "<ol><li>楼层内与精装交接作业面的收尾、清理工作滞后；</li><li>屋面工程、室外工程对比月进度计划滞后；</li><li>地下室设备房装修未开始。</li></ol>"
+		// 			},
+		// 	"jdgc": {
+		// 				name: "机电专业",
+		// 				done: [],
+		// 				doing: ['B2','B1','1F','2F','3F','4F','5F','6F','7F'],
+		// 				todo: [],
+		// 				tips: "无"
+		// 				// tips: "<ol><li>一至六层室内穿线未开始。</li><li>弱电线缆未进场未开始敷设。</li><li>消防水泵未进场。</li></ol>"
+		// 			},
+		// 	"wmq": {
+		// 				name: "外幕墙专业",
+		// 				done: [],
+		// 				doing: ['1F','2F','3F','4F','5F','6F','7F'],
+		// 				todo: [],
+		// 				tips: "<ol><li>采光顶未完成，已严重滞后。</li></ol>"
+		// 			},
+		// 	"jzx": {
+		// 				name: "精装修专业",
+		// 				done: [],
+		// 				doing: ['2F','3F','4F'],
+		// 				todo: ['B2','B1','1F','5F','6F','7F'],
+		// 				tips: "无"
+						// tips: "<ol><li>精装BIM样板未落实。</li></ol>"
+		// 			}
+		// }
+		const config = {
+			2: "康复中心2#",
+			12368:"康复中心2#",
+			13331:"康复中心1#",
+			43537:"康复中心1#",
+			47176:"康复中心地下室",
+			49292:"康复中心地下室"
+		}
+
+
+		$("body").ready(setup);
+
+		function setup() {
+			/* 初始化 Viewer */
+			$.ajax({
+			url: '/canlian/token',
+			dataType: "json"
+			}).done(function (data) {
+				launchViewer(data.access_token);
+			});
+		}
+
+
+		// 启动 Forge Viewer
+		function launchViewer(token) {
+			var options = {
+				env: 'AutodeskProduction',
+				accessToken: token
+			};
+			var documentId = 'urn:' + urn;
+			Autodesk.Viewing.Initializer(options, function onInitialized() {
+				// 生成一个forge viewer application，并将图形界面绑定至 $('#forgeViewer')
+				viewerApp = new Autodesk.Viewing.ViewingApplication('forgeViewer');
+				// 为viewer application注册一个3d viewer
+				// viewerApp.registerViewer(viewerApp.k3D, Autodesk.Viewing.Viewer3D);
+				viewerApp.registerViewer(viewerApp.k3D, Autodesk.Viewing.Private.GuiViewer3D);
+
+				// 加载文档
+				viewerApp.loadDocument(documentId, onDocumentLoadSuccess,
+					(viewerErrorCode)=>{console.error('onDocumentLoadFailure() - errorCode:' + viewerErrorCode)});
+			});
+		}
+
+		function onDocumentLoadSuccess(doc) {
+			viewables = viewerApp.bubble.search({ 'type': 'geometry' });
+			viewerApp.selectItem(viewables[0].data, onItemLoadSuccess, (errorCode)=>{console.error('onItemLoadFail() - errorCode:' + errorCode);});
+		}
+
+		function onItemLoadSuccess(viewer, item) {
+			viewer.getObjectTree(function(tree){
+				$('#forgeViewer').click(function(){
+					var dbid = NOP_VIEWER.getSelection()[0];
+					while(dbid && dbid != tree.getRootId()){
+						dbid= tree.getNodeParentId(dbid)
+						// if (BB.includes(dbid)){
+						// 	viewer.select(BB)
+						// 	// alert("商务办公B栋,地上八层,建筑面积 9906.68平方米");
+						// 	$(".cont-tips-wrap").show()
+						// 	$(".cont-tips").html("商务办公B栋,地上八层,建筑面积 9906.68 平方米")
+						// 	break;}
+						// if (BA.includes(dbid)){
+						// 	viewer.select(BA)
+						// 	$(".cont-tips-wrap").show()
+						// 	$(".cont-tips").html("商务办公A栋,地上十层,建筑面积 9609.03 平方米 ")
+						// 	break;}
+						// if (ZA.includes(dbid)){
+						// 	viewer.select(ZA)
+						// 	$(".cont-tips-wrap").show()
+						// 	$(".cont-tips").html("行政服务办公楼，地上十层,建筑面积 9609.03 平方米")
+						// 	break;}
+						// if (XZ.includes(dbid)){
+						// 	viewer.select(XZ)
+						// 	$(".cont-tips-wrap").show()
+						// 	$(".cont-tips").html("商务办公A栋,地上十层,建筑面积 9609.03 平方米<br><br><br>行政服务办公楼，地上十层,建筑面积 9609.03 平方米<br><br><br>政服务中心，地上五层,建筑面积 30125.46 平方米")
+						// 	break;}
+
+								if (config[dbid]){
+									viewer.select(dbid)
+									$(".cont-tips-wrap").show()
+									$(".cont-tips").html(config[dbid])
+									break;
+								}
+
+
+					}
+				});
+			});
+		}
+	</script>
+</body>
+</html>
