@@ -1,0 +1,434 @@
+.cnt-wrap{
+  width: 1648px;
+  height: 1121px;
+  background-color: #0f1947;
+  box-sizing: border-box;
+  border:1px solid #1d35a8;
+  margin: 10px auto;
+  position: relative;
+}
+.top_cnt{
+  width:1646px;
+  height:367px;
+  overflow: hidden;
+  background:url("../images/top_bg.jpg") no-repeat;
+  padding:15px 30px 0; 
+  box-sizing: border-box;
+}
+
+.top_cnt .title{
+  color:#095fc8;
+  font-size: 16px;
+
+}
+.left-top,.right-top,.left-bottom,.right-bottom{
+  width: 7px;
+  height: 9px;
+  position: absolute;
+}
+
+.left-top{
+  background: url("../\images/left_top.jpg") no-repeat;
+  left:0;
+  top:0;
+}
+.right-top{
+  background: url("../\images/right_top.jpg") no-repeat;
+  right:0;
+  top:0;
+}
+.left-bottom{
+  background: url("../\images/left_bottom.jpg") no-repeat;
+  left:0;
+  bottom:0px;
+}
+.right-bottom{
+  background: url("../\images/right_bottom.jpg") no-repeat;
+  right:0;
+  bottom:0px;
+}
+.b_cnt{
+  width:1575px;
+  height:211px;
+  margin: 0 auto;
+}
+.b_cnt-l{
+  width: 37px;
+  height: 211px;
+  background: url(../images/b-l.jpg) no-repeat;
+}
+.b_cnt-c{
+  width: 1501px;
+  height: 211px;
+  background: url(../images/b-c.jpg);
+}
+.b_cnt-c .title{
+  font-size: 18px;
+  color:#0ca6ff;
+  padding-top: 23px;
+}
+.h-prediction{
+  height:142px;
+  overflow: hidden;
+  display: flex;
+  justify-content:space-between;
+}
+.h-prediction-item{
+  width: 52px;
+  height: 142px;
+  overflow: hidden;
+  color:#0ca6ff;
+  padding-top: 18px;
+}
+.h-prediction-item-h{
+  width: 50px;
+  height: 48px;
+  font-size: 16px;
+}
+
+.h-prediction-item-icon{
+  width: 32px;
+  height: 29px;
+  background: url("../images/state1.png") no-repeat;
+}
+
+.h-prediction-item-temp{
+  width: 32px;
+  overflow: hidden;
+  font-size: 18px;
+  text-align: center;
+  padding-top:10px;
+}
+
+.b_cnt-r{
+  width: 37px;
+  height: 211px;
+  background: url(../images/b-r.jpg) no-repeat;
+}
+
+.bottom-wrap{
+  width:1575px;
+  overflow: hidden;
+  margin: 20px auto 0;
+}
+
+.c_cnt{
+  width: 1037px;
+  height: 508px;
+}
+
+.c_cnt-l{
+  width: 36px;
+  height: 508px;
+  background: url(../images/c_l.jpg) no-repeat;
+}
+.c_cnt-c{
+  width: 965px;
+  height: 508px;
+  background: url(../images/c_c.jpg);
+}
+.c_cnt-r{
+  width: 36px;
+  height: 508px;
+  background: url(../images/c_r.jpg) no-repeat;
+}
+
+.total-wrap{
+  width:518px;
+  height: 508px;
+  overflow: hidden;
+  margin-left: 20px;
+}
+
+.block-wrap{
+  width:255px;
+  height:245px; 
+  position: relative;
+}
+.light-mask{
+  width:255px;
+  height:245px; 
+  box-shadow:rgb(0, 112, 255) 0px 0px 60px inset;
+  position: absolute;
+  left:0;
+  top:0;
+  display: none;
+}
+
+.block-wrap.t1{
+  margin-bottom: 16px; 
+}
+
+.block-wrap.t2{
+  margin-right: 8px; 
+}
+
+.block-wrap-l{
+  width: 16px;
+  height: 245px;
+  background: url(../images/d_l.jpg) no-repeat;
+}
+.block-wrap-c{
+  width: 223px;
+  height: 185px;
+  padding-top: 60px;
+  background: url(../images/d_c.jpg);
+  text-align: center;
+}
+.block-wrap-r{
+  width: 16px;
+  height: 245px;
+  background: url(../images/d_r.jpg) no-repeat;
+}
+
+.current-wrap{
+  height: 161px;
+  margin-top: 20px;
+}
+.icon1{
+  width: 161px;
+  height: 161px;
+  line-height: 161px;
+  text-align: center;
+  background: url("../images/icon1.png") no-repeat;
+  position: relative;
+  font-size: 72px;
+  color:#0cc9ff;
+}
+
+.current-desc{
+  margin: 115px 0 0 20px;
+}
+
+.tyl-text{
+  font-size:30px;
+  color:#0ca6ff;
+}
+
+.tips1{
+  width: 66px;
+  height: 38px;
+  line-height: 38px;
+  margin-left: 20px;
+  background: url("../images/icon2.png") no-repeat;
+  color:#0ca6ff;
+  font-size: 16px;
+  padding-left: 44px;
+}
+
+.tips2{
+  width: 85px;
+  height: 38px;
+  line-height: 38px;
+  margin-left: 20px;
+  background: url("../images/icon3.png") no-repeat;
+  color:#0ca6ff;
+  font-size: 16px;
+  padding-left:44px;
+}
+
+.text-desc-wrap{
+  height: 138px;
+  overflow: hidden;
+}
+
+.text-des-item{
+  width: 230px;
+  font-size: 24px;
+  color:#0ca6ff;
+  float: left;
+}
+.text-des-item2{
+  width: 500px;
+  font-size: 24px;
+  color:#0ca6ff;
+  float: left;
+}
+
+.text-desc-t1{
+  height: 32px;
+  overflow: hidden;
+  margin-top: 34px;
+  padding-left:15px;
+}
+
+.text-desc-t2{
+  height: 32px;
+  overflow: hidden;
+  margin-top: 25px;
+  padding-left:15px;
+}
+
+.feng{
+  display: inline-block;
+  width: 22px;
+  height: 21px;
+  background: url("../images/ic_bg1.png") no-repeat;
+  vertical-align: -2px;
+}
+.shidu{
+  display: inline-block;
+  width: 22px;
+  height: 21px;
+  background: url("../images/ic_bg3.png") no-repeat;
+  vertical-align: -2px;
+}
+.qiya{
+  display: inline-block;
+  width: 26px;
+  height: 24px;
+  background: url("../images/ic_bg4.png") no-repeat;
+  vertical-align: -2px;
+}
+
+.miaosu{
+  display: inline-block;
+  width: 26px;
+  height: 24px;
+  background: url("../images/ic_bg2.png") no-repeat;
+  vertical-align: -2px;
+}
+.warn-icon{
+  display: inline-block;
+}
+
+.warn-icon.c1{
+  width: 80px;
+  height: 71px;
+  background: url("../images/warn_icon2.png") no-repeat center center;
+}
+
+.warn-icon.c2{
+  width: 80px;
+  height: 71px;
+  background: url("../images/warn_icon3.png") no-repeat center center;
+}
+
+.warn-icon.c3{
+  width: 82px;
+  height: 81px;
+  background: url("../images/warn_icon1.png") no-repeat center center;
+}
+
+.warn-icon.c4{
+  width: 68px;
+  height: 67px;
+  padding-bottom: 10px;
+  background: url("../images/warn_icon4.png") no-repeat center center;
+}
+
+.warn-text{
+  font-size: 24px;
+  color:#0ca6ff;
+  padding-top: 35px;
+}
+.myecharts{
+  height: 206px;
+  overflow: hidden;
+}
+.my-date{
+  padding-top: 20px;
+  height: 34px;
+  overflow: hidden;
+}
+.date-item{
+  width:136px;
+  overflow: hidden;
+  font-size: 16px;
+  color:#0ca6ff;
+  float: left;
+}
+
+.date-item.ts1{
+  width:150px;
+}
+
+.date-item.ts2{
+  width:150px;
+}
+
+.date-item.ts3{
+  width:150px;
+}
+
+.date-item.ts4{
+  width:142px;
+}
+
+.date-item.ts0{
+  width:88px;
+}
+
+
+
+.week-prediction-item{
+  width: 52px;
+  height: 103px;
+  overflow: hidden;
+  color:#0ca6ff;
+  padding-top: 18px;
+  float: left;
+  margin-left: 94px;
+}
+
+.week-prediction-item.ts1{
+  margin-left: 15px;
+}
+
+.week-prediction-item-t{
+  width: 50px;
+  height: 31px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.week-prediction-item-icon{
+  width: 32px;
+  height: 29px;
+  background: url("../images/state1.png") no-repeat;
+  margin-left: 8px;
+}
+
+.week-prediction-item-temp{
+  width: 48px;
+  overflow: hidden;
+  font-size: 18px;
+  text-align: center;
+  padding-top:10px;
+}
+
+.c_cnt_hight{
+  height: 121px;
+  overflow: hidden;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

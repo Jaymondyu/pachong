@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>test</title>
+  <link rel="stylesheet" type="text/css" href="../static/css/reset.css">
+  <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+  <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+  <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+  <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+  <script type="text/javascript"
+    src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+  <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+  <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+</head>
+
+<body>
+  <div class="cnt-wrap">
+    <div class="left-top"></div>
+    <div class="right-top"></div>
+    <div class="left-bottom"></div>
+    <div class="right-bottom"></div>
+    <div class="top_cnt">
+      <p class="title">中央气象台 <span class="j-shijian"></span>:00 发布</p>
+      <div class="current-wrap">
+        <div class="icon1 l-left j-wd">42</div>
+        <div class="current-desc l-left">
+          <div class="tyl-text l-left j-weather">晴</div>
+<!--           <div class="tips1 l-left">29 优</div>
+          <div class="tips2 l-left">高温预警</div> -->
+        </div>
+      </div>
+
+      <div class="text-desc-wrap">
+        <div class="text-desc-t1">
+          <div class="text-des-item">
+            <span class="feng"></span>&nbsp;&nbsp;
+             <span class="j-fx"></span> <span class="j-fj"></span> 级
+          </div>
+          <div class="text-des-item">
+            <span class="shidu"></span>&nbsp;&nbsp;
+            湿度 <span class="j-shidu"></span>%
+          </div>
+          <div class="text-des-item">
+            <span class="qiya"></span>&nbsp;&nbsp;
+            气压 <span class="j-qiya"></span> hpa
+          </div>
+        </div>
+        <div class="text-desc-t2">
+          <div class="text-des-item2" style="display: none">
+            <span class="miaosu"></span>&nbsp;&nbsp;
+            天太热了，吃个西瓜~
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="b_cnt">
+      <div class="b_cnt-l l-left"></div>
+      <div class="b_cnt-c l-left">
+        <p class="title">逐小时预报</p>
+        <div class="h-prediction"></div>
+      </div>
+      <div class="b_cnt-r l-left"></div>
+    </div>
+
+    <div class="bottom-wrap">
+      <div class="c_cnt l-left">
+        <div class="c_cnt-l l-left"></div>
+        <div id="c_cnt-c" class="c_cnt-c l-left">
+          <div class="my-date">
+            <div class="date-item" style="padding-left:10px">--月--日</div>
+            <div class="date-item ts1">--月--日</div>
+            <div class="date-item ts2">--月--日</div>
+            <div class="date-item ts3">--月--日</div>
+            <div class="date-item ts4">--月--日</div>
+            <div class="date-item">--月--日</div>
+            <div class="date-item ts0">--月--日</div>
+          </div>
+          <div class="c_cnt_hight"></div>
+          <div id="myecharts" class="myecharts"></div>
+          <div class="c_cnt_low"></div>
+        </div>
+        <div class="c_cnt-r l-left"></div>
+      </div>
+      <div class="total-wrap l-left">
+        <div class="block-wrap t1 t2 l-left">
+          <div class="light-mask"></div>
+          <div class="block-wrap-l l-left"></div>
+          <div class="block-wrap-c l-left">
+            <span class="warn-icon c1"></span>
+            <p class="warn-text">雷电</p>
+          </div>
+          <div class="block-wrap-r l-left"></div>
+        </div>
+        <div class="block-wrap t1 l-left">
+          <div class="light-mask"></div>
+          <div class="block-wrap-l l-left"></div>
+          <div class="block-wrap-c l-left">
+            <span class="warn-icon c4"></span>
+            <p class="warn-text"> 台风</p>
+          </div>
+          <div class="block-wrap-r l-left"></div>
+        </div>
+        <div class="block-wrap t2 l-left">
+          <div class="block-wrap-l l-left"></div>
+          <div class="block-wrap-c l-left">
+            <span class="warn-icon c3"></span>
+            <p class="warn-text">雨天 <span class="j-y-t"></span> 天</p>
+          </div>
+          <div class="block-wrap-r l-left"></div>
+        </div>
+        <div class="block-wrap l-left">
+          <div class="block-wrap-l l-left"></div>
+          <div class="block-wrap-c l-left">
+            <span class="warn-icon c2"></span>
+            <p class="warn-text">高温 <span class="j-g-t"></span> 天</p>
+          </div>
+          <div class="block-wrap-r l-left"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="../static/js/jquery.min.js"></script>
+<script src="../static/js/page.js"></script>
+
+</html>
