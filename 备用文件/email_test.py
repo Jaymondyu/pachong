@@ -1,10 +1,5 @@
-
 # -*-encoding: utf-8 -*-
-"""
-@version: 3.6
-@time: 2018/6/9 10:16
-@author: SunnyYang
-"""
+
 import os,sys
 import datetime
 import smtplib
