@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>林同棪（重庆）国际工程技术有限公司</title>
+  <link rel="stylesheet" type="text/css" href="/event/static/css/reset.css">
+  <link rel="stylesheet" type="text/css" href="/event/static/layui/css/layui.css">
+  <link rel="stylesheet" type="text/css" href="/event/static/css/style.css">
+</head>
+
+<body>
+  <div class="head-wrap">
+    <div class="head-title">BIM销项计划跟踪表</div>
+  </div>
+
+  <div class="tyl-progress-wrap">
+      <div class="tyl-progress"></div>
+      <div class="progress-date date1">2019年07月</div>
+      <div class="progress-date date2">2019年08月</div>
+      <div class="progress-date date3">2019年09月</div>
+      <div class="progress-date date4">2019年10月</div>
+
+      <div class="progress-text te1">规划验收</div>
+      <div class="progress-text te2">人防验收</div>
+      <div class="progress-text te3">消防验收</div>
+      <div class="progress-text te4">竣工验收</div>
+  </div>
+
+  <div class="content-wrap">
+    <div class="cont-title">
+      <span class="cnt-sp"></span>
+      <div class="filter-wrap">
+        <span data-val="0"  class="filter-btn l-left">全部</span>
+        <span data-val="1" class="filter-btn l-left">滞后</span>
+        <span data-val="2" class="filter-btn l-left">临近</span>
+        <span data-val="3" class="filter-btn l-left">已完成</span>
+        <span data-val="4" class="filter-btn l-left">计划内</span>
+      </div>
+      
+      <div class="alltotal l-right">
+        <strong>统计：</strong>
+        完成 <span class="j-t-wc"></span> 
+        计划内 <span class="j-t-jhl"></span> 
+        滞后 <span class="j-t-zh"></span> 
+        临近 <span class="j-t-lj"></span>
+      </div>
+    </div>
+    <table class="cnt-table">
+      <thead>
+          <tr class="table-title">
+              <td>任务事件</td>
+              <td>计划开始时间</td>
+              <td>预期完成时间</td>
+              <td>实际完成时间</td>
+              <td>状态</td>
+              <td>责任方</td>
+              <td>责任人</td>
+            </tr>
+      </thead>
+      <tbody>
+        
+      </tbody>
+    </table>
+  </div>
+
+</body>
+<script src="/event/static/js/jquery.min.js"></script>
+<script src="/event/static/layui/layui.all.js"></script>
+<script src="/event/static/js/page.js"></script>
+
+<script id="tabletr" type="text/html">
+  {{# for(var i=0;i<d.length;i++){ }}
+
+  <tr data-id="{{d[i].id }}">
+    <td>{{ d[i].event_name }}</td>
+    <td>{{ d[i].start_plan }}</td>
+    <td>{{ d[i].plan_time }}</td>
+    <td>{{ d[i].finish_time }}</td>
+    <td>
+      {{ d[i].state===999999?'已完成':d[i].state<-3?"计划内":d[i].state>0?'滞后':'临近'  }}
+    </td>
+    <td>{{ d[i].department }}</td>
+    <td>{{ d[i].contector }}</td>
+  </tr>
+  {{# } }}
+</script>
+
+
+</html>

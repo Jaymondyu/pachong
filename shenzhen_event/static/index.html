@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>林同棪（重庆）国际工程技术有限公司</title>
+  <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+  <link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+
+<body>
+  <div class="head-wrap">
+    <div class="head-title">BIM销项计划跟踪表</div>
+  </div>
+
+  <div class="tyl-progress-wrap">
+      <div class="tyl-progress"></div>
+      <div class="progress-date date1">2019年07月</div>
+      <div class="progress-date date2">2019年08月</div>
+      <div class="progress-date date3">2019年09月</div>
+      <div class="progress-date date4">2019年10月</div>
+
+      <div class="progress-text te1">规划验收</div>
+      <div class="progress-text te2">人防验收</div>
+      <div class="progress-text te3">消防验收</div>
+      <div class="progress-text te4">竣工验收</div>
+  </div>
+
+  <div class="content-wrap">
+    <div class="cont-title">
+      <span class="cnt-sp"></span>
+      <div class="filter-wrap">
+        <span data-val="0"  class="filter-btn l-left">全部</span>
+        <span data-val="1" class="filter-btn l-left">滞后</span>
+        <span data-val="2" class="filter-btn l-left">临近</span>
+        <span data-val="3" class="filter-btn l-left">已完成</span>
+        <span data-val="4" class="filter-btn l-left">计划内</span>
+      </div>
+      
+      <!-- <div class="del-btn l-right">删除事件</div> -->
+      <div class="add-btn l-right">新增事件</div>
+      <div class="alltotal l-right">
+        <strong>统计：</strong>
+        完成 <span class="j-t-wc"></span> 
+        计划内 <span class="j-t-jhl"></span> 
+        滞后 <span class="j-t-zh"></span> 
+        临近 <span class="j-t-lj"></span>
+      </div>
+    </div>
+    <table class="cnt-table">
+      <thead>
+          <tr class="table-title">
+              <td>任务事件</td>
+              <td>计划开始时间</td>
+              <td>预期完成时间</td>
+              <td>实际完成时间</td>
+              <td>状态</td>
+              <td>责任方</td>
+              <td>责任人</td>
+              <td>操作</td>
+            </tr>
+      </thead>
+      <tbody>
+        
+      </tbody>
+    </table>
+  </div>
+
+</body>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/layui/layui.all.js"></script>
+<script src="/static/js/page.js"></script>
+
+<script id="addalert" type="text/html">
+  <div class="add-alert-wrap">
+      <div class="add-alert">
+          <div class="add-alert-head">新增事件</div>
+          <div class="add-alert-cnt">
+              <div class="add-alert-item">
+                  <div class="add-alert-item-l l-left">任务事件:</div>
+                  <div class="add-alert-item-r l-left"><input class="my-text" type="text"></div>
+              </div>
+              <div class="add-alert-item">
+                <div class="add-alert-item-l l-left">计划开始时间:</div>
+                <div class="add-alert-item-r l-left"><input type="text" class="layui-input" id="mydate2"></div>
+            </div>
+              <div class="add-alert-item">
+                  <div class="add-alert-item-l l-left">预期完成时间:</div>
+                  <div class="add-alert-item-r l-left"><input type="text" class="layui-input" id="mydate1"></div>
+              </div>
+              <div class="add-alert-item">
+                  <div class="add-alert-item-l l-left">责任方:</div>
+                  <div class="add-alert-item-r l-left">
+                    <select class="my-selec j-selec-zrf">
+                      <option value="0">请选择</option>
+                      <option value="1">总包土建</option>
+                      <option value="2">总包机电</option>
+                      <option value="3">幕墙</option>
+                      <option value="4">公区设计</option>
+                      <option value="5">影院设计</option>
+                      <option value="6">弘文设计</option>
+                      <option value="7">培训设计</option>
+                      <option value="8">精装施工</option>
+                      <option value="9">立体车库</option>
+                      <option value="10">电梯</option>
+                      <option value="11">景观</option>
+                      <option value="12">设计院</option>
+                      <option value="12">BIM</option>
+                    </select>
+                  </div>
+              </div>
+              <div class="add-alert-item">
+                  <div class="add-alert-item-l l-left">责任人:</div>
+                  <div class="add-alert-item-r l-left">
+                      <p class="add-zrr-p"></p>
+                  </div>
+              </div>
+          </div>
+          <div class="add-alert-foot">
+            <div class="submit-btn j-sumbit">确定</div>
+            <div class="cancel-btn">取消</div>
+          </div>
+      </div> 
+    </div>  
+</script>
+
+
+<script id="modifyalert" type="text/html">
+  <div class="add-alert-wrap">
+      <div class="add-alert">
+          <div class="add-alert-head">修改事件</div>
+          <div class="add-alert-cnt">
+              <div class="add-alert-item">
+                  <div class="add-alert-item-l l-left">任务事件:</div>
+                  <div class="add-alert-item-r l-left"><input value="{{d.event_name}}" class="my-text" type="text"></div>
+              </div>
+              <div class="add-alert-item">
+                <div class="add-alert-item-l l-left">计划开始时间:</div>
+                <div class="add-alert-item-r l-left"><input value="{{d.start_plan}}" type="text" class="layui-input" id="mydate4"></div>
+            </div>
+              <div class="add-alert-item">
+                  <div class="add-alert-item-l l-left">预期完成时间:</div>
+                  <div class="add-alert-item-r l-left"><input value="{{d.plan_time}}" type="text" class="layui-input" id="mydate3"></div>
+              </div>
+              <div class="add-alert-item">
+                  <div class="add-alert-item-l l-left">责任方:</div>
+                  <div class="add-alert-item-r l-left">
+                    <select value="{{d.dpi}}" class="my-selec j-selec-zrf">
+                      <option value="1">总包土建</option>
+                      <option value="2">总包机电</option>
+                      <option value="3">幕墙</option>
+                      <option value="4">公区设计</option>
+                      <option value="5">影院设计</option>
+                      <option value="6">弘文设计</option>
+                      <option value="7">培训设计</option>
+                      <option value="8">精装施工</option>
+                      <option value="9">立体车库</option>
+                      <option value="10">电梯</option>
+                      <option value="11">景观</option>
+                      <option value="12">设计院</option>
+                      <option value="12">BIM</option>
+                    </select>
+                  </div>
+              </div>
+              <div class="add-alert-item">
+                  <div class="add-alert-item-l l-left">责任人:</div>
+                  <div class="add-alert-item-r l-left">
+                      <p class="add-zrr-p">{{d.zrr}}</p>
+                  </div>
+              </div>
+          </div>
+          <div class="add-alert-foot">
+            <div class="submit-btn j-modify">确定</div>
+            <div class="cancel-btn">取消</div>
+          </div>
+      </div> 
+    </div>  
+</script>
+
+
+<script id="tabletr" type="text/html">
+  {{# for(var i=0;i<d.length;i++){ }}
+
+  <tr data-id="{{d[i].id }}">
+    <td>{{ d[i].event_name }}</td>
+    <td>{{ d[i].start_plan }}</td>
+    <td>{{ d[i].plan_time }}</td>
+    <td>{{ d[i].finish_time }}</td>
+    <td>
+      {{ d[i].state===999999?'已完成':d[i].state<-3?"计划内":d[i].state>0?'滞后':'临近'  }}
+    </td>
+    <td>{{ d[i].department }}</td>
+    <td>{{ d[i].contector }}</td>
+    <td>
+      {{# if(d[i].state!==999999){ }}
+      <span class="tbale-s-btn j-xiaox">销项</span>
+      <span class="tbale-s-btn j-modify2">修改</span>
+      {{# } }}
+      <span class="tbale-s-btn j-del">删除</span>
+    
+    </td>
+  </tr>
+  {{# } }}
+</script>
+
+
+
+
+</html>

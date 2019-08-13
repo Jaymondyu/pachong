@@ -1,5 +1,5 @@
-# encoding = utf-8
-from flask import Flask,request
+#coding:utf-8
+from flask import Flask,request,render_template
 import mysql.connector
 import json
 import time
@@ -10,12 +10,20 @@ import datetime
 
 app = Flask(__name__)
 
-conn = mysql.connector.connect( host= '127.0.0.1',user= 'root',password ='plokijuh9',database ='j') #连接数据库，创建Flask_app数据库
+conn = mysql.connector.connect(host='183.66.213.82',port="8803",user= 'tylin',password ='Tylin@123',database ='shenzhen_event',auth_plugin='mysql_native_password') #连接数据库，创建Flask_app数据库
 cursor = conn.cursor()
 
-@app.route('/table')
-def hello_world():
-    table = "SELECT test_event.id,event_name, start_plan ,plan_time, finish_time, department,name from test_event JOIN person ON test_event.dpi=person.id"
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
+@app.route("/show")
+def show():
+    return app.send_static_file('show.html')
+
+@app.route('/event/table')
+def table():
+    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
 
     cursor.execute(table)
 
@@ -58,7 +66,7 @@ def hello_world():
 
     return json.dumps(list)
 
-@app.route("/table/insert" ,methods=["POST"])
+@app.route("/event/table/insert" ,methods=["POST"])
 def insert():
     data = request.get_json()
 
@@ -73,17 +81,17 @@ def insert():
 
     if finish_time == 'Null':
 
-        sql = "INSERT INTO test_event (event_name,start_plan ,plan_time, finish_time, dpi) VALUES ('%s','%s','%s',%s,%d)"% (event_name,start_plan,plan_time,finish_time,dpi)
+        sql = "INSERT INTO event (event_name,start_plan ,plan_time, finish_time, dpi) VALUES ('%s','%s','%s',%s,%d)"% (event_name,start_plan,plan_time,finish_time,dpi)
 
     else:
 
-        sql = "INSERT INTO test_event (event_name, start_plan,plan_time, finish_time, dpi) VALUES ('%s','%s','%s','%s',%d)" % (event_name,start_plan ,plan_time, finish_time, dpi)
+        sql = "INSERT INTO event (event_name, start_plan,plan_time, finish_time, dpi) VALUES ('%s','%s','%s','%s',%d)" % (event_name,start_plan ,plan_time, finish_time, dpi)
 
 
     cursor.execute(sql)
     conn.commit()
 
-    table = "SELECT test_event.id,event_name, start_plan ,plan_time, finish_time, department,name from test_event JOIN person ON test_event.dpi=person.id"
+    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
 
     cursor.execute(table)
 
@@ -127,17 +135,17 @@ def insert():
 
     return json.dumps(list)
 
-@app.route("/table/cancel" ,methods=["POST"])
+@app.route("/event/table/cancel" ,methods=["POST"])
 def cancel():
     data = request.get_json()
     id = data["id"]
 
     current_time = datetime.datetime.now().strftime('%Y-%m-%d')
-    cancel = "UPDATE test_event SET finish_time =" + "'"+current_time+"'" + "where id=" + "'" +id+ "'"
+    cancel = "UPDATE event SET finish_time =" + "'"+current_time+"'" + "where id=" + "'" +id+ "'"
     cursor.execute(cancel)
     conn.commit()
 
-    table = "SELECT test_event.id,event_name, start_plan ,plan_time, finish_time, department,name from test_event JOIN person ON test_event.dpi=person.id"
+    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
 
     cursor.execute(table)
 
@@ -182,16 +190,16 @@ def cancel():
     return json.dumps(list)
 
 
-@app.route("/table/delete" ,methods=["POST"])
+@app.route("/event/table/delete" ,methods=["POST"])
 def delete():
     data = request.get_json()
     id = data["id"]
 
-    delete = "DELETE FROM test_event WHERE id=" + "'" +id+ "'"
+    delete = "DELETE FROM event WHERE id=" + "'" +id+ "'"
     cursor.execute(delete)
     conn.commit()
 
-    table = "SELECT test_event.id,event_name, start_plan ,plan_time, finish_time, department,name from test_event JOIN person ON test_event.dpi=person.id"
+    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
 
     cursor.execute(table)
 
@@ -236,7 +244,7 @@ def delete():
     return json.dumps(list)
 
 
-@app.route("/table/change" ,methods=["POST"])
+@app.route("/event/table/change" ,methods=["POST"])
 def change():
 
 
@@ -248,14 +256,14 @@ def change():
     dpi = data["dpi"]
 
 
-    change = "UPDATE test_event SET event_name ='%s',start_plan ='%s',plan_time ='%s',dpi ='%s'where id='%s'"%(event_name,start_plan,plan_time,dpi,id)
+    change = "UPDATE event SET event_name ='%s',start_plan ='%s',plan_time ='%s',dpi ='%s'where id='%s'"%(event_name,start_plan,plan_time,dpi,id)
     cursor.execute(change)
     conn.commit()
 
 
 
 
-    table = "SELECT test_event.id,event_name, start_plan ,plan_time, finish_time, department,name from test_event JOIN person ON test_event.dpi=person.id"
+    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
 
     cursor.execute(table)
 
@@ -300,9 +308,9 @@ def change():
     return json.dumps(list)
 
 
-@app.route('/table/late')
+@app.route('/event/table/late')
 def late():
-    table = "SELECT test_event.id,event_name, start_plan ,plan_time, finish_time, department,name from test_event JOIN person ON test_event.dpi=person.id"
+    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
 
     cursor.execute(table)
 
@@ -345,13 +353,14 @@ def late():
         if state > 0 and state < 999999:
             list.append(dict)
 
-
+    print(table)
+    print(list)
     return json.dumps(list)
 
 
-@app.route('/table/near')
+@app.route('/event/table/near')
 def near():
-    table = "SELECT test_event.id,event_name, start_plan ,plan_time, finish_time, department,name from test_event JOIN person ON test_event.dpi=person.id"
+    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
 
     cursor.execute(table)
 
@@ -397,9 +406,9 @@ def near():
 
     return json.dumps(list)
 
-@app.route('/table/complete')
+@app.route('/event/table/complete')
 def complete():
-    table = "SELECT test_event.id,event_name, start_plan ,plan_time, finish_time, department,name from test_event JOIN person ON test_event.dpi=person.id"
+    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
 
     cursor.execute(table)
 
@@ -444,9 +453,9 @@ def complete():
 
     return json.dumps(list)
 
-@app.route('/table/in_plan')
+@app.route('/event/table/in_plan')
 def in_plan():
-    table = "SELECT test_event.id,event_name, start_plan ,plan_time, finish_time, department,name from test_event JOIN person ON test_event.dpi=person.id"
+    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
 
     cursor.execute(table)
 
@@ -491,9 +500,9 @@ def in_plan():
 
     return json.dumps(list)
 
-@app.route('/table/count')
+@app.route('/event/table/count')
 def count():
-    table = "SELECT test_event.id,event_name, start_plan ,plan_time, finish_time, department,name from test_event JOIN person ON test_event.dpi=person.id"
+    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
 
     cursor.execute(table)
 
@@ -556,7 +565,7 @@ def count():
 
     return json.dumps(count_list)
 
-@app.route('/table/date')
+@app.route('/event/table/date')
 def date():
     current_time = datetime.datetime.now().strftime('%Y-%m-%d')
 
@@ -564,7 +573,7 @@ def date():
 
 @app.route('/table/email_late')
 def email_late():
-    table = "SELECT test_event.id,event_name, start_plan ,plan_time, finish_time, department,name,email from test_event JOIN person ON test_event.dpi=person.id"
+    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name,email from event JOIN person ON event.dpi=person.id"
 
     cursor.execute(table)
 
@@ -615,7 +624,7 @@ def email_late():
         a_list = []
 
         for info in list_late:
-            a = [info["event_name"],info["email"]]
+            a = [info["event_name"],info["email"],info["department"]]
             a_list.append(a)
 
 
@@ -626,7 +635,7 @@ def email_late():
 
 @app.route('/table/email_near')
 def email_near():
-    table = "SELECT test_event.id,event_name, start_plan ,plan_time, finish_time, department,name,email from test_event JOIN person ON test_event.dpi=person.id"
+    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name,email from event JOIN person ON event.dpi=person.id"
 
     cursor.execute(table)
 
@@ -677,7 +686,7 @@ def email_near():
         a_list = []
 
         for info in list_late:
-            a = [info["event_name"],info["email"]]
+            a = [info["event_name"],info["email"],info["department"]]
             a_list.append(a)
 
 
@@ -687,6 +696,6 @@ def email_near():
 
 
 
-
+application = app
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=5000, debug=True)
+    app.run(port=5000, debug=True)
