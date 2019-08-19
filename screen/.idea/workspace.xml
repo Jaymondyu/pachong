@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b6467536-7c9d-4ec6-82ce-4f62959766d6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shenzhen_event/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../shenzhen_event/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shenzhen_event/app.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shenzhen_event/sendemail.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shenzhen_event/sendemail.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shenzhen_event/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/../shenzhen_event/static/css/style.css" afterDir="false" />
-    </list>
+    <list default="true" id="b6467536-7c9d-4ec6-82ce-4f62959766d6" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,7 +14,7 @@
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="275">
-              <caret line="11" column="4" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="4" />
+              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
               <folding>
                 <element signature="e#14#61#0" expanded="true" />
               </folding>
@@ -58,7 +52,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="278" />
     <option name="width" value="1630" />
     <option name="height" value="1040" />
@@ -84,6 +78,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -111,15 +106,15 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1565753571739</updated>
-      <workItem from="1565753573246" duration="2620000" />
+      <workItem from="1565753573246" duration="2631000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2620000" />
+    <option name="totallyTimeSpent" value="2631000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
@@ -154,7 +149,7 @@
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="275">
-          <caret line="11" column="4" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="4" />
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
           <folding>
             <element signature="e#14#61#0" expanded="true" />
           </folding>

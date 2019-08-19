@@ -1,5 +1,5 @@
 #coding:utf-8
-from flask import Flask,request,render_template
+from flask import Flask,request
 import mysql.connector
 import json
 import time
