@@ -1,12 +1,27 @@
 var MYID;
+var REQUESTURL="/event/table" //保存此时筛选发送的ajax地址
+var DPISELECT="0" //保存此时筛选要发送的dpi值（哪个部门）;
+// 存储各分页总数
+var TOTAL ={"total":0}
+var COMPLETE ={"total":0}
+var IN_PLAN ={"total":0}
+var LATE ={"total":0}
+var NEAR ={"total":0}
+
+var CURRENTCLASS = TOTAL; //当前筛选dpi所对应的条件
 //页面初始化
 function pageInit(){
+    var sendJson = {
+        "dpi":DPISELECT,
+        "page":1
+    }
     $.ajax({
-        type: "get",
+        type: "post",
         url: "/event/table",
+        contentType:'application/json;charset=UTF-8',
+        data:JSON.stringify(sendJson),
         success:function (response) {
             var data = JSON.parse(response)
-            console.log(data)
             var getTpl = $('#tabletr').html();
             var view = $('.cnt-table tbody');
             layui.laytpl(getTpl).render(data, function (html) {
@@ -14,6 +29,27 @@ function pageInit(){
             });
 
 
+        }
+    });
+    //获取初始对应dpi下面各部门的总页数
+    var sendJson = {
+        "dpi":DPISELECT
+    };
+    $.ajax({
+        type: "post",
+        url: "/event/table/page",
+        contentType:'application/json;charset=UTF-8',
+        data:JSON.stringify(sendJson),
+        success:function (response) {
+            var data = JSON.parse(response);
+            TOTAL.total = data[0].total;
+            COMPLETE.total = data[0].complete;
+            IN_PLAN.total = data[0].in_plan;
+            LATE.total = data[0].late;
+            NEAR.total = data[0].near;
+            console.log(TOTAL);
+            console.log(CURRENTCLASS.total)
+            pageTotal(CURRENTCLASS.total)
         }
     });
 }
@@ -63,7 +99,6 @@ $('body').on('click', '.j-sumbit', function () {
         data:JSON.stringify(sendJson),
         success:function (response) {
             var data = JSON.parse(response)
-            console.log(data)
             var getTpl = $('#tabletr').html();
             var view = $('.cnt-table tbody');
             layui.laytpl(getTpl).render(data, function (html) {
@@ -239,7 +274,6 @@ $('body').on('click', '.j-modify', function () {
         data:JSON.stringify(sendJson),
         success:function (response) {
             var data = JSON.parse(response)
-            console.log(data)
             var getTpl = $('#tabletr').html();
             var view = $('.cnt-table tbody');
             layui.laytpl(getTpl).render(data, function (html) {
@@ -255,32 +289,43 @@ $('body').on('click', '.j-modify', function () {
 })
 
 //过滤排序
+
+
 $('.filter-btn').click(function(){
     $('.filter-btn').removeClass('clickclass');
     $(this).addClass('clickclass');
     var currentVal = $(this).attr('data-val');
-    var requestUrl=""
     switch(currentVal){
         case "0":
-        requestUrl = "/event/table";
+        REQUESTURL = "/event/table";
+        CURRENTCLASS = TOTAL
         break
         case "1":
-        requestUrl = "/event/table/late";
+        REQUESTURL = "/event/table/late";
+        CURRENTCLASS = LATE
         break
         case "2":
-        requestUrl = "/event/table/near";
+        REQUESTURL = "/event/table/near";
+        CURRENTCLASS = NEAR
         break
         case "3":
-        requestUrl = "/event/table/complete";
+        REQUESTURL = "/event/table/complete";
+        CURRENTCLASS = COMPLETE
         break
         case "4":
-        requestUrl = "/event/table/in_plan";
+        REQUESTURL = "/event/table/in_plan";
+        CURRENTCLASS = IN_PLAN
         break
     };
-
+    var sendJson = {
+        "dpi":DPISELECT,
+        "page":1
+    }
     $.ajax({
-        type: "get",
-        url: requestUrl,
+        type: "post",
+        url: REQUESTURL,
+        contentType:'application/json;charset=UTF-8',
+        data:JSON.stringify(sendJson),
         success:function (response) {
             var data = JSON.parse(response)
             var getTpl = $('#tabletr').html();
@@ -288,7 +333,7 @@ $('.filter-btn').click(function(){
             layui.laytpl(getTpl).render(data, function (html) {
                 view.html(html);
             });
-
+            pageTotal(CURRENTCLASS.total)
 
         }
     });
@@ -310,7 +355,7 @@ $.ajax({
 });
 
 //获取日期,且更新进度条
-var JINGFUCONFIG = ['07','08','09','10']
+var JINGFUCONFIG = ['07','08','09','10'] //手工配置对应的进度日期
 $.ajax({
     type: "get",
     url: "/event/table/date",
@@ -318,8 +363,6 @@ $.ajax({
         $('.cnt-sp').text(response);
         var cuMonth = response.slice(5,7);
         var jinduIndex =  JINGFUCONFIG.indexOf(cuMonth)
-        console.log(jinduIndex)
-        console.log(typeof jinduIndex)
         var curProClass = ""
         switch(jinduIndex){
             case 0:
@@ -344,11 +387,92 @@ $.ajax({
 });
 
 
+//下拉框筛选查询
+$('#sx-select').change(function(){
+    DPISELECT = $(this).val()
+    var sendJson = {
+        "dpi":DPISELECT
+    }
+    $.ajax({
+        type: "post",
+        url: REQUESTURL,
+        contentType:'application/json;charset=UTF-8',
+        data:JSON.stringify(sendJson),
+        success:function (response) {
+            var data = JSON.parse(response)
+            var getTpl = $('#tabletr').html();
+            var view = $('.cnt-table tbody');
+            layui.laytpl(getTpl).render(data, function (html) {
+                view.html(html);
+            });
 
 
+        }
+    });
+    //获取对应DPI的所有项的分页总数
+    $.ajax({
+        type: "post",
+        url: "/event/table/page",
+        contentType:'application/json;charset=UTF-8',
+        data:JSON.stringify(sendJson),
+        success:function (response) {
+            var data = JSON.parse(response);
+            TOTAL.total = data[0].total;
+            COMPLETE.total = data[0].complete;
+            IN_PLAN.total = data[0].in_plan;
+            LATE.total = data[0].late;
+            NEAR.total = data[0].near;
+            pageTotal(CURRENTCLASS.total)
+        }
+    });
+})
+
+//各分页
 
 
-
+//初始化分页函数
+function pageTotal(totalpage){
+    
+    layui.use('laypage', function(){
+        var laypage = layui.laypage;
+        //执行一个laypage实例
+        laypage.render({
+          theme:'#1E9FFF',
+          groups:5,
+          elem: 'paging' //注意，这里的 test1 是 ID，不用加 # 号
+          ,count: totalpage
+          ,jump: function(obj, first){
+          //obj包含了当前分页的所有参数，比如：
+          console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+          console.log(obj.limit); //得到每页显示的条数
+          //
+            var sendJson = {
+                "dpi":DPISELECT,
+                "page":obj.curr
+            }
+            $.ajax({
+                type: "post",
+                url: REQUESTURL,
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify(sendJson),
+                success:function (response) {
+                    var data = JSON.parse(response)
+                    var getTpl = $('#tabletr').html();
+                    var view = $('.cnt-table tbody');
+                    layui.laytpl(getTpl).render(data, function (html) {
+                        view.html(html);
+                    });
+                }
+            });  
+        
+          //首次不执行
+          if(!first){
+            //do something
+          }
+        }
+        });
+      });
+}
 
 
 

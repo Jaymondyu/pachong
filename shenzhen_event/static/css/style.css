@@ -166,7 +166,7 @@ body{
 }
 
 .filter-wrap{
-    width: 300px;
+    width: 360px;
     height: 24px;
     position:absolute;
     left:110px;
@@ -196,7 +196,7 @@ body{
 
 .alltotal{
     color:#fff;
-    font-size: 12px;
+    font-size: 16px;
 }
 
 .alltotal span{
@@ -296,11 +296,20 @@ body{
     top:-34px;
 }
 
+#paging{
+    margin:20px 0 0 20px;
+}
 
-
-
-
-
+#sx-select{
+    display: inline-block;
+    width:80px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    border:1px solid #d8d8d8;
+    vertical-align: 17px;
+    margin-left: 10px;
+}
 
 
 

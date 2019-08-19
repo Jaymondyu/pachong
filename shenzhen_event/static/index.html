@@ -4,9 +4,9 @@
 <head>
   <meta charset="utf-8">
   <title>林同棪（重庆）国际工程技术有限公司</title>
-  <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
-  <link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css">
-  <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/event/static/css/reset.css">
+  <link rel="stylesheet" type="text/css" href="/event/static/layui/css/layui.css">
+  <link rel="stylesheet" type="text/css" href="/event/static/css/style.css">
 </head>
 
 <body>
@@ -31,47 +31,63 @@
     <div class="cont-title">
       <span class="cnt-sp"></span>
       <div class="filter-wrap">
-        <span data-val="0"  class="filter-btn l-left">全部</span>
-        <span data-val="1" class="filter-btn l-left">滞后</span>
+          <select id="sx-select">
+              <option value="0">全部</option>
+              <option value="1">总包土建</option>
+              <option value="2">总包机电</option>
+              <option value="3">幕墙</option>
+              <option value="4">公区设计</option>
+              <option value="5">影院设计</option>
+              <option value="6">弘文设计</option>
+              <option value="7">培训设计</option>
+              <option value="8">精装施工</option>
+              <option value="9">立体车库</option>
+              <option value="10">电梯</option>
+              <option value="11">景观</option>
+              <option value="12">设计院</option>
+              <option value="13">BIM</option>
+          </select>
+        <span data-val="0"  class="filter-btn l-left clickclass">全部</span>
+        <span data-val="1" class="filter-btn l-left">滞留</span>
         <span data-val="2" class="filter-btn l-left">临近</span>
         <span data-val="3" class="filter-btn l-left">已完成</span>
         <span data-val="4" class="filter-btn l-left">计划内</span>
       </div>
-      
+
       <!-- <div class="del-btn l-right">删除事件</div> -->
       <div class="add-btn l-right">新增事件</div>
       <div class="alltotal l-right">
         <strong>统计：</strong>
-        完成 <span class="j-t-wc"></span> 
-        计划内 <span class="j-t-jhl"></span> 
-        滞后 <span class="j-t-zh"></span> 
+        完成 <span class="j-t-wc"></span>
+        计划内 <span class="j-t-jhl"></span>
+        滞后 <span class="j-t-zh"></span>
         临近 <span class="j-t-lj"></span>
       </div>
     </div>
-    <table class="cnt-table">
-      <thead>
-          <tr class="table-title">
-              <td>任务事件</td>
-              <td>计划开始时间</td>
-              <td>预期完成时间</td>
-              <td>实际完成时间</td>
-              <td>状态</td>
-              <td>责任方</td>
-              <td>责任人</td>
-              <td>操作</td>
-            </tr>
-      </thead>
-      <tbody>
-        
-      </tbody>
-    </table>
+      <table class="cnt-table">
+        <thead>
+            <tr class="table-title">
+                <td>任务事件</td>
+                <td>计划开始时间</td>
+                <td>预期完成时间</td>
+                <td>实际完成时间</td>
+                <td>状态</td>
+                <td>责任方</td>
+                <td>责任人</td>
+                <td>操作</td>
+              </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    <div id="paging"></div>
   </div>
 
 </body>
-<script src="/static/js/jquery.min.js"></script>
-<script src="/static/layui/layui.all.js"></script>
-<script src="/static/js/page.js"></script>
-
+<script src="/event/static/js/jquery.min.js"></script>
+<script src="/event/static/layui/layui.all.js"></script>
+<script src="/event/static/js/page.js"></script>
 <script id="addalert" type="text/html">
   <div class="add-alert-wrap">
       <div class="add-alert">
@@ -106,7 +122,7 @@
                       <option value="10">电梯</option>
                       <option value="11">景观</option>
                       <option value="12">设计院</option>
-                      <option value="12">BIM</option>
+                      <option value="13">BIM</option>
                     </select>
                   </div>
               </div>
@@ -121,8 +137,8 @@
             <div class="submit-btn j-sumbit">确定</div>
             <div class="cancel-btn">取消</div>
           </div>
-      </div> 
-    </div>  
+      </div>
+    </div>
 </script>
 
 
@@ -174,8 +190,8 @@
             <div class="submit-btn j-modify">确定</div>
             <div class="cancel-btn">取消</div>
           </div>
-      </div> 
-    </div>  
+      </div>
+    </div>
 </script>
 
 
@@ -198,7 +214,7 @@
       <span class="tbale-s-btn j-modify2">修改</span>
       {{# } }}
       <span class="tbale-s-btn j-del">删除</span>
-    
+
     </td>
   </tr>
   {{# } }}

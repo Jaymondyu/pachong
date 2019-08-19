@@ -21,52 +21,8 @@ def index():
 def show():
     return app.send_static_file('show.html')
 
-@app.route('/event/table')
-def table():
-    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
-
-    cursor.execute(table)
-
-    result = cursor.fetchall()
-
-    list = []
-
-    for i in result:
-
-        id = i[0]
-        event_name = i[1]
-        start_plan = i[2].strftime('%Y-%m-%d')
-        plan_time = i[3].strftime('%Y-%m-%d')
-        finish_time = i[4]
-
-        localtime = time.strftime("%Y-%m-%d", time.localtime())
-
-        plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
-        localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
-
-        time_dis = localtime_trans - plan_time_trans
-
-        state = int(time_dis) / 86400
-
-        if finish_time == None:
-            finish_time = i[4]
-
-        else:
-            finish_time = i[4].strftime('%Y-%m-%d')
-            state = 999999
-
-        department = i[5]
-        contector = i[6]
-        if contector == "":
-            contector = "无"
-
-        dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,'department': department,"contector":contector}
-
-        list.append(dict)
-
-    return json.dumps(list)
-
-@app.route("/event/table/insert" ,methods=["POST"])
+# 修改
+@app.route("/table/insert" ,methods=["POST"])
 def insert():
     data = request.get_json()
 
@@ -135,7 +91,7 @@ def insert():
 
     return json.dumps(list)
 
-@app.route("/event/table/cancel" ,methods=["POST"])
+@app.route("/table/cancel" ,methods=["POST"])
 def cancel():
     data = request.get_json()
     id = data["id"]
@@ -190,7 +146,7 @@ def cancel():
     return json.dumps(list)
 
 
-@app.route("/event/table/delete" ,methods=["POST"])
+@app.route("/table/delete" ,methods=["POST"])
 def delete():
     data = request.get_json()
     id = data["id"]
@@ -244,7 +200,7 @@ def delete():
     return json.dumps(list)
 
 
-@app.route("/event/table/change" ,methods=["POST"])
+@app.route("/table/change" ,methods=["POST"])
 def change():
 
 
@@ -307,200 +263,485 @@ def change():
 
     return json.dumps(list)
 
+#筛选
+@app.route('/table',methods=["POST"])
+def table():
+    data = request.get_json()
+    dpi = data["dpi"]
+    page = data["page"]
 
-@app.route('/event/table/late')
+    if dpi== "0":
+
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id LIMIT "+ str((page-1)*10)+',10'
+
+        cursor.execute(table)
+
+        result = cursor.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,'department': department,"contector":contector}
+
+            list.append(dict)
+
+    else:
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where event.dpi=" + dpi + " LIMIT "+ str((page-1)*10)+',10'
+
+        cursor.execute(table)
+
+        result = cursor.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,'department': department,"contector":contector}
+
+            list.append(dict)
+
+    return json.dumps(list)
+
+@app.route('/table/late',methods=["POST"])
 def late():
-    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
+    data = request.get_json()
+    dpi = data["dpi"]
+    page = data["page"]
 
-    cursor.execute(table)
+    if dpi== "0":
 
-    result = cursor.fetchall()
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where datediff(CURRENT_DATE , plan_time) >0 LIMIT " + str((page - 1) * 10) + ',10'
+        cursor.execute(table)
 
-    list = []
+        result = cursor.fetchall()
 
-    for i in result:
+        list = []
 
-        id = i[0]
-        event_name = i[1]
-        start_plan = i[2].strftime('%Y-%m-%d')
-        plan_time = i[3].strftime('%Y-%m-%d')
-        finish_time = i[4]
+        for i in result:
 
-        localtime = time.strftime("%Y-%m-%d", time.localtime())
-
-        plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
-        localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
-
-        time_dis = localtime_trans - plan_time_trans
-
-        state = int(time_dis) / 86400
-
-        if finish_time == None:
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
             finish_time = i[4]
 
-        else:
-            finish_time = i[4].strftime('%Y-%m-%d')
-            state = 999999
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
 
-        department = i[5]
-        contector = i[6]
-        if contector == "":
-            contector = "无"
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
 
-        dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
-                'department': department,"contector":contector}
+            time_dis = localtime_trans - plan_time_trans
 
-        if state > 0 and state < 999999:
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
+                    'department': department,"contector":contector}
+
             list.append(dict)
 
-    print(table)
-    print(list)
+
+    else:
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where event.dpi=" + dpi + " and datediff(CURRENT_DATE , plan_time) >0 LIMIT " + str((page - 1) * 10) + ',10'
+        cursor.execute(table)
+
+        result = cursor.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan': start_plan, 'plan_time': plan_time,
+                    'finish_time': finish_time, 'state': state, 'department': department, "contector": contector}
+
+            list.append(dict)
+
     return json.dumps(list)
 
-
-@app.route('/event/table/near')
+@app.route('/table/near',methods=["POST"])
 def near():
-    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
+    data = request.get_json()
+    dpi = data["dpi"]
+    page = data["page"]
 
-    cursor.execute(table)
+    if dpi== "0":
 
-    result = cursor.fetchall()
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where datediff(CURRENT_DATE , plan_time) between -3 and 0 LIMIT " + str((page - 1) * 10) + ',10'
+        cursor.execute(table)
 
-    list = []
+        result = cursor.fetchall()
 
-    for i in result:
+        list = []
 
-        id = i[0]
-        event_name = i[1]
-        start_plan = i[2].strftime('%Y-%m-%d')
-        plan_time = i[3].strftime('%Y-%m-%d')
-        finish_time = i[4]
+        for i in result:
 
-        localtime = time.strftime("%Y-%m-%d", time.localtime())
-
-        plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
-        localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
-
-        time_dis = localtime_trans - plan_time_trans
-
-        state = int(time_dis) / 86400
-
-        if finish_time == None:
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
             finish_time = i[4]
 
-        else:
-            finish_time = i[4].strftime('%Y-%m-%d')
-            state = 999999
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
 
-        department = i[5]
-        contector = i[6]
-        if contector == "":
-            contector = "无"
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
 
-        dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
-                'department': department,"contector":contector}
+            time_dis = localtime_trans - plan_time_trans
 
-        if state < 1 and state > -4:
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
+                    'department': department,"contector":contector}
+
+            list.append(dict)
+
+
+    else:
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where event.dpi=" + dpi + " and datediff(CURRENT_DATE , plan_time) between -3 and 0 LIMIT " + str((page - 1) * 10) + ',10'
+        cursor.execute(table)
+
+        result = cursor.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,'department': department,"contector":contector}
+
             list.append(dict)
 
 
     return json.dumps(list)
 
-@app.route('/event/table/complete')
+@app.route('/table/complete',methods=["POST"])
 def complete():
-    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
 
-    cursor.execute(table)
+    data = request.get_json()
+    dpi = data["dpi"]
+    page = data["page"]
 
-    result = cursor.fetchall()
 
-    list = []
 
-    for i in result:
+    if dpi=="0":
 
-        id = i[0]
-        event_name = i[1]
-        start_plan = i[2].strftime('%Y-%m-%d')
-        plan_time = i[3].strftime('%Y-%m-%d')
-        finish_time = i[4]
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where finish_time is not null LIMIT " + str(up) + ',10'
+        cursor.execute(table)
 
-        localtime = time.strftime("%Y-%m-%d", time.localtime())
+        result = cursor.fetchall()
 
-        plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
-        localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+        list = []
 
-        time_dis = localtime_trans - plan_time_trans
+        for i in result:
 
-        state = int(time_dis) / 86400
-
-        if finish_time == None:
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
             finish_time = i[4]
 
-        else:
-            finish_time = i[4].strftime('%Y-%m-%d')
-            state = 999999
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
 
-        department = i[5]
-        contector = i[6]
-        if contector == "":
-            contector = "无"
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
 
-        dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
-                'department': department,"contector":contector}
+            time_dis = localtime_trans - plan_time_trans
 
-        if state == 999999:
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
+                    'department': department,"contector":contector}
+
+            list.append(dict)
+
+    else:
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where event.dpi=" + dpi + " and finish_time is not null LIMIT " + str((page - 1) * 10) + ',10'
+        cursor.execute(table)
+
+        result = cursor.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
+                    'department': department,"contector":contector}
+
             list.append(dict)
 
     return json.dumps(list)
 
-@app.route('/event/table/in_plan')
+@app.route('/table/in_plan',methods=["POST"])
 def in_plan():
-    table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
 
-    cursor.execute(table)
+    data = request.get_json()
+    dpi = data["dpi"]
+    page = data["page"]
 
-    result = cursor.fetchall()
+    if dpi=="0":
 
-    list = []
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where datediff(CURRENT_DATE , plan_time)<-3 LIMIT " + str((page - 1) * 10) + ',10'
+        cursor.execute(table)
 
-    for i in result:
+        result = cursor.fetchall()
 
-        id = i[0]
-        event_name = i[1]
-        start_plan = i[2].strftime('%Y-%m-%d')
-        plan_time = i[3].strftime('%Y-%m-%d')
-        finish_time = i[4]
+        list = []
 
-        localtime = time.strftime("%Y-%m-%d", time.localtime())
+        for i in result:
 
-        plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
-        localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
-
-        time_dis = localtime_trans - plan_time_trans
-
-        state = int(time_dis) / 86400
-
-        if finish_time == None:
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
             finish_time = i[4]
 
-        else:
-            finish_time = i[4].strftime('%Y-%m-%d')
-            state = 999999
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
 
-        department = i[5]
-        contector = i[6]
-        if contector == "":
-            contector = "无"
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
 
-        dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
-                'department': department,"contector":contector}
+            time_dis = localtime_trans - plan_time_trans
 
-        if state <-3:
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
+                    'department': department,"contector":contector}
+
             list.append(dict)
+
+    else:
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where event.dpi=" + dpi + " and datediff(CURRENT_DATE , plan_time)<-3 LIMIT " + str((page - 1) * 10) + ',10'
+        cursor.execute(table)
+
+        result = cursor.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan': start_plan, 'plan_time': plan_time,
+                    'finish_time': finish_time, 'state': state, 'department': department, "contector": contector}
+
+            list.append(dict)
+
 
     return json.dumps(list)
 
-@app.route('/event/table/count')
+@app.route('/table/count')
 def count():
     table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
 
@@ -565,7 +806,7 @@ def count():
 
     return json.dumps(count_list)
 
-@app.route('/event/table/date')
+@app.route('/table/date')
 def date():
     current_time = datetime.datetime.now().strftime('%Y-%m-%d')
 
@@ -695,7 +936,143 @@ def email_near():
     return json.dumps(a_list)
 
 
+@app.route('/table/page',methods=['POST'])
+def page():
+    data = request.get_json()
+    dpi = data["dpi"]
+
+    if dpi == "0":
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
+
+        cursor.execute(table)
+
+        result = cursor.fetchall()
+
+        list_late = []
+        list_complete = []
+        list_near = []
+        list_in_plan = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
+                    'department': department,"contector":contector}
+
+            if state == 999999:
+                list_complete.append(dict)
+
+            if state>0 and state <999999:
+                list_late.append(dict)
+
+            if state<1 and state>-4:
+                list_near.append(dict)
+
+            if state<-3:
+                list_in_plan.append((dict))
+
+            count_dict = {"total":len(list_late)+len(list_near)+len(list_in_plan)+len(list_complete),"late":len(list_late),"near":len(list_near),"in_plan":len(list_in_plan),"complete":len(list_complete)}
+
+            count_list =[]
+
+            count_list.append(count_dict)
+
+    else:
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where event.dpi=" + dpi
+
+        cursor.execute(table)
+
+        result = cursor.fetchall()
+
+        list_late = []
+        list_complete = []
+        list_near = []
+        list_in_plan = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan': start_plan, 'plan_time': plan_time,
+                    'finish_time': finish_time, 'state': state,
+                    'department': department, "contector": contector}
+
+            if state == 999999:
+                list_complete.append(dict)
+
+            if state > 0 and state < 999999:
+                list_late.append(dict)
+
+            if state < 1 and state > -4:
+                list_near.append(dict)
+
+            if state < -3:
+                list_in_plan.append((dict))
+
+            count_dict = {"total":len(list_late)+len(list_near)+len(list_in_plan)+len(list_complete),"late":len(list_late),"near":len(list_near),"in_plan":len(list_in_plan),"complete":len(list_complete)}
+
+            count_list = []
+
+            count_list.append(count_dict)
+
+
+    return json.dumps(count_list)
+
+
+
 
 application = app
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host="0.0.0.0",port=5000, debug=True)

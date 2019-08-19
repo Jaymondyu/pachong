@@ -31,43 +31,82 @@
     <div class="cont-title">
       <span class="cnt-sp"></span>
       <div class="filter-wrap">
-        <span data-val="0"  class="filter-btn l-left">全部</span>
-        <span data-val="1" class="filter-btn l-left">滞后</span>
+          <select id="sx-select">
+              <option value="0">全部</option>
+              <option value="1">总包土建</option>
+              <option value="2">总包机电</option>
+              <option value="3">幕墙</option>
+              <option value="4">公区设计</option>
+              <option value="5">影院设计</option>
+              <option value="6">弘文设计</option>
+              <option value="7">培训设计</option>
+              <option value="8">精装施工</option>
+              <option value="9">立体车库</option>
+              <option value="10">电梯</option>
+              <option value="11">景观</option>
+              <option value="12">设计院</option>
+              <option value="13">BIM</option>
+          </select>
+        <span data-val="0"  class="filter-btn l-left clickclass">全部</span>
+        <span data-val="1" class="filter-btn l-left">滞留</span>
         <span data-val="2" class="filter-btn l-left">临近</span>
         <span data-val="3" class="filter-btn l-left">已完成</span>
         <span data-val="4" class="filter-btn l-left">计划内</span>
       </div>
-      
       <div class="alltotal l-right">
         <strong>统计：</strong>
-        完成 <span class="j-t-wc"></span> 
-        计划内 <span class="j-t-jhl"></span> 
-        滞后 <span class="j-t-zh"></span> 
+        完成 <span class="j-t-wc"></span>
+        计划内 <span class="j-t-jhl"></span>
+        滞后 <span class="j-t-zh"></span>
         临近 <span class="j-t-lj"></span>
       </div>
     </div>
-    <table class="cnt-table">
-      <thead>
-          <tr class="table-title">
-              <td>任务事件</td>
-              <td>计划开始时间</td>
-              <td>预期完成时间</td>
-              <td>实际完成时间</td>
-              <td>状态</td>
-              <td>责任方</td>
-              <td>责任人</td>
-            </tr>
-      </thead>
-      <tbody>
-        
-      </tbody>
-    </table>
+      <table class="cnt-table">
+        <thead>
+            <tr class="table-title">
+                <td>任务事件</td>
+                <td>计划开始时间</td>
+                <td>预期完成时间</td>
+                <td>实际完成时间</td>
+                <td>状态</td>
+                <td>责任方</td>
+                <td>责任人</td>
+              </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    <div id="paging"></div>
   </div>
 
 </body>
 <script src="/event/static/js/jquery.min.js"></script>
 <script src="/event/static/layui/layui.all.js"></script>
 <script src="/event/static/js/page.js"></script>
+<script>
+/* layui.use('laypage', function(){
+  var laypage = layui.laypage;
+
+  //执行一个laypage实例
+  laypage.render({
+    theme:'#1E9FFF',
+    groups:5,
+    elem: 'paging' //注意，这里的 test1 是 ID，不用加 # 号
+    ,count: 70 //数据总数，从服务端得到
+    ,jump: function(obj, first){
+    //obj包含了当前分页的所有参数，比如：
+    console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+    console.log(obj.limit); //得到每页显示的条数
+
+    //首次不执行
+    if(!first){
+      //do something
+    }
+  }
+  });
+}); */
+</script>
 
 <script id="tabletr" type="text/html">
   {{# for(var i=0;i<d.length;i++){ }}
