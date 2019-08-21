@@ -11,6 +11,7 @@ def get_address_late():
 
    data = requests.get("http://183.66.213.82:8888/event/table/email_late")
    data = data.text
+
    data = json.loads(data)
    b_dict = {}
    email_dict={}

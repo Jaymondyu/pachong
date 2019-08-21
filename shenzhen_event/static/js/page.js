@@ -1,5 +1,5 @@
 var MYID;
-var REQUESTURL="/event/table" //保存此时筛选发送的ajax地址
+var REQUESTURL="/table" //保存此时筛选发送的ajax地址
 var DPISELECT="0" //保存此时筛选要发送的dpi值（哪个部门）;
 // 存储各分页总数
 var TOTAL ={"total":0}
@@ -17,7 +17,7 @@ function pageInit(){
     }
     $.ajax({
         type: "post",
-        url: "/event/table",
+        url: "/table",
         contentType:'application/json;charset=UTF-8',
         data:JSON.stringify(sendJson),
         success:function (response) {
@@ -37,7 +37,7 @@ function pageInit(){
     };
     $.ajax({
         type: "post",
-        url: "/event/table/page",
+        url: "/table/page",
         contentType:'application/json;charset=UTF-8',
         data:JSON.stringify(sendJson),
         success:function (response) {
@@ -74,7 +74,7 @@ $('.add-btn').click(function () {
 
 //取消新增
 $('body').on('click', '.cancel-btn', function () {
-    $('.add-alert-wrap').remove();                                                                                                                                
+    $('.add-alert-wrap').remove();
 })
 
 //确定新增
@@ -94,7 +94,7 @@ $('body').on('click', '.j-sumbit', function () {
 
     $.ajax({
         type: "post",
-        url: "/event/table/insert",
+        url: "/table/insert",
         contentType:'application/json;charset=UTF-8',
         data:JSON.stringify(sendJson),
         success:function (response) {
@@ -158,7 +158,7 @@ $('body').on('click', '.j-xiaox', function () {
         yes:function(index){
             $.ajax({
                 type: "post",
-                url: "/event/table/cancel",
+                url: "/table/cancel",
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify(sendJson),
                 success:function (response) {
@@ -169,7 +169,7 @@ $('body').on('click', '.j-xiaox', function () {
                         view.html(html);
                     });
                     $('.add-alert-wrap').remove()
-        
+
                 },
                 error:function(){
                     $('.add-alert-wrap').remove()
@@ -177,15 +177,15 @@ $('body').on('click', '.j-xiaox', function () {
             });
             layui.layer.close(index)
         }
-      }); 
+      });
 
-    
+
 });
 
 //修改
 $('body').on('click', '.j-modify2', function () {
     var thisTd = $(this).parents('tr').find("td");
-    MYID = $(this).parents('tr').attr('data-id'); 
+    MYID = $(this).parents('tr').attr('data-id');
     var event_name = thisTd.eq(0).text();
     var start_plan = thisTd.eq(1).text();
     var plan_time = thisTd.eq(2).text();
@@ -228,7 +228,7 @@ $('body').on('click', '.j-del', function () {
         yes:function(index){
             $.ajax({
                 type: "post",
-                url: "/event/table/delete",
+                url: "/table/delete",
                 contentType:'application/json;charset=UTF-8',
                 data:JSON.stringify(sendJson),
                 success:function (response) {
@@ -239,7 +239,7 @@ $('body').on('click', '.j-del', function () {
                         view.html(html);
                     });
                     $('.add-alert-wrap').remove()
-        
+
                 },
                 error:function(){
                     $('.add-alert-wrap').remove()
@@ -247,8 +247,8 @@ $('body').on('click', '.j-del', function () {
             });
             layui.layer.close(index)
         }
-      }); 
-    
+      });
+
 });
 
 //确定修改
@@ -269,7 +269,7 @@ $('body').on('click', '.j-modify', function () {
 
     $.ajax({
         type: "post",
-        url: "/event/table/change",
+        url: "/table/change",
         contentType:'application/json;charset=UTF-8',
         data:JSON.stringify(sendJson),
         success:function (response) {
@@ -297,23 +297,23 @@ $('.filter-btn').click(function(){
     var currentVal = $(this).attr('data-val');
     switch(currentVal){
         case "0":
-        REQUESTURL = "/event/table";
+        REQUESTURL = "/table";
         CURRENTCLASS = TOTAL
         break
         case "1":
-        REQUESTURL = "/event/table/late";
+        REQUESTURL = "/table/late";
         CURRENTCLASS = LATE
         break
         case "2":
-        REQUESTURL = "/event/table/near";
+        REQUESTURL = "/table/near";
         CURRENTCLASS = NEAR
         break
         case "3":
-        REQUESTURL = "/event/table/complete";
+        REQUESTURL = "/table/complete";
         CURRENTCLASS = COMPLETE
         break
         case "4":
-        REQUESTURL = "/event/table/in_plan";
+        REQUESTURL = "/table/in_plan";
         CURRENTCLASS = IN_PLAN
         break
     };
@@ -344,7 +344,7 @@ $('.filter-btn').click(function(){
 
 $.ajax({
     type: "get",
-    url: "/event/table/count",
+    url: "/table/count",
     success:function (response) {
         var data = JSON.parse(response)
         $('.j-t-wc').text(data[0].complete);
@@ -358,7 +358,7 @@ $.ajax({
 var JINGFUCONFIG = ['07','08','09','10'] //手工配置对应的进度日期
 $.ajax({
     type: "get",
-    url: "/event/table/date",
+    url: "/table/date",
     success:function (response) {
         $('.cnt-sp').text(response);
         var cuMonth = response.slice(5,7);
@@ -412,7 +412,7 @@ $('#sx-select').change(function(){
     //获取对应DPI的所有项的分页总数
     $.ajax({
         type: "post",
-        url: "/event/table/page",
+        url: "/table/page",
         contentType:'application/json;charset=UTF-8',
         data:JSON.stringify(sendJson),
         success:function (response) {
@@ -432,7 +432,7 @@ $('#sx-select').change(function(){
 
 //初始化分页函数
 function pageTotal(totalpage){
-    
+
     layui.use('laypage', function(){
         var laypage = layui.laypage;
         //执行一个laypage实例
@@ -463,8 +463,8 @@ function pageTotal(totalpage){
                         view.html(html);
                     });
                 }
-            });  
-        
+            });
+
           //首次不执行
           if(!first){
             //do something
@@ -473,15 +473,3 @@ function pageTotal(totalpage){
         });
       });
 }
-
-
-
-
-
-
-
-
-
-
-
-
