@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b6467536-7c9d-4ec6-82ce-4f62959766d6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shenzhen_event/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../shenzhen_event/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,16 +16,36 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="158" column="22" lean-forward="true" selection-start-line="158" selection-start-column="22" selection-end-line="158" selection-end-column="22" />
+            <state relative-caret-position="251">
+              <caret line="572" lean-forward="true" selection-start-line="572" selection-end-line="572" />
               <folding>
-                <element signature="e#14#61#0" expanded="true" />
-                <element signature="e#1035#2332#0" />
-                <element signature="e#1#555#0" />
-                <element signature="e#2601#3103#0" />
-                <element signature="e#3170#3632#0" />
-                <element signature="e#3745#4553#0" />
-                <element signature="e#0#372#2" />
+                <element signature="e#459#991#0" />
+                <element signature="e#1062#2561#0" />
+                <element signature="e#2639#3153#0" />
+                <element signature="e#3212#4002#0" />
+                <element signature="e#4483#4942#0" />
+                <element signature="e#5017#5837#0" />
+                <element signature="e#5900#6579#0" />
+                <element signature="e#6658#7300#0" />
+                <element signature="e#7378#8946#0" />
+                <element signature="e#9038#9409#0" />
+                <element signature="e#9489#9788#0" />
+                <element signature="e#9872#10337#0" />
+                <element signature="e#10426#10833#0" />
+                <element signature="e#10921#11234#0" />
+                <element signature="e#11326#11806#0" />
+                <element signature="e#11901#12337#0" />
+                <element signature="e#12431#12762#0" />
+                <element signature="e#12860#13355#0" />
+                <element signature="e#13438#13827#0" />
+                <element signature="e#13454#13554#0" />
+                <element signature="e#13909#14204#0" />
+                <element signature="e#14290#14755#0" />
+                <element signature="e#14841#15134#0" />
+                <element signature="e#15220#15685#0" />
+                <element signature="e#15771#16064#0" />
+                <element signature="e#16150#16615#0" />
+                <element signature="e#16669#17147#0" />
               </folding>
             </state>
           </provider>
@@ -39,6 +59,12 @@
         <option value="Python Script" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>wind</find>
+      <find>humidity</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -61,11 +87,11 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="25" />
-    <option name="y" value="9" />
-    <option name="width" value="1630" />
-    <option name="height" value="1040" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -73,7 +99,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -85,11 +110,13 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../yuelai_tushifang" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -146,23 +173,26 @@
       <option name="presentableId" value="Default" />
       <updated>1565753571739</updated>
       <workItem from="1565753573246" duration="2631000" />
-      <workItem from="1566528052110" duration="18352000" />
+      <workItem from="1566528052110" duration="30846000" />
+      <workItem from="1566954687864" duration="4066000" />
+      <workItem from="1566967844663" duration="15450000" />
+      <workItem from="1567127995641" duration="6082000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20983000" />
+    <option name="totallyTimeSpent" value="59075000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="25" y="9" width="1630" height="1040" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.30191082" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26119402" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3351709" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946696" weight="0.32936078" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -170,7 +200,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50053304" side_tool="true" weight="0.32936078" />
       <window_info anchor="bottom" id="Terminal" order="11" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -186,21 +216,41 @@
     <option name="version" value="1" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/screen$app.coverage" NAME="app Coverage Results" MODIFIED="1566551907843" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/screen$app.coverage" NAME="app Coverage Results" MODIFIED="1566982873533" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="158" column="22" lean-forward="true" selection-start-line="158" selection-start-column="22" selection-end-line="158" selection-end-column="22" />
+        <state relative-caret-position="251">
+          <caret line="572" lean-forward="true" selection-start-line="572" selection-end-line="572" />
           <folding>
-            <element signature="e#14#61#0" expanded="true" />
-            <element signature="e#1035#2332#0" />
-            <element signature="e#1#555#0" />
-            <element signature="e#2601#3103#0" />
-            <element signature="e#3170#3632#0" />
-            <element signature="e#3745#4553#0" />
-            <element signature="e#0#372#2" />
+            <element signature="e#459#991#0" />
+            <element signature="e#1062#2561#0" />
+            <element signature="e#2639#3153#0" />
+            <element signature="e#3212#4002#0" />
+            <element signature="e#4483#4942#0" />
+            <element signature="e#5017#5837#0" />
+            <element signature="e#5900#6579#0" />
+            <element signature="e#6658#7300#0" />
+            <element signature="e#7378#8946#0" />
+            <element signature="e#9038#9409#0" />
+            <element signature="e#9489#9788#0" />
+            <element signature="e#9872#10337#0" />
+            <element signature="e#10426#10833#0" />
+            <element signature="e#10921#11234#0" />
+            <element signature="e#11326#11806#0" />
+            <element signature="e#11901#12337#0" />
+            <element signature="e#12431#12762#0" />
+            <element signature="e#12860#13355#0" />
+            <element signature="e#13438#13827#0" />
+            <element signature="e#13454#13554#0" />
+            <element signature="e#13909#14204#0" />
+            <element signature="e#14290#14755#0" />
+            <element signature="e#14841#15134#0" />
+            <element signature="e#15220#15685#0" />
+            <element signature="e#15771#16064#0" />
+            <element signature="e#16150#16615#0" />
+            <element signature="e#16669#17147#0" />
           </folding>
         </state>
       </provider>
