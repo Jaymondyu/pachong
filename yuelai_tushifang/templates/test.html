@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<from action="" enctype="multipart/form-data" method="post">
+    <a>
+        <span>修改头像</span>
+        <input type="file" id="fileUp" accept="image/png,image/jpeg">
+    </a>
+</from>
+
+<script>
+
+    var fileM=document.querySelector("#fileUp");
+$("#fileUp").on("change",function() {
+    //获取文件对象，files是文件选取控件的属性，存储的是文件选取控件选取的文件对象，类型是一个数组
+    var fileObj = fileM.files[0];
+    //创建formdata对象，formData用来存储表单的数据，表单数据时以键值对形式存储的。
+    var formData = new FormData();
+    formData.append('file', fileObj);
+    $.ajax({
+        url: "http://172.168.10.22:8888/",
+        type: "post",
+        dataType: "json",
+        data: formData,
+        async: false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (json_data) {
+            alert("恭喜你！上传成功");
+        },
+    });
+});
+
+</script>
+
+</body>
+</html>
