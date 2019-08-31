@@ -12,6 +12,9 @@ cursor = conn.cursor()
 app = Flask(__name__)
 
 # 江津大屏
+@app.route("/jiangjin")
+def jiangjin():
+    return render_template("index.html")
 
 # 江津驾驶舱接口
 # 天气
