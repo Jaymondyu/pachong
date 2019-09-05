@@ -18,6 +18,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 @app.route("/")
 def index():
     return render_template("index.html")
+@app.route("/show")
+def show():
+    return render_template("show.html")
 
 @app.route("/img",methods=["POST"])
 def test():
@@ -84,11 +87,17 @@ def insert():
     # 渣票(图片)
     file_path = data["file_path"]
 
+    # 区域
+    area = data["area"]
+    # 备注
+    ps = data["ps"]
 
-    insert = "insert into yuelai__tushifang (date,start_date,end_date,days,days_gone,days_remain,out_total,plan_out,plan_car,day_out_total,car_take,car_amount,zhachang,distance,digger_amount,day_car_out,day_out,manager,plan_day_out,deviation_out,out_remain,plan_out_remain,deviation_remain,car_amount_total,car_amount_plan,deviation_car_amount,rate,plan_rate,deviation_rate,advice_out,advice_car,file_path) values (%s,%s,%s,%d,%d,%d,%d,%f,%d,%f,%f,%d,%s,%f,%d,%d,%f,%s,%f,%f,%f,%f,%f,%d,%d,%d,%f,%f,%f,%f,%d,%s)"%("'"+date+"'","'"+start_date+"'","'"+end_date+"'",days,days_gone,days_remain,out_total,plan_out,plan_car,day_out_total,car_take,car_amount,"'"+zhachang+"'",distance,digger_amount,day_car_out,day_out,"'"+manager+"'",plan_day_out,deviation_out,out_remain,plan_out_remain,deviation_remain,car_amount_total,car_amount_plan,deviation_car_amount,rate,plan_rate,deviation_rate,advice_out,advice_car,"'"+file_path+"'")
+
+    insert = "insert into yuelai__tushifang (date,start_date,end_date,days,days_gone,days_remain,out_total,plan_out,plan_car,day_out_total,car_take,car_amount,zhachang,distance,digger_amount,day_car_out,day_out,manager,plan_day_out,deviation_out,out_remain,plan_out_remain,deviation_remain,car_amount_total,car_amount_plan,deviation_car_amount,rate,plan_rate,deviation_rate,advice_out,advice_car,file_path,area,ps) values (%s,%s,%s,%d,%d,%d,%d,%f,%d,%f,%f,%d,%s,%f,%d,%d,%f,%s,%f,%f,%f,%f,%f,%d,%d,%d,%f,%f,%f,%f,%d,%s,%s,%s)"%("'"+date+"'","'"+start_date+"'","'"+end_date+"'",days,days_gone,days_remain,out_total,plan_out,plan_car,day_out_total,car_take,car_amount,"'"+zhachang+"'",distance,digger_amount,day_car_out,day_out,"'"+manager+"'",plan_day_out,deviation_out,out_remain,plan_out_remain,deviation_remain,car_amount_total,car_amount_plan,deviation_car_amount,rate,plan_rate,deviation_rate,advice_out,advice_car,"'"+file_path+"'","'"+area+"'","'"+ps+"'")
 
     cursor.execute(insert)
     conn.commit()
+
 
 
     return "data inserted"
@@ -100,7 +109,7 @@ def select():
     page = data["page"]
 
     # 数据库操作
-    search = "select * from yuelai__tushifang limit "+str((page-1)*10)+",10"
+    search = "select * from yuelai__tushifang order by date desc limit "+str((page-1)*10)+",10"
     cursor.execute(search)
     info = cursor.fetchall()
 
@@ -145,7 +154,66 @@ def select():
         # 调整建议
         "advice_out" :i[30],
         "advice_car" :i[31],
-        "file_path":i[32]
+        "file_path":i[32],
+        "area":i[33],
+        "ps":i[34]
+        }
+
+        list.append(dict)
+
+    return json.dumps(list)
+
+#最近一个查询
+@app.route("/last")
+def last():
+    # 数据库操作
+    search = "select * from yuelai__tushifang order by date desc limit 1"
+    cursor.execute(search)
+    info = cursor.fetchall()
+
+    # 数据整理
+    list = []
+    for i in info:
+
+        dict={
+        "date" : i[1].strftime('%Y-%m-%d'),
+        "start_date" : i[2].strftime('%Y-%m-%d'),
+        "end_date" : i[3].strftime('%Y-%m-%d'),
+        "days" : i[4],
+        "days_gone" : i[5],
+        "days_remain" : i[6],
+        "out_total" : i[7],
+        "plan_out" : i[8],
+        "plan_car" : i[9],
+        "day_out_total" : i[10],
+        # 每日详情
+        "car_take" : i[11],
+        "car_amount" : i[12],
+        "zhachang" : i[13],
+        "distance" : i[14],
+        "digger_amount" : i[15],
+        "day_car_out" : i[16],
+        "day_out" : i[17],
+        # 渣票
+        "manager" : i[18],
+        # 进度情况
+        "plan_day_out" : i[19],
+        "deviation_out" : i[20],
+        "out_remain" : i[21],
+        "plan_out_remain" : i[22],
+        "deviation_remain" : i[23],
+        "car_amount_total" : i[24],
+        "car_amount_plan" : i[25],
+        "deviation_car_amount" : i[26],
+        "rate": i[27],
+        "plan_rate": i[28],
+        "deviation_rate":i[29],
+        # 调整建议
+        "advice_out" :i[30],
+        "advice_car" :i[31],
+        "file_path":i[32],
+        "area":i[33],
+        "ps":i[34]
         }
 
         list.append(dict)

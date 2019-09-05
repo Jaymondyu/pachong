@@ -11,10 +11,13 @@ cursor = conn.cursor()
 
 app = Flask(__name__)
 
-# 江津大屏
+# 江津滨江新城大屏
 @app.route("/jiangjin")
 def jiangjin():
-    return render_template("index.html")
+    return render_template("jiangjin_index.html")
+@app.route("/jiangjin/insert")
+def jiangjin_insert():
+    return render_template("jiangjin_insert.html")
 
 # 江津驾驶舱接口
 # 天气
@@ -136,6 +139,29 @@ def jindu():
          "name":"室外工程"}
     ]
     return json.dumps(list)
+# 进度上传
+@app.route("/jiangjin/index/jindu_insert",methods=["POST"])
+def jindu_insert():
+    data = request.get_json()
+    tujian = data["tujian"]
+    xuanwazhuang = data["xuanwazhuang"]
+    wakongzhuang = data["wakongzhuang"]
+    jidian = data["jidian"]
+    muqiang = data["muqiang"]
+    jingzhuang = data["jingzhuang"]
+    shiwaigongcheng = data["shiwaigongcheng"]
+
+    insert = """
+        insert into jiangjin_screen (tujian,xuanwazhuang,wakongzhuang,jidian,muqiang,jingzhuang,shiwaigongcheng)
+        values (%d,%d,%d,%d,%d,%d,%d)
+    """%(tujian,xuanwazhuang,wakongzhuang,jidian,muqiang,jingzhuang,shiwaigongcheng)
+
+    cursor.execute(insert)
+    conn.commit()
+
+
+    return "data inserted"
+
 # 项目概况
 @app.route("/jiangjin/index/intro")
 def intro():
@@ -148,17 +174,18 @@ def company():
         {
             "unit": "建设单位",
             "company": "重庆市江津区滨江新城开发建设集团有限公司"
-        }, {
+        },
+        {
+            "unit":"勘察单位",
+            "company":"重庆市设计院"
+        },{
             "unit": "设计单位",
             "company": "重庆市设计院"
         }, {
             "unit": "施工总包单位",
             "company": "重庆建工住宅建设有限公司"
         }, {
-            "unit": "监理单位",
-            "company": "林同棪（重庆）国际工程技术有限公司"
-        }, {
-            "unit": "BIM咨询单位",
+            "unit": "BIM咨询及监理单位",
             "company": "林同棪（重庆）国际工程技术有限公司"
         }
     ]
@@ -224,7 +251,7 @@ def zhuanyefenbao():
             SELECT name, department,if(entry=1,'进场','出场') as entry, DATE_FORMAT(attendancetime,'%Y-%m-%d %H:%i:%s') as attendancetime 
             from access 
             where DATE_FORMAT(attendancetime,'%Y-%m-%d') = date_format(CURRENT_DATE,'%Y-%m-%d') 
-            AND department in ('重庆正旋基础有限公司','重庆名庆防水工程有限公司')
+            AND department in ('重庆正旋基础有限公司','重庆名庆防水工程有限公司','重庆力杰消防工程有限公司')
 
     """
     cursor.execute(sql_zhuanyefenbao)
@@ -276,33 +303,60 @@ ORDER BY s
     cursor.execute(sql_renyuantongji)
     renyuantongji = cursor.fetchall()
 
+    dict_1 = {}
+    dict_2 = {}
+    dict_3 = {}
+    dict_4 = {}
+    dict_5 = {}
+    dict_6 = {}
+    for i in renyuantongji:
+        if i[2] == 1:
+            dict_1[i[1]] = i[0]
+            dict_3[i[1]] = 0
+            dict_2[i[1]] = 0
+            dict_4[i[1]] = 0
+            dict_5[i[1]] = 0
+            dict_6[i[1]] = 0
+        if i[2] == 3:
+            dict_3[i[1]] = i[0]
+        if i[2] == 2:
+            dict_2[i[1]] = i[0]
+        if i[2] == 4:
+            dict_4[i[1]] = i[0]
+        if i[2] == 5:
+            dict_5[i[1]] = i[0]
+        if i[2] == 6:
+            dict_6[i[1]] = i[0]
+
     list_x = []
+    for j in sorted(dict_1):
+        list_x.append(j)
+
     list_1 = []
     list_2 = []
     list_3 = []
     list_4 = []
     list_5 = []
     list_6 = []
-    for i in renyuantongji:
-        list_x.append(i[1])
-        if i[2] == 1:
-            list_1.append(i[0])
-        elif i[2] == 2:
-            list_2.append(i[0])
-        elif i[2] == 3:
-            list_3.append(i[0])
-        elif i[2] == 4:
-            list_4.append(i[0])
-        elif i[2] == 5:
-            list_5.append(i[0])
-        elif i[2] == 6:
-            list_6.append(i[0])
+    for k_1 in sorted(dict_1):
+        list_1.append(dict_1[k_1])
+    for k_2 in sorted(dict_2):
+        list_2.append(dict_2[k_2])
+    for k_3 in sorted(dict_3):
+        list_3.append(dict_3[k_3])
+    for k_4 in sorted(dict_4):
+        list_4.append(dict_4[k_4])
+    for k_5 in sorted(dict_5):
+        list_5.append(dict_5[k_5])
+    for k_6 in sorted(dict_6):
+        list_6.append(dict_6[k_6])
 
     dict = {
-        "x":list_x[0:7],
+        "x":list_x,
         "y":[{"name":"重庆建工住宅建设有限公司","data":list_1},{"name":"重庆正旋基础有限公司","data":list_2},{"name":"重庆联文建筑劳务有限公司","data":list_3},{"name":"林同棪【重庆】国际工程技术有限公司","data":list_4},{"name":"重庆名庆防水工程有限公司","data":list_5},{"name":"重庆力杰消防工程有限公司","data":list_6}]
 
     }
+
 
     return json.dumps(dict)
 
@@ -319,10 +373,14 @@ def wind_now():
     cursor.execute(sql_wind_now)
     wind_now = cursor.fetchall()
 
+    if wind_now[0][0] == None:
+        wind_now_1 = 0
+    else:
+        wind_now_1 = wind_now[0][0]
     dict = {
-        "wind_now":wind_now[0][0],
+        "wind_now":wind_now_1,
         "wind_total": wind_now[0][1],
-        "data":(float(wind_now[0][0])/float(wind_now[0][1]))*100
+        "data":(float(wind_now_1)/float(wind_now[0][1]))*100
     }
     return json.dumps(dict)
 # 数字翻牌(今日最高)
@@ -488,8 +546,8 @@ def noise_now():
     noise_now = cursor.fetchall()
 
     dict = {
-        "temperature_now":noise_now[0][0],
-        "temperature_total": noise_now[0][1],
+        "noise_now":noise_now[0][0],
+        "noise_total": noise_now[0][1],
         "data":(float(noise_now[0][0])/float(noise_now[0][1]))*100
     }
     return json.dumps(dict)
@@ -651,6 +709,801 @@ def list():
     ]
 
     return json.dumps(list)
+
+
+# --------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------- 分割线 -----------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# 悦来会展总部基地项目大屏
+
+conn_yuelai_event = mysql.connector.connect(host='183.66.213.82',port="8803",user= 'tylin',password ='Tylin@123',database ='shenzhen_event',auth_plugin='mysql_native_password') #连接数据库，创建Flask_app数据库
+cursor_yuelai_event = conn_yuelai_event.cursor()
+
+
+
+# 驾驶舱
+@app.route("/yuelai")
+def yuelai():
+    return render_template("index_yuelai.html")
+# 天气
+@app.route("/yuelai/index/weather")
+def yuelai_index_weather():
+    # 数据库查询
+    sql_weather = "select pm2p5,pm10,noise,temperature from environment order by id desc LIMIT 1"
+    cursor.execute(sql_weather)
+    enviroment = cursor.fetchall()
+    # 获取剩余天数
+    days = requests.get("http://183.66.213.82:8888/shenzhen/date/begin?d=2019-07-01")
+    days = days.text
+    days = int(days[10:-2])
+    # 整合
+    list = {"data":{
+        "pm2p5": enviroment[0][0],
+        "pm10": enviroment[0][1],
+        "noise": enviroment[0][2],
+        "temperature": enviroment[0][3],
+        "days": days
+    }}
+    return json.dumps(list)
+#资产统计
+@app.route("/yuelai/index/zichan")
+def yuelai_index_renyuan():
+    dict = {
+        "x":["8月第1周","8月第2周","8月第3周","8月第4周"],
+        "y":[{"name":"计划产值","data":[200,400,450,500]},{"name":"实际产值","data":[150,350,400,450]}]
+    }
+    return json.dumps(dict)
+# 进度
+@app.route("/yuelai/index/jindu")
+def yuelai_jindu():
+    sql_jindu = "select tujian,xuanwazhuang,wakongzhuang,jidian,muqiang,jingzhuang,shiwaigongcheng from jiangjin_screen where tujian is not NULL order by id desc LIMIT 1"
+    cursor.execute(sql_jindu)
+    jindu = cursor.fetchall()
+
+
+    list = [
+        {"data": jindu[0][0],
+         "name":"土建工程"},
+        {"comp": jindu[0][1],
+         "total":227,
+         "data":float(jindu[0][1])/227*100,
+         "name":"旋挖桩"},
+        {"comp": jindu[0][2],
+         "total": 190,
+         "data":float(jindu[0][2])/190*100,
+         "name":"挖孔桩"},
+        {"data": jindu[0][3],
+         "name":"机电工程"},
+        {"data": jindu[0][4],
+         "name":"幕墙工程"},
+        {"data": jindu[0][5],
+         "name":"精装工程"},
+        {"data": jindu[0][6],
+         "name":"室外工程"}
+    ]
+    return json.dumps(list)
+
+# 项目概况
+@app.route("/yuelai/index/intro")
+def yuelai_intro():
+    dict = {"data":{
+        "data": """    项目紧邻悦来国博会展中心及会展公园，是国博会展中心重要的配套项目。项目以实现绿色建筑三星、LEED金级标准为设计目标，旨在打造一个集智能、绿色、时尚为一体的具有新区特色和时代风貌的文化艺术城市综合体，成为悦来会展城重要地标性建筑，也将成为绿色建筑、智能建筑的典范工程。
+    项目总用地面积20904.00㎡，容积率6.0，建筑密度40%，绿地率30%.总建筑面积204204.60 ㎡，其中计容建筑面积125424.00㎡，地上建筑面积162609.28 ㎡，地下建筑面积41595.32 ㎡。建筑最高195.67m。由一栋23层的高层塔楼、一栋43层的超高层塔楼及裙房组成，地下吊2层，负6层为设备用房及车库。高层塔楼功能为雅辰酒店，约384间客房；超高层部分吊1层至34层功能为办公（其中1层、17层为酒店大堂），35层至43层为洲际集团旗下英迪格酒店，约200间客房，裙房为配套商业。              
+    """
+    }}
+    return json.dumps(dict)
+# 参建单位
+@app.route("/yuelai/index/company")
+def yuelai_company():
+    list = {"data":[
+        {
+            "unit": "建设单位",
+            "company": "重庆悦瑞文化旅游发展有限公司"
+        },
+        {
+            "unit": "设计单位",
+            "company": "重庆博建建筑规划设计有限公司"
+        }, {
+            "unit": "施工总包单位",
+            "company": "中国建筑第八工程局有限公司"
+        }, {
+            "unit": "监理单位",
+            "company": "林同棪（重庆）国际工程技术有限公司"
+        }, {
+            "unit": "BIM咨询",
+            "company": "林同棪（重庆）国际工程技术有限公司"
+        }, {
+            "unit": "监测单位",
+            "company": "重庆市市政设计研究院"
+        }, {
+            "unit": "跟审单位",
+            "company": "中京华（北京）工程咨询有限公司"
+        }
+    ]}
+    return json.dumps(list)
+# 效果图预览
+@app.route("/yuelai/index/pic")
+def yuelai_pic():
+    list={
+       "data":{"data":[{"url":"http://183.66.213.82:8888/screen/static/yuelai_pic/1.png"},{"url":"http://183.66.213.82:8888/screen/static/yuelai_pic/2.png"},{"url":"http://183.66.213.82:8888/screen/static/yuelai_pic/3.png"}]}
+    }
+    return json.dumps(list)
+# 无人机地址
+@app.route("/yuelai/index/wurenji")
+def yuelai_wurenji():
+    dict = {"data":
+        {"data":"https://720yun.com/t/e8vknmdlr7l"}
+    }
+    return json.dumps(dict)
+# 模型(左)地址
+@app.route("/yuelai/index/iframe_left")
+def yuelai_iframe_left():
+    dict = {"data":
+        {"data":"http://www.tylinbim.com/4DAnalog/qrshare/s.action?newUrl=UnIv6b"}
+    }
+    return json.dumps(dict)
+# 模型(右)地址
+@app.route("/yuelai/index/iframe_right")
+def yuelai_iframe_right():
+    dict = {"data":
+        {"data":"http://www.tylinbim.com/4DAnalog/qrshare/s.action?newUrl=mEfui2"}
+    }
+    return json.dumps(dict)
+
+
+
+
+# 计划追踪
+# 全部
+@app.route('/yuelai/event/table',methods=["POST"]) #dpi,page
+def table():
+    data = request.get_json()
+    dpi = data["dpi"]
+    page = data["page"]
+
+    if dpi== "0":
+
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id LIMIT "+ str((page-1)*10)+',10'
+
+        cursor_yuelai_event.execute(table)
+
+        result = cursor_yuelai_event.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,'department': department,"contector":contector}
+
+            list.append(dict)
+
+    else:
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where event.dpi=" + dpi + " LIMIT "+ str((page-1)*10)+',10'
+
+        cursor_yuelai_event.execute(table)
+
+        result = cursor_yuelai_event.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,'department': department,"contector":contector}
+
+            list.append(dict)
+    final_dict = {"data":list}
+    return json.dumps(final_dict)
+# 滞后
+@app.route('/yuelai/event/table/late',methods=["POST"]) #dpi,page
+def late():
+    data = request.get_json()
+    dpi = data["dpi"]
+    page = data["page"]
+
+    if dpi== "0":
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where datediff(CURRENT_DATE , plan_time) >0 and finish_time is null LIMIT " + str((page - 1) * 10) + ',10'
+        cursor_yuelai_event.execute(table)
+
+        result = cursor_yuelai_event.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
+                    'department': department,"contector":contector}
+
+            list.append(dict)
+
+
+    else:
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where event.dpi=" + dpi + " and datediff(CURRENT_DATE , plan_time) >0 and finish_time is null LIMIT " + str((page - 1) * 10) + ',10'
+        cursor_yuelai_event.execute(table)
+
+        result = cursor_yuelai_event.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan': start_plan, 'plan_time': plan_time,
+                    'finish_time': finish_time, 'state': state, 'department': department, "contector": contector}
+
+            list.append(dict)
+    final_dict = {"data": list}
+    return json.dumps(final_dict)
+# 临近
+@app.route('/yuelai/event/table/near',methods=["POST"]) #dpi,page
+def near():
+    data = request.get_json()
+    dpi = data["dpi"]
+    page = data["page"]
+
+    if dpi== "0":
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where datediff(CURRENT_DATE , plan_time) between -3 and 0  and finish_time is null LIMIT " + str((page - 1) * 10) + ',10'
+        cursor_yuelai_event.execute(table)
+
+        result = cursor_yuelai_event.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
+                    'department': department,"contector":contector}
+
+            list.append(dict)
+
+
+    else:
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where event.dpi=" + dpi + " and datediff(CURRENT_DATE , plan_time) between -3 and 0  and finish_time is null LIMIT " + str((page - 1) * 10) + ',10'
+        cursor_yuelai_event.execute(table)
+
+        result = cursor_yuelai_event.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,'department': department,"contector":contector}
+
+            list.append(dict)
+
+    final_dict = {"data": list}
+    return json.dumps(final_dict)
+# 已完成
+@app.route('/yuelai/event/table/complete',methods=["POST"]) #dpi,page
+def complete():
+
+    data = request.get_json()
+    dpi = data["dpi"]
+    page = data["page"]
+
+
+
+    if dpi=="0":
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where finish_time is not null LIMIT " + str((page-1)*10) + ',10'
+        cursor_yuelai_event.execute(table)
+
+        result = cursor_yuelai_event.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
+                    'department': department,"contector":contector}
+
+            list.append(dict)
+
+    else:
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where event.dpi=" + dpi + " and finish_time is not null LIMIT " + str((page - 1) * 10) + ',10'
+        cursor_yuelai_event.execute(table)
+
+        result = cursor_yuelai_event.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
+                    'department': department,"contector":contector}
+
+            list.append(dict)
+
+    final_dict = {"data": list}
+    return json.dumps(final_dict)
+# 计划内
+@app.route('/yuelai/event/table/in_plan',methods=["POST"]) #dpi,page
+def in_plan():
+
+    data = request.get_json()
+    dpi = data["dpi"]
+    page = data["page"]
+
+    if dpi=="0":
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where datediff(CURRENT_DATE , plan_time)<-3  and finish_time is null LIMIT " + str((page - 1) * 10) + ',10'
+        cursor_yuelai_event.execute(table)
+
+        result = cursor_yuelai_event.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
+                    'department': department,"contector":contector}
+
+            list.append(dict)
+
+    else:
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where event.dpi=" + dpi + " and datediff(CURRENT_DATE , plan_time)<-3  and finish_time is null LIMIT " + str((page - 1) * 10) + ',10'
+        cursor_yuelai_event.execute(table)
+
+        result = cursor_yuelai_event.fetchall()
+
+        list = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan': start_plan, 'plan_time': plan_time,
+                    'finish_time': finish_time, 'state': state, 'department': department, "contector": contector}
+
+            list.append(dict)
+
+    final_dict = {"data": list}
+    return json.dumps(final_dict)
+# 总数获取
+@app.route('/yuelai/event/table/count')
+def count():
+    #数据库查询语句(通用)
+
+    complete_data = 'SELECT event.id from event where finish_time is not null '
+    in_plan_data = "SELECT event.id from event where datediff(CURRENT_DATE , plan_time)<-3 and finish_time is null"
+    near_data = "SELECT event.id from event where datediff(CURRENT_DATE , plan_time) between -3 and 0 and finish_time is null"
+    late_data = "SELECT event.id from event where datediff(CURRENT_DATE , plan_time)>0 and finish_time is null"
+
+    #查找已完成:
+    cursor_yuelai_event.execute(complete_data)
+    complete = cursor_yuelai_event.fetchall()
+    #查找计划中:
+    cursor_yuelai_event.execute(in_plan_data)
+    in_plan = cursor_yuelai_event.fetchall()
+    # 查找临近:
+    cursor_yuelai_event.execute(near_data)
+    near = cursor_yuelai_event.fetchall()
+    # 查找滞后:
+    cursor_yuelai_event.execute(late_data)
+    late = cursor_yuelai_event.fetchall()
+    #统一封装:
+    count_dict = {"late":len(late),"near":len(near),"in_plan":len(in_plan),"complete":len(complete)}
+    count_list =[]
+    count_list.append(count_dict)
+    final_dict = {"data":count_dict}
+    return json.dumps(final_dict)
+# 页数
+@app.route('/yuelai/event/table/page',methods=['POST']) #dpi
+def page():
+    data = request.get_json()
+    dpi = data["dpi"]
+
+    if dpi == "0":
+
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id"
+
+        cursor_yuelai_event.execute(table)
+
+        result = cursor_yuelai_event.fetchall()
+
+        list_late = []
+        list_complete = []
+        list_near = []
+        list_in_plan = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan':start_plan ,'plan_time': plan_time, 'finish_time': finish_time, 'state': state,
+                    'department': department,"contector":contector}
+
+            if state == 999999:
+                list_complete.append(dict)
+
+            if state>0 and state <999999:
+                list_late.append(dict)
+
+            if state<1 and state>-4:
+                list_near.append(dict)
+
+            if state<-3:
+                list_in_plan.append((dict))
+
+            count_dict = {"total":len(list_late)+len(list_near)+len(list_in_plan)+len(list_complete),"late":len(list_late),"near":len(list_near),"in_plan":len(list_in_plan),"complete":len(list_complete)}
+
+            count_list =[]
+
+            count_list.append(count_dict)
+
+    else:
+        table = "SELECT event.id,event_name, start_plan ,plan_time, finish_time, department,name from event JOIN person ON event.dpi=person.id where event.dpi=" + dpi
+
+        cursor_yuelai_event.execute(table)
+
+        result = cursor_yuelai_event.fetchall()
+
+        list_late = []
+        list_complete = []
+        list_near = []
+        list_in_plan = []
+
+        for i in result:
+
+            id = i[0]
+            event_name = i[1]
+            start_plan = i[2].strftime('%Y-%m-%d')
+            plan_time = i[3].strftime('%Y-%m-%d')
+            finish_time = i[4]
+
+            localtime = time.strftime("%Y-%m-%d", time.localtime())
+
+            plan_time_trans = time.mktime(time.strptime(plan_time, "%Y-%m-%d"))
+            localtime_trans = time.mktime(time.strptime(localtime, "%Y-%m-%d"))
+
+            time_dis = localtime_trans - plan_time_trans
+
+            state = int(time_dis) / 86400
+
+            if finish_time == None:
+                finish_time = i[4]
+
+            else:
+                finish_time = i[4].strftime('%Y-%m-%d')
+                state = 999999
+
+            department = i[5]
+            contector = i[6]
+            if contector == "":
+                contector = "无"
+
+            dict = {"id": id, 'event_name': event_name, 'start_plan': start_plan, 'plan_time': plan_time,
+                    'finish_time': finish_time, 'state': state,
+                    'department': department, "contector": contector}
+
+            if state == 999999:
+                list_complete.append(dict)
+
+            if state > 0 and state < 999999:
+                list_late.append(dict)
+
+            if state < 1 and state > -4:
+                list_near.append(dict)
+
+            if state < -3:
+                list_in_plan.append((dict))
+
+            count_dict = {"total":len(list_late)+len(list_near)+len(list_in_plan)+len(list_complete),"late":len(list_late),"near":len(list_near),"in_plan":len(list_in_plan),"complete":len(list_complete)}
+
+            count_list = []
+
+            count_list.append(count_dict)
+
+    dict = {"data":count_dict}
+    return json.dumps(dict)
+
+
+
+
+
+
+
+
 
 
 application = app
