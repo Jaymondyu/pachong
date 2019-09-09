@@ -6,8 +6,15 @@ import time
 import datetime
 import requests
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+# 江津数据库
 conn = mysql.connector.connect(host='183.66.213.82',port="8803",user= 'tylin',password ='Tylin@123',database ='openplatform',auth_plugin='mysql_native_password') #连接数据库，创建Flask_app数据库
 cursor = conn.cursor()
+# shenzhen_event 数据库
+conn_yuelai_event = mysql.connector.connect(host='183.66.213.82',port="8803",user= 'tylin',password ='Tylin@123',database ='shenzhen_event',auth_plugin='mysql_native_password') #连接数据库，创建Flask_app数据库
+cursor_yuelai_event = conn_yuelai_event.cursor()
 
 app = Flask(__name__)
 
@@ -710,16 +717,58 @@ def list():
 
     return json.dumps(list)
 
+# 晴雨表
+@app.route("/jiangjin/weather_table/editdata",methods=["POST"])
+def jiangjin_EditData():
 
-# --------------------------------------------------------------------------------------------------------------------------------------------
-# ------------------------------------------------------------------------------- 分割线 -----------------------------------------------------
-# --------------------------------------------------------------------------------------------------------------------------------------------
+    data = request.get_json()
+    project_name = "江津滨江新城"
+    date = data["date"]
+    weather = data["weather"]
+    warning = data["warning"]
+
+    sql_insert = """
+                insert into weather_table (project_name,date,weather,warning) values ("%s","%s",%d,%d)
+    """%(project_name,date,weather,warning)
+
+
+    conn_yuelai_event.cursor(sql_insert)
+    conn_yuelai_event.commit()
+
+    return "200"
+
+@app.route("/jiangjin/weather_table/data")
+def jiangjin_weather_data():
+
+    sql_table = """
+                    SELECT date,weather,warning from weather_table where project_name = '江津滨江新城'
+    """
+
+    cursor_yuelai_event.execute(sql_table)
+    result = cursor_yuelai_event.fetchall()
+
+    list = []
+    for i in result:
+        date = i[0].strftime('%Y-%m-%d')
+        weather = i[1]
+        warning = i[2]
+        dict = {"date":date,"weather":weather,"warning":warning}
+        list.append(dict)
+
+    final_dict = {"data":list}
+    return json.dumps(final_dict)
+
+
+
+
+# ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------- 分割线 ------------------------------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 # 悦来会展总部基地项目大屏
 
-conn_yuelai_event = mysql.connector.connect(host='183.66.213.82',port="8803",user= 'tylin',password ='Tylin@123',database ='shenzhen_event',auth_plugin='mysql_native_password') #连接数据库，创建Flask_app数据库
-cursor_yuelai_event = conn_yuelai_event.cursor()
+
 
 
 
