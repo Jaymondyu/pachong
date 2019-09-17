@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b6467536-7c9d-4ec6-82ce-4f62959766d6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../music_spider/.idea/music_spider.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../music_spider/spider.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../music_spider/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jiangjin.rar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/yuelai.rar" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,10 +17,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="355">
-              <caret line="1557" selection-start-line="1557" selection-end-line="1559" selection-end-column="49" />
+            <state relative-caret-position="10650">
+              <caret line="1591" lean-forward="true" selection-start-line="1591" selection-end-line="1591" />
               <folding>
                 <element signature="e#14#61#0" expanded="true" />
+                <element signature="e#7549#8206#0" />
+                <element signature="e#8284#10503#0" />
+                <element signature="e#8304#8952#0" />
+                <element signature="e#9#637#1" />
                 <element signature="e#10594#11033#0" />
                 <element signature="e#11114#11413#0" />
                 <element signature="e#11498#11963#0" />
@@ -38,8 +40,11 @@
                 <element signature="e#15910#16375#0" />
                 <element signature="e#16466#16759#0" />
                 <element signature="e#16846#17311#0" />
+                <element signature="e#17743#18038#0" />
                 <element signature="e#17399#17689#0" />
                 <element signature="e#17774#18234#0" />
+                <element signature="e#19031#19326#0" />
+                <element signature="e#19048#19175#0" />
                 <element signature="e#18296#18769#0" />
                 <element signature="e#19217#19619#0" />
                 <element signature="e#19261#19304#0" />
@@ -90,11 +95,11 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="1" />
+    <option name="y" value="1" />
+    <option name="width" value="1918" />
+    <option name="height" value="1038" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -187,22 +192,23 @@
       <workItem from="1567127995641" duration="8788000" />
       <workItem from="1567315696066" duration="30239000" />
       <workItem from="1567494683713" duration="9146000" />
-      <workItem from="1567558006797" duration="21631000" />
+      <workItem from="1567558006797" duration="24699000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="122797000" />
+    <option name="totallyTimeSpent" value="125865000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="1" y="1" width="1918" height="1038" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26918977" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27179763" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49946696" visible="true" weight="0.32936078" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946696" visible="true" weight="0.3359116" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -238,10 +244,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="355">
-          <caret line="1557" selection-start-line="1557" selection-end-line="1559" selection-end-column="49" />
+        <state relative-caret-position="10650">
+          <caret line="1591" lean-forward="true" selection-start-line="1591" selection-end-line="1591" />
           <folding>
             <element signature="e#14#61#0" expanded="true" />
+            <element signature="e#7549#8206#0" />
+            <element signature="e#8284#10503#0" />
+            <element signature="e#8304#8952#0" />
+            <element signature="e#9#637#1" />
             <element signature="e#10594#11033#0" />
             <element signature="e#11114#11413#0" />
             <element signature="e#11498#11963#0" />
@@ -257,8 +267,11 @@
             <element signature="e#15910#16375#0" />
             <element signature="e#16466#16759#0" />
             <element signature="e#16846#17311#0" />
+            <element signature="e#17743#18038#0" />
             <element signature="e#17399#17689#0" />
             <element signature="e#17774#18234#0" />
+            <element signature="e#19031#19326#0" />
+            <element signature="e#19048#19175#0" />
             <element signature="e#18296#18769#0" />
             <element signature="e#19217#19619#0" />
             <element signature="e#19261#19304#0" />

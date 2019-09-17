@@ -638,6 +638,21 @@ def pm2p5_echart():
     }
 
     return json.dumps(dict)
+# 今日最高
+@app.route("/jiangjin/environment/pm2p5_high")
+def pm2p5_high():
+    sql_noise_high = """
+            SELECT MAX(pm2p5) as max_pm2p5 FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE 
+    """
+
+    cursor.execute(sql_noise_high)
+    noise_high = cursor.fetchall()
+
+    dict ={
+        "data":noise_high[0][0]
+    }
+
+    return json.dumps(dict)
 
 # PM10
 # 平均值
@@ -677,6 +692,21 @@ def pm10_echart():
     dict = {
         "x": list_x,
         "y":{"data":list_data}
+    }
+
+    return json.dumps(dict)
+# 今日最高
+@app.route("/jiangjin/environment/pm10_high")
+def pm10_high():
+    sql_noise_high = """
+            SELECT MAX(pm10) as max_pm10 FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE 
+    """
+
+    cursor.execute(sql_noise_high)
+    noise_high = cursor.fetchall()
+
+    dict ={
+        "data":noise_high[0][0]
     }
 
     return json.dumps(dict)
@@ -1545,6 +1575,23 @@ def page():
 
     dict = {"data":count_dict}
     return json.dumps(dict)
+
+
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# 江苏园博园大屏
+
+@app.route("/jiangsu/pic")
+def jiangsu_pic():
+    return render_template("jiangsu_pic.html")
+
+
+
 
 
 
