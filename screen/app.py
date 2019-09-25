@@ -5,7 +5,7 @@ import json
 import time
 import datetime
 import requests
-
+from dateutil.relativedelta import relativedelta
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -54,7 +54,7 @@ def index_renyuan():
     sql_renyuan = """
                     SELECT
                         count(*) AS y,
-                        DATE_FORMAT(attendancetime, '%Y-%m-%d') AS x,
+                        DATE_FORMAT(attendancetime, '%m-%d') AS x,
                     case 
                     when department in ("重庆建工住宅建设有限公司","林同棪【重庆】国际工程技术有限公司")then 1 
                     when department in  ("重庆正旋基础有限公司","重庆名庆防水工程有限公司","重庆力杰消防工程有限公司" )then 3
@@ -73,48 +73,176 @@ def index_renyuan():
                 """
     cursor.execute(sql_renyuan)
     renyuan = cursor.fetchall()
+    dict_1 = {}
+    dict_2 = {}
+    dict_3 = {}
+    for i in renyuan:
+        if i[2] == 1:
+            dict_1[i[1]] = i[0]
+            dict_3[i[1]] = 0
+            dict_2[i[1]] = 0
+
+        if i[2] == 3:
+            dict_3[i[1]] = i[0]
+        if i[2] == 2:
+            dict_2[i[1]] = i[0]
+
     list_x = []
+    for j in sorted(dict_1):
+        list_x.append(j)
+
     list_1 = []
     list_2 = []
     list_3 = []
-    for i in renyuan:
-        list_x.append(i[1])
-        if i[2] == 1:
-            list_1.append(i[0])
-        elif i[2] == 2:
-            list_2.append(i[0])
-        elif i[2] == 3:
-            list_3.append(i[0])
+
+    for k_1 in sorted(dict_1):
+        list_1.append(dict_1[k_1])
+    for k_2 in sorted(dict_2):
+        list_2.append(dict_2[k_2])
+    for k_3 in sorted(dict_3):
+        list_3.append(dict_3[k_3])
+
 
     dict = {
-        "x":list_x[0:7],
-        "y":[{"name":"管理人员","data":list_1},{"name":"劳务人员","data":list_2},{"name":"专业分包","data":list_3}]
+    "x": list_x,
+    "y": [{"name": "管理人员", "data": list_1}, {"name": "劳务人员", "data": list_2}, {"name": "专业分包", "data": list_3}]
 
-    }
-
+}
 
     return json.dumps(dict)
-# 质量问题与安全问题
-@app.route("/jiangjin/index/zhiliang")
-def index_zhiliang():
-    sql_zhiliang = "select date,zhiliang,anquan from jiangjin_screen where date is not NULL order by id desc LIMIT 5"
-    cursor.execute(sql_zhiliang)
-    zhiliang = cursor.fetchall()
 
-    list_x = []
-    list_zhiliang = []
-    list_anquan = []
 
-    for i in zhiliang:
-        list_x.append(i[0])
-        list_zhiliang.append(i[1])
-        list_anquan.append(i[2])
+# 安全问题
+@app.route("/jiangjin/index/anquan")
+def index_safe():
+    # 日期确认
+    datetime_now = datetime.datetime.now()
+    this_month = datetime.datetime.now().strftime('%Y-%m')
+    last_1_month = (datetime_now - relativedelta(months=1)).strftime('%Y-%m')
+    last_2_month = (datetime_now - relativedelta(months=2)).strftime('%Y-%m')
+    last_3_month = (datetime_now - relativedelta(months=3)).strftime('%Y-%m')
+    last_4_month = (datetime_now - relativedelta(months=4)).strftime('%Y-%m')
+    month_now = []
+    month_1_before = []
+    month_2_before = []
+    month_3_before = []
+    month_4_before = []
+    # 安全部分
 
-    dict={
-        "x":list_x,
-        "y":[{"name":"质量问题","data":list_zhiliang},{"name":"安全问题","data":list_anquan}]
+    url_1 = "http://www.tylinbim.com/wui/safeProList"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+    for i in dataList_1:
+        if str(i["checkTime"][0:7]) == this_month:
+            month_now.append(i)
+        elif str(i["checkTime"][0:7]) == last_1_month:
+            month_1_before.append(i)
+        elif str(i["checkTime"][0:7]) == last_2_month:
+            month_2_before.append(i)
+        elif str(i["checkTime"][0:7]) == last_3_month:
+            month_3_before.append(i)
+        elif str(i["checkTime"][0:7]) == last_4_month:
+            month_4_before.append(i)
+        else:
+            pass
+
+    month_now_solved = []
+    month_1_before_solved = []
+    month_2_before_solved = []
+    month_3_before_solved = []
+    month_4_before_solved = []
+    for j in month_now:
+        if j["rectificate"] == "是":
+            month_now_solved.append(j)
+    for k in month_1_before:
+        if k["rectificate"] == "是":
+            month_now_solved.append(k)
+    for l in month_2_before:
+        if l["rectificate"] == "是":
+            month_now_solved.append(l)
+    for m in month_3_before:
+        if m["rectificate"] == "是":
+            month_now_solved.append(m)
+    for n in month_4_before:
+        if n["rectificate"] == "是":
+            month_now_solved.append(n)
+
+    y = {
+        "total": [len(month_4_before), len(month_3_before), len(month_2_before), len(month_1_before), len(month_now)],
+        "solved": [len(month_4_before_solved), len(month_3_before_solved), len(month_2_before_solved),
+                   len(month_1_before_solved), len(month_now_solved)]
     }
+    x = [last_4_month, last_3_month, last_2_month, last_1_month, this_month]
 
+    dict = {"y": y, "x": x}
+
+    return json.dumps(dict)
+
+# 质量问题
+@app.route("/jiangjin/index/zhiliang")
+def index_quality():
+    # 日期确认
+    datetime_now = datetime.datetime.now()
+    this_month = datetime.datetime.now().strftime('%Y-%m')
+    last_1_month = (datetime_now - relativedelta(months=1)).strftime('%Y-%m')
+    last_2_month = (datetime_now - relativedelta(months=2)).strftime('%Y-%m')
+    last_3_month = (datetime_now - relativedelta(months=3)).strftime('%Y-%m')
+    last_4_month = (datetime_now - relativedelta(months=4)).strftime('%Y-%m')
+    month_now = []
+    month_1_before = []
+    month_2_before = []
+    month_3_before = []
+    month_4_before = []
+    # 安全部分
+
+    url_1 = "http://www.tylinbim.com/wui/qualityProList"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+    for i in dataList_1:
+        if str(i["checkTime"][0:7]) == this_month:
+            month_now.append(i)
+        elif str(i["checkTime"][0:7]) == last_1_month:
+            month_1_before.append(i)
+        elif str(i["checkTime"][0:7]) == last_2_month:
+            month_2_before.append(i)
+        elif str(i["checkTime"][0:7]) == last_3_month:
+            month_3_before.append(i)
+        elif str(i["checkTime"][0:7]) == last_4_month:
+            month_4_before.append(i)
+        else:
+            pass
+
+    month_now_solved = []
+    month_1_before_solved = []
+    month_2_before_solved = []
+    month_3_before_solved = []
+    month_4_before_solved = []
+    for j in month_now:
+        if j["rectificate"] == "是":
+            month_now_solved.append(j)
+    for k in month_1_before:
+        if k["rectificate"] == "是":
+            month_now_solved.append(k)
+    for l in month_2_before:
+        if l["rectificate"] == "是":
+            month_now_solved.append(l)
+    for m in month_3_before:
+        if m["rectificate"] == "是":
+            month_now_solved.append(m)
+    for n in month_4_before:
+        if n["rectificate"] == "是":
+            month_now_solved.append(n)
+
+    y = {
+        "total": [len(month_4_before), len(month_3_before), len(month_2_before), len(month_1_before), len(month_now)],
+        "solved": [len(month_4_before_solved), len(month_3_before_solved), len(month_2_before_solved),
+                   len(month_1_before_solved), len(month_now_solved)]
+    }
+    x = [last_4_month, last_3_month, last_2_month, last_1_month, this_month]
+
+    dict = {"y": y, "x": x}
 
     return json.dumps(dict)
 # 进度
@@ -280,14 +408,14 @@ def renyuantongji():
     sql_renyuantongji = """
         SELECT
 	count(*) AS y,
-	DATE_FORMAT(attendancetime, '%Y-%m-%d') AS x,
+	DATE_FORMAT(attendancetime, '%m-%d') AS x,
 	CASE
 WHEN department = "重庆建工住宅建设有限公司" THEN
-	1
+	3
 WHEN department = "重庆正旋基础有限公司" THEN
 	2
 WHEN department = "重庆联文建筑劳务有限公司" THEN
-	3
+	1
 WHEN department = "林同棪【重庆】国际工程技术有限公司" THEN
 	4
 WHEN department = "重庆名庆防水工程有限公司" THEN
@@ -360,7 +488,7 @@ ORDER BY s
 
     dict = {
         "x":list_x,
-        "y":[{"name":"重庆建工住宅建设有限公司","data":list_1},{"name":"重庆正旋基础有限公司","data":list_2},{"name":"重庆联文建筑劳务有限公司","data":list_3},{"name":"林同棪【重庆】国际工程技术有限公司","data":list_4},{"name":"重庆名庆防水工程有限公司","data":list_5},{"name":"重庆力杰消防工程有限公司","data":list_6}]
+        "y":[{"name":"重庆建工住宅建设有限公司","data":list_3},{"name":"重庆正旋基础有限公司","data":list_2},{"name":"重庆联文建筑劳务有限公司","data":list_1},{"name":"林同棪【重庆】国际工程技术有限公司","data":list_4},{"name":"重庆名庆防水工程有限公司","data":list_5},{"name":"重庆力杰消防工程有限公司","data":list_6}]
 
     }
 
@@ -374,7 +502,7 @@ ORDER BY s
 @app.route("/jiangjin/environment/wind_now")
 def wind_now():
     sql_wind_now = """
-            select windspeed as actual,10 as aims from environment order by id desc LIMIT 1
+            select windspeed as actual,10 as aims from environment order by recordtime desc LIMIT 1
     """
 
     cursor.execute(sql_wind_now)
@@ -409,7 +537,7 @@ def wind_high():
 @app.route("/jiangjin/environment/wind_echart")
 def wind_echart():
     sql_wind_echart = """
-            SELECT windspeed as y,DATE_FORMAT(recordtime,'%T') as x FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE
+            SELECT windspeed as y,DATE_FORMAT(recordtime,'%H:%i') as x FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE order by x
     """
 
     cursor.execute(sql_wind_echart)
@@ -419,8 +547,14 @@ def wind_echart():
     list_data = []
 
     for i in wind_echart:
-        list_x.append(i[1])
+
         list_data.append(i[0])
+        list_x.append(i[1])
+
+    for data in range(0,len(list_data)):
+        if str(type(list_data[data])) == "<type 'NoneType'>":
+            list_data[data] = 0.0
+
 
     dict = {
         "x": list_x,
@@ -434,7 +568,7 @@ def wind_echart():
 @app.route("/jiangjin/environment/humidity_now")
 def humidity_now():
     sql_humidity_now = """
-            select humidity as actual,100 as aims from environment order by id desc LIMIT 1
+            select humidity as actual,100 as aims from environment order by recordtime desc LIMIT 1
     """
 
     cursor.execute(sql_humidity_now)
@@ -465,7 +599,7 @@ def humidity_high():
 @app.route("/jiangjin/environment/humidity_echart")
 def humidity_echart():
     sql_humidity_echart = """
-            SELECT humidity as y,DATE_FORMAT(recordtime,'%T') as x FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE
+            SELECT humidity as y,DATE_FORMAT(recordtime,'%H:%i') as x FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE order by x
     """
 
     cursor.execute(sql_humidity_echart)
@@ -490,7 +624,7 @@ def humidity_echart():
 @app.route("/jiangjin/environment/temperature_now")
 def temperature_now():
     sql_temperature_now = """
-            select temperature as actual,50 as aims from environment order by id desc LIMIT 1
+            select temperature as actual,50 as aims from environment order by recordtime desc LIMIT 1
     """
 
     cursor.execute(sql_temperature_now)
@@ -521,7 +655,7 @@ def temperature_high():
 @app.route("/jiangjin/environment/temperature_echart")
 def temperature_echart():
     sql_temperature_echart = """
-            SELECT temperature as y,DATE_FORMAT(recordtime,'%T') as x FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE
+            SELECT temperature as y,DATE_FORMAT(recordtime,'%H:%i') as x FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE order by x
     """
 
     cursor.execute(sql_temperature_echart)
@@ -546,7 +680,7 @@ def temperature_echart():
 @app.route("/jiangjin/environment/noise_now")
 def noise_now():
     sql_noise_now = """
-            select noise as actual,140 as aims from environment order by id desc LIMIT 1
+            select noise as actual,140 as aims from environment order by recordtime desc LIMIT 1
     """
 
     cursor.execute(sql_noise_now)
@@ -577,7 +711,7 @@ def noise_high():
 @app.route("/jiangjin/environment/noise_echart")
 def noise_echart():
     sql_noise_echart = """
-            SELECT noise as y,DATE_FORMAT(recordtime,'%T') as x FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE
+            SELECT noise as y,DATE_FORMAT(recordtime,'%H:%i') as x FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE order by x
     """
 
     cursor.execute(sql_noise_echart)
@@ -619,7 +753,7 @@ def pm2p5_average():
 @app.route("/jiangjin/environment/pm2p5_echart")
 def pm2p5_echart():
     sql_pm2p5_echart = """
-            SELECT pm2p5 as y,DATE_FORMAT(recordtime,'%T') as x FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE
+            SELECT pm2p5 as y,DATE_FORMAT(recordtime,'%H:%i') as x FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE order by x
     """
 
     cursor.execute(sql_pm2p5_echart)
@@ -676,7 +810,7 @@ def pm10_average():
 @app.route("/jiangjin/environment/pm10_echart")
 def pm10_echart():
     sql_pm10_echart = """
-            SELECT pm10 as y,DATE_FORMAT(recordtime,'%T') as x FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE
+            SELECT pm10 as y,DATE_FORMAT(recordtime,'%H:%i') as x FROM environment where DATE_FORMAT(recordtime,'%Y-%m-%d')= CURRENT_DATE order by x
     """
 
     cursor.execute(sql_pm10_echart)
@@ -712,40 +846,202 @@ def pm10_high():
     return json.dumps(dict)
 
 
-# 安全管理接口
-@app.route("/jiangjin/safe/list")
-def list():
-    list = [
-        {
-            "q": "施工许可证"
-        },
-        {
-            "q": "危大工程管理及安全技术交底"
-        },
-        {
-            "q": "安全专项施工方案及专家论证"
-        },
-        {
-            "q": "人员履职及人员变更"
-        },
-        {
-            "q": "无证上岗"
-        },
-        {
-            "q": "机械违规使用"
-        },
-        {
-            "q": "安全检查"
-        },
-        {
-            "q": "安全资料"
-        },
-        {
-            "q": "应急预案"
-        }
-    ]
+# 质量安全接口
+# 质量管理
+# 饼状图
+@app.route("/jiangjin/quality/circle")
+def quality_circle():
 
-    return json.dumps(list)
+    url_1 = "http://www.tylinbim.com/wui/qualityProList"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    solved = []
+    unsolved =[]
+    for i in dataList_1:
+        if i["rectificate"] == "是":
+            solved.append(i)
+        else:
+            unsolved.append(i)
+    solved_bad =[]
+    solved_normal = []
+    for j in solved:
+        if j["serverity"] == "严重":
+            solved_bad.append(j)
+        else:
+            solved_normal.append(j)
+    unsolved_bad =[]
+    unsolved_normal = []
+    for k in unsolved:
+        if k["serverity"] == "严重":
+            unsolved_bad.append(k)
+        else:
+            unsolved_normal.append(k)
+
+    dict = {"data":{"total":len(dataList_1),"solved":len(solved),"unsolved":len(unsolved),"solved_normal":len(solved_normal),"solved_bad":len(solved_bad),"unsolved_normal":len(unsolved_normal),"unsolved_bad":len(unsolved_bad)}}
+
+
+    return json.dumps(dict)
+
+# 施工班组质量问题
+@app.route("/jiangjin/quality/team")
+def quality_team():
+
+    url_1 = "http://www.tylinbim.com/wui/qualityProList"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+    gangjin = []
+    muban = []
+    qizhuan = []
+    fangshui = []
+    jiaoshoujia = []
+    nuantong = []
+    xiaofang = []
+    jipaishui = []
+    qiangruodian = []
+    tadiao = []
+    hunningtu = []
+    dianhan = []
+    unknow = []
+
+    for i in dataList_1:
+        if i["team"] == "钢筋班组":
+            gangjin.append(i)
+        elif i["team"] == "模板班组":
+            muban.append(i)
+        elif i["team"] == "砌砖班组":
+            qizhuan.append(i)
+        elif i["team"] == "防水班组":
+            fangshui.append(i)
+        elif i["team"] == "脚手架班组":
+            jiaoshoujia.append(i)
+        elif i["team"] == "暖通班组":
+            nuantong.append(i)
+        elif i["team"] == "消防班组":
+            xiaofang.append(i)
+        elif i["team"] == "给排水班组":
+            jipaishui.append(i)
+        elif i["team"] == "强弱电班组":
+            qiangruodian.append(i)
+        elif i["team"] == "塔吊班组":
+            tadiao.append(i)
+        elif i["team"] == "混凝土班组":
+            hunningtu.append(i)
+        elif i["team"] == "电焊班组":
+            dianhan.append(i)
+        else:
+            unknow.append(i)
+
+    dict ={"data":{
+                   "x":["钢筋","模板","砌砖","防水","脚手架","暖通","消防","给排水","强弱电","塔吊","混凝土","电焊","未划分"],
+                   "y":[len(gangjin),len(muban),len(qizhuan),len(fangshui),len(jiaoshoujia),len(nuantong),len(xiaofang),len(jipaishui),len(qiangruodian),len(tadiao),len(hunningtu),len(dianhan),len(unknow)]
+          }}
+
+    return json.dumps(dict)
+
+# 安全管理
+# 饼状图
+@app.route("/jiangjin/safe/circle")
+def safe_circle():
+
+    url_1 = "http://www.tylinbim.com/wui/safeProList"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    solved = []
+    unsolved =[]
+    for i in dataList_1:
+        if i["rectificate"] == "是":
+            solved.append(i)
+        else:
+            unsolved.append(i)
+    solved_bad =[]
+    solved_normal = []
+    for j in solved:
+        if j["serverity"] == "严重":
+            solved_bad.append(j)
+        else:
+            solved_normal.append(j)
+    unsolved_bad =[]
+    unsolved_normal = []
+    for k in unsolved:
+        if k["serverity"] == "严重":
+            unsolved_bad.append(k)
+        else:
+            unsolved_normal.append(k)
+
+    dict = {"data":{"total":len(dataList_1),"solved":len(solved),"unsolved":len(unsolved),"solved_normal":len(solved_normal),"solved_bad":len(solved_bad),"unsolved_normal":len(unsolved_normal),"unsolved_bad":len(unsolved_bad)}}
+
+
+    return json.dumps(dict)
+
+# 施工班组安全问题
+@app.route("/jiangjin/safe/team")
+def safe_team():
+
+    url_1 = "http://www.tylinbim.com/wui/safeProList"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+    gangjin = []
+    muban = []
+    qizhuan = []
+    fangshui = []
+    jiaoshoujia = []
+    nuantong = []
+    xiaofang = []
+    jipaishui = []
+    qiangruodian = []
+    tadiao = []
+    hunningtu = []
+    dianhan = []
+    unknow = []
+
+    for i in dataList_1:
+        if i["team"] == "钢筋班组":
+            gangjin.append(i)
+        elif i["team"] == "模板班组":
+            muban.append(i)
+        elif i["team"] == "砌砖班组":
+            qizhuan.append(i)
+        elif i["team"] == "防水班组":
+            fangshui.append(i)
+        elif i["team"] == "脚手架班组":
+            jiaoshoujia.append(i)
+        elif i["team"] == "暖通班组":
+            nuantong.append(i)
+        elif i["team"] == "消防班组":
+            xiaofang.append(i)
+        elif i["team"] == "给排水班组":
+            jipaishui.append(i)
+        elif i["team"] == "强弱电班组":
+            qiangruodian.append(i)
+        elif i["team"] == "塔吊班组":
+            tadiao.append(i)
+        elif i["team"] == "混凝土班组":
+            hunningtu.append(i)
+        elif i["team"] == "电焊班组":
+            dianhan.append(i)
+        else:
+            unknow.append(i)
+
+    dict ={"data":{
+                   "x":["钢筋","模板","砌砖","防水","脚手架","暖通","消防","给排水","强弱电","塔吊","混凝土","电焊","未划分"],
+                   "y":[len(gangjin),len(muban),len(qizhuan),len(fangshui),len(jiaoshoujia),len(nuantong),len(xiaofang),len(jipaishui),len(qiangruodian),len(tadiao),len(hunningtu),len(dianhan),len(unknow)]
+          }}
+
+    return json.dumps(dict)
+
+
+
+
+
+
+
+
 
 # 晴雨表
 @app.route("/jiangjin/weather_table/editdata",methods=["POST"])
