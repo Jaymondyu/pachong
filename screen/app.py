@@ -248,30 +248,20 @@ def index_quality():
 # 进度
 @app.route("/jiangjin/index/jindu")
 def jindu():
-    sql_jindu = "select tujian,xuanwazhuang,wakongzhuang,jidian,muqiang,jingzhuang,shiwaigongcheng from jiangjin_screen where tujian is not NULL order by id desc LIMIT 1"
-    cursor.execute(sql_jindu)
-    jindu = cursor.fetchall()
-
 
     list = [
-        {"data": jindu[0][0],
-         "name":"土建工程"},
-        {"comp": jindu[0][1],
-         "total":227,
-         "data":float(jindu[0][1])/227*100,
-         "name":"旋挖桩"},
-        {"comp": jindu[0][2],
-         "total": 190,
-         "data":float(jindu[0][2])/190*100,
-         "name":"挖孔桩"},
-        {"data": jindu[0][3],
+        {"data": 43.57,
+         "name":"结构工程"},
+        {"data":3.39,
+         "name":"建筑工程"},
+        {"data":0,
          "name":"机电工程"},
-        {"data": jindu[0][4],
+        {"data": 0,
          "name":"幕墙工程"},
-        {"data": jindu[0][5],
+        {"data":0,
          "name":"精装工程"},
-        {"data": jindu[0][6],
-         "name":"室外工程"}
+        {"data": 0,
+         "name":"景观工程"}
     ]
     return json.dumps(list)
 # 进度上传
@@ -941,6 +931,218 @@ def quality_team():
 
     return json.dumps(dict)
 
+# 本周质量问题数量
+@app.route("/jiangjin/quality/week_question")
+def quality_week_question():
+    url_1 = "http://www.tylinbim.com/wui/qualityProList"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    datetime_now = datetime.datetime.now()
+    today = datetime_now.strftime("%Y-%m-%d")
+    last_1_day = (datetime_now - relativedelta(days=1)).strftime("%Y-%m-%d")
+    last_2_day = (datetime_now - relativedelta(days=2)).strftime("%Y-%m-%d")
+    last_3_day = (datetime_now - relativedelta(days=3)).strftime("%Y-%m-%d")
+    last_4_day = (datetime_now - relativedelta(days=4)).strftime("%Y-%m-%d")
+    last_5_day = (datetime_now - relativedelta(days=5)).strftime("%Y-%m-%d")
+    last_6_day = (datetime_now - relativedelta(days=6)).strftime("%Y-%m-%d")
+
+    today_list = []
+    last_1_day_list = []
+    last_2_day_list = []
+    last_3_day_list = []
+    last_4_day_list = []
+    last_5_day_list = []
+    last_6_day_list = []
+
+    for i in dataList_1:
+        if i["checkTime"] == today:
+            today_list.append(i)
+        elif i["checkTime"] == last_1_day:
+            last_1_day_list.append(i)
+        elif i["checkTime"] == last_2_day:
+            last_2_day_list.append(i)
+        elif i["checkTime"] == last_3_day:
+            last_3_day_list.append(i)
+        elif i["checkTime"] == last_4_day:
+            last_4_day_list.append(i)
+        elif i["checkTime"] == last_5_day:
+            last_5_day_list.append(i)
+        elif i["checkTime"] == last_6_day:
+            last_6_day_list.append(i)
+        else:
+            pass
+
+    d1 = (datetime_now - relativedelta(days=6)).strftime("%m/%d")
+    d2 = (datetime_now - relativedelta(days=5)).strftime("%m/%d")
+    d3 = (datetime_now - relativedelta(days=4)).strftime("%m/%d")
+    d4 = (datetime_now - relativedelta(days=3)).strftime("%m/%d")
+    d5 = (datetime_now - relativedelta(days=2)).strftime("%m/%d")
+    d6 = (datetime_now - relativedelta(days=1)).strftime("%m/%d")
+    d7 = last_6_day = datetime_now.strftime("%m/%d")
+
+    dict = {
+        "data": {
+            "x": [d1, d2, d3, d4, d5, d6, d7],
+            "y": [len(last_6_day_list), len(last_5_day_list), len(last_4_day_list), len(last_3_day_list),
+                  len(last_2_day_list), len(last_1_day_list), len(today_list)]}
+    }
+
+    return json.dumps(dict)
+
+# 本周质量问题统计
+@app.route("/jiangjin/quality/week_question_state")
+def quality_week_question_state():
+    url_1 = "http://www.tylinbim.com/wui/qualityProList"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    datetime_now = datetime.datetime.now()
+    today = datetime_now.strftime("%Y-%m-%d")
+    last_1_day = (datetime_now - relativedelta(days=1)).strftime("%Y-%m-%d")
+    last_2_day = (datetime_now - relativedelta(days=2)).strftime("%Y-%m-%d")
+    last_3_day = (datetime_now - relativedelta(days=3)).strftime("%Y-%m-%d")
+    last_4_day = (datetime_now - relativedelta(days=4)).strftime("%Y-%m-%d")
+    last_5_day = (datetime_now - relativedelta(days=5)).strftime("%Y-%m-%d")
+    last_6_day = (datetime_now - relativedelta(days=6)).strftime("%Y-%m-%d")
+
+    today_list = []
+    last_1_day_list = []
+    last_2_day_list = []
+    last_3_day_list = []
+    last_4_day_list = []
+    last_5_day_list = []
+    last_6_day_list = []
+
+    today_solved_list = []
+    last_1_day_solved_list = []
+    last_2_day_solved_list = []
+    last_3_day_solved_list = []
+    last_4_day_solved_list = []
+    last_5_day_solved_list = []
+    last_6_day_solved_list = []
+
+    for i in dataList_1:
+        if i["checkTime"] == today:
+            today_list.append(i)
+            if i["rectificate"] == "是":
+                today_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_1_day:
+            last_1_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_1_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_2_day:
+            last_2_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_2_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_3_day:
+            last_3_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_3_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_4_day:
+            last_4_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_4_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_5_day:
+            last_5_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_5_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_6_day:
+            last_6_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_6_day_solved_list.append(i)
+            else:
+                pass
+        else:
+            pass
+
+    d1 = (datetime_now - relativedelta(days=6)).strftime("%m/%d")
+    d2 = (datetime_now - relativedelta(days=5)).strftime("%m/%d")
+    d3 = (datetime_now - relativedelta(days=4)).strftime("%m/%d")
+    d4 = (datetime_now - relativedelta(days=3)).strftime("%m/%d")
+    d5 = (datetime_now - relativedelta(days=2)).strftime("%m/%d")
+    d6 = (datetime_now - relativedelta(days=1)).strftime("%m/%d")
+    d7 = datetime_now.strftime("%m/%d")
+
+    dict = {
+        "data": {
+            "x": [d1, d2, d3, d4, d5, d6, d7],
+            "total": [len(last_6_day_list), len(last_5_day_list), len(last_4_day_list), len(last_3_day_list),
+                      len(last_2_day_list), len(last_1_day_list), len(today_list)],
+            "solved": [len(last_6_day_solved_list), len(last_5_day_solved_list), len(last_4_day_solved_list),
+                       len(last_3_day_solved_list), len(last_2_day_solved_list), len(last_1_day_solved_list),
+                       len(today_solved_list)]}
+    }
+
+    return json.dumps(dict)
+
+# 未解决质量问题统计
+@app.route("/jiangjin/quality/unsolved_state")
+def quality_unsolved_state():
+    url_1 = "http://www.tylinbim.com/wui/qualityProList"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    datetime_now = datetime.datetime.now().strftime("%Y-%m-%d")
+    today = datetime.datetime.strptime(datetime_now, '%Y-%m-%d')
+
+    d30 = []
+    d30_60 = []
+    d60_90 = []
+    d90_120 = []
+    d120 = []
+    unsolved = []
+
+    for i in dataList_1:
+        if i["rectificate"] == "是":
+            pass
+        else:
+            unsolved.append(i)
+            day = str(today - datetime.datetime.strptime(i["checkTime"], '%Y-%m-%d'))
+            if day == "0:00:00":
+                day = 0
+            elif day == "1 day, 0:00:00":
+                day = 1
+            else:
+                day = int(day.replace(" days, 0:00:00", ""))
+            if day <= 30:
+                d30.append(i)
+            elif 30 < day <= 60:
+                d30_60.append(i)
+            elif 60 < day <= 90:
+                d60_90.append(i)
+            elif 90 < day <= 120:
+                d90_120.append(i)
+            elif 120 < day:
+                d120.append(i)
+
+    dict = {
+        "data": {
+            "x": ["<30", "30~60", "60~90", "90~120", ">120"],
+            "unsolved": [len(d30), len(d30_60), len(d60_90), len(d90_120), len(d120)],
+            "total": [len(d30), len(d30) + len(d30_60), len(d30) + len(d30_60) + len(d60_90),
+                      len(d30) + len(d30_60) + len(d60_90) + len(d90_120),
+                      len(d30) + len(d30_60) + len(d60_90) + len(d90_120) + len(d120)]
+        }
+    }
+
+    return json.dumps(dict)
+
 # 安全管理
 # 饼状图
 @app.route("/jiangjin/safe/circle")
@@ -1035,11 +1237,217 @@ def safe_team():
 
     return json.dumps(dict)
 
+# 本周质量问题数量
+@app.route("/jiangjin/safe/week_question")
+def safe_week_question():
+    url_1 = "http://www.tylinbim.com/wui/safeProList"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
 
+    datetime_now = datetime.datetime.now()
+    today = datetime_now.strftime("%Y-%m-%d")
+    last_1_day = (datetime_now - relativedelta(days=1)).strftime("%Y-%m-%d")
+    last_2_day = (datetime_now - relativedelta(days=2)).strftime("%Y-%m-%d")
+    last_3_day = (datetime_now - relativedelta(days=3)).strftime("%Y-%m-%d")
+    last_4_day = (datetime_now - relativedelta(days=4)).strftime("%Y-%m-%d")
+    last_5_day = (datetime_now - relativedelta(days=5)).strftime("%Y-%m-%d")
+    last_6_day = (datetime_now - relativedelta(days=6)).strftime("%Y-%m-%d")
 
+    today_list = []
+    last_1_day_list = []
+    last_2_day_list = []
+    last_3_day_list = []
+    last_4_day_list = []
+    last_5_day_list = []
+    last_6_day_list = []
 
+    for i in dataList_1:
+        if i["checkTime"] == today:
+            today_list.append(i)
+        elif i["checkTime"] == last_1_day:
+            last_1_day_list.append(i)
+        elif i["checkTime"] == last_2_day:
+            last_2_day_list.append(i)
+        elif i["checkTime"] == last_3_day:
+            last_3_day_list.append(i)
+        elif i["checkTime"] == last_4_day:
+            last_4_day_list.append(i)
+        elif i["checkTime"] == last_5_day:
+            last_5_day_list.append(i)
+        elif i["checkTime"] == last_6_day:
+            last_6_day_list.append(i)
+        else:
+            pass
 
+    d1 = (datetime_now - relativedelta(days=6)).strftime("%m/%d")
+    d2 = (datetime_now - relativedelta(days=5)).strftime("%m/%d")
+    d3 = (datetime_now - relativedelta(days=4)).strftime("%m/%d")
+    d4 = (datetime_now - relativedelta(days=3)).strftime("%m/%d")
+    d5 = (datetime_now - relativedelta(days=2)).strftime("%m/%d")
+    d6 = (datetime_now - relativedelta(days=1)).strftime("%m/%d")
+    d7 = last_6_day = datetime_now.strftime("%m/%d")
 
+    dict = {
+        "data": {
+            "x": [d1, d2, d3, d4, d5, d6, d7],
+            "y": [len(last_6_day_list), len(last_5_day_list), len(last_4_day_list), len(last_3_day_list),
+                  len(last_2_day_list), len(last_1_day_list), len(today_list)]}
+    }
+
+    return json.dumps(dict)
+
+# 本周质量问题统计
+@app.route("/jiangjin/safe/week_question_state")
+def safe_week_question_state():
+    url_1 = "http://www.tylinbim.com/wui/safeProList"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    datetime_now = datetime.datetime.now()
+    today = datetime_now.strftime("%Y-%m-%d")
+    last_1_day = (datetime_now - relativedelta(days=1)).strftime("%Y-%m-%d")
+    last_2_day = (datetime_now - relativedelta(days=2)).strftime("%Y-%m-%d")
+    last_3_day = (datetime_now - relativedelta(days=3)).strftime("%Y-%m-%d")
+    last_4_day = (datetime_now - relativedelta(days=4)).strftime("%Y-%m-%d")
+    last_5_day = (datetime_now - relativedelta(days=5)).strftime("%Y-%m-%d")
+    last_6_day = (datetime_now - relativedelta(days=6)).strftime("%Y-%m-%d")
+
+    today_list = []
+    last_1_day_list = []
+    last_2_day_list = []
+    last_3_day_list = []
+    last_4_day_list = []
+    last_5_day_list = []
+    last_6_day_list = []
+
+    today_solved_list = []
+    last_1_day_solved_list = []
+    last_2_day_solved_list = []
+    last_3_day_solved_list = []
+    last_4_day_solved_list = []
+    last_5_day_solved_list = []
+    last_6_day_solved_list = []
+
+    for i in dataList_1:
+        if i["checkTime"] == today:
+            today_list.append(i)
+            if i["rectificate"] == "是":
+                today_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_1_day:
+            last_1_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_1_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_2_day:
+            last_2_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_2_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_3_day:
+            last_3_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_3_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_4_day:
+            last_4_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_4_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_5_day:
+            last_5_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_5_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_6_day:
+            last_6_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_6_day_solved_list.append(i)
+            else:
+                pass
+        else:
+            pass
+
+    d1 = (datetime_now - relativedelta(days=6)).strftime("%m/%d")
+    d2 = (datetime_now - relativedelta(days=5)).strftime("%m/%d")
+    d3 = (datetime_now - relativedelta(days=4)).strftime("%m/%d")
+    d4 = (datetime_now - relativedelta(days=3)).strftime("%m/%d")
+    d5 = (datetime_now - relativedelta(days=2)).strftime("%m/%d")
+    d6 = (datetime_now - relativedelta(days=1)).strftime("%m/%d")
+    d7 = datetime_now.strftime("%m/%d")
+
+    dict = {
+        "data": {
+            "x": [d1, d2, d3, d4, d5, d6, d7],
+            "total": [len(last_6_day_list), len(last_5_day_list), len(last_4_day_list), len(last_3_day_list),
+                      len(last_2_day_list), len(last_1_day_list), len(today_list)],
+            "solved": [len(last_6_day_solved_list), len(last_5_day_solved_list), len(last_4_day_solved_list),
+                       len(last_3_day_solved_list), len(last_2_day_solved_list), len(last_1_day_solved_list),
+                       len(today_solved_list)]}
+    }
+
+    return json.dumps(dict)
+
+# 未解决质量问题统计
+@app.route("/jiangjin/safe/unsolved_state")
+def safe_unsolved_state():
+    url_1 = "http://www.tylinbim.com/wui/safeProList"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    datetime_now = datetime.datetime.now().strftime("%Y-%m-%d")
+    today = datetime.datetime.strptime(datetime_now, '%Y-%m-%d')
+
+    d30 = []
+    d30_60 = []
+    d60_90 = []
+    d90_120 = []
+    d120 = []
+    unsolved = []
+
+    for i in dataList_1:
+        if i["rectificate"] == "是":
+            pass
+        else:
+            unsolved.append(i)
+            day = str(today - datetime.datetime.strptime(i["checkTime"], '%Y-%m-%d'))
+            if day == "0:00:00":
+                day = 0
+            elif day == "1 day, 0:00:00":
+                day = 1
+            else:
+                day = int(day.replace(" days, 0:00:00", ""))
+            if day <= 30:
+                d30.append(i)
+            elif 30 < day <= 60:
+                d30_60.append(i)
+            elif 60 < day <= 90:
+                d60_90.append(i)
+            elif 90 < day <= 120:
+                d90_120.append(i)
+            elif 120 < day:
+                d120.append(i)
+
+    dict = {
+        "data": {
+            "x": ["<30", "30~60", "60~90", "90~120", ">120"],
+            "unsolved": [len(d30), len(d30_60), len(d60_90), len(d90_120), len(d120)],
+            "total": [len(d30), len(d30) + len(d30_60), len(d30) + len(d30_60) + len(d60_90),
+                      len(d30) + len(d30_60) + len(d60_90) + len(d90_120),
+                      len(d30) + len(d30_60) + len(d60_90) + len(d90_120) + len(d120)]
+        }
+    }
+
+    return json.dumps(dict)
 
 
 
@@ -1133,30 +1541,20 @@ def yuelai_index_renyuan():
 # 进度
 @app.route("/yuelai/index/jindu")
 def yuelai_jindu():
-    sql_jindu = "select tujian,xuanwazhuang,wakongzhuang,jidian,muqiang,jingzhuang,shiwaigongcheng from jiangjin_screen where tujian is not NULL order by id desc LIMIT 1"
-    cursor.execute(sql_jindu)
-    jindu = cursor.fetchall()
-
 
     list = [
-        {"data": jindu[0][0],
-         "name":"土建工程"},
-        {"comp": jindu[0][1],
-         "total":227,
-         "data":float(jindu[0][1])/227*100,
-         "name":"旋挖桩"},
-        {"comp": jindu[0][2],
-         "total": 190,
-         "data":float(jindu[0][2])/190*100,
-         "name":"挖孔桩"},
-        {"data": jindu[0][3],
+        {"data": 0,
+         "name":"结构工程"},
+        {"data":0,
+         "name":"建筑工程"},
+        {"data":0,
          "name":"机电工程"},
-        {"data": jindu[0][4],
+        {"data": 0,
          "name":"幕墙工程"},
-        {"data": jindu[0][5],
+        {"data":0,
          "name":"精装工程"},
-        {"data": jindu[0][6],
-         "name":"室外工程"}
+        {"data": 0,
+         "name":"景观工程"}
     ]
     return json.dumps(list)
 

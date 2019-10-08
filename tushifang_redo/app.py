@@ -51,7 +51,7 @@ plan_car = plan_out / car_take  # 计划每日出土车数 (=计划每日出土�
 
 # 累计出土方量调取方法
 def leiji(date):
-    search = "select day_out from yuelai__tushifang__test where date <" + "'" + str(date) + "'"
+    search = "select day_out from yuelai__tushifang where date <" + "'" + str(date) + "'"
     cursor.execute(search)
     result = cursor.fetchall()
     sum = 0
@@ -61,7 +61,7 @@ def leiji(date):
 
 # 实际累计出土车数
 def leiji_che(date):
-    search = "select day_car_out from yuelai__tushifang__test where date <" + "'" + str(date) + "'"
+    search = "select day_car_out from yuelai__tushifang where date <" + "'" + str(date) + "'"
     cursor.execute(search)
     result = cursor.fetchall()
     sum = 0
@@ -70,15 +70,13 @@ def leiji_che(date):
     return sum
 
 
-
-
-
 # 向数据库中写入数据
 @app.route("/insert",methods=["POST"])
 def insert():
 
     # 获取前端传来的信息-----------------------------------------------------------------------------------------------------------------------------
     data = request.get_json()
+
     # 基本信息
     date = datetime.datetime.strptime(data["date"],'%Y-%m-%d')        # 当天日期          date
     car_amount = data["car_amount"]         # 运渣车数量     (需要输入)      int
@@ -112,8 +110,8 @@ def insert():
     car_amount_total = leiji_che(date) + day_car_out        # 实际累计出土车数
     car_amount_plan = plan_car * days_gone                  #计划累计出土车数(=计划每日出土车数*已用工期
     deviation_car_amount = car_amount_total - car_amount_plan                # 出土车数偏差(=实际累计出土车数-计划累计出土车数)
-    rate = day_out_total/out_total                   # 实际完成比例(=实际累计出土方量/总土石方量)
-    plan_rate = plan_day_out/out_total               # 计划完成比例(=计划累计出土方量/总土石方量)
+    rate = (day_out_total/float(out_total))*100                   # 实际完成比例(=实际累计出土方量/总土石方量)
+    plan_rate = (plan_day_out/float(out_total))*100               # 计划完成比例(=计划累计出土方量/总土石方量)
     deviation_rate = rate - plan_rate                # 比例偏差(=实际完成比例-计划完成比例)
 
     # 调整建议
@@ -121,17 +119,11 @@ def insert():
     advice_car = advice_out/car_take                # 后续每日建议出土车数(=实际剩余土石方量/剩余工期/核载量)
 
 
-
-
-
-
-
-
     # 录入数据库 --------------------------------------------------------------------------------------------------------------------------------------------------
-    insert = """insert into yuelai__tushifang__test 
-    (date,start_date,end_date,days,days_gone,days_remain,out_total,plan_out,plan_car,day_out_total,car_take,car_amount,zhachang,distance,digger_amount,day_car_out,day_out,manager,plan_day_out,deviation_out,out_remain,plan_out_remain,deviation_remain,car_amount_total,car_amount_plan,deviation_car_amount,rate,plan_rate,deviation_rate,advice_out,advice_car,file_path,area,ps) 
-    values 
-    (%s,%s,%s,%d,%d,%d,%d,%f,%d,%f,%f,%d,%s,%f,%d,%d,%f,%s,%f,%f,%f,%f,%f,%d,%d,%d,%f,%f,%f,%f,%d,%s,%s,%s)"""%("'"+str(date)+"'","'"+str(start_date)+"'","'"+str(end_date)+"'",days,days_gone,days_remain,out_total,plan_out,plan_car,day_out_total,car_take,car_amount,"'"+zhachang+"'",distance,digger_amount,day_car_out,day_out,"'"+str(manager)+"'",plan_day_out,deviation_out,out_remain,plan_out_remain,deviation_remain,car_amount_total,car_amount_plan,deviation_car_amount,rate,plan_rate,deviation_rate,advice_out,advice_car,"'"+file_path+"'","'"+area+"'","'"+ps+"'")
+    insert = """insert into yuelai__tushifang
+    (date,start_date,end_date,days,days_gone,days_remain,out_total,plan_out,plan_car,day_out_total,car_take,car_amount,zhachang,distance,digger_amount,day_car_out,day_out,manager,plan_day_out,deviation_out,out_remain,plan_out_remain,deviation_remain,car_amount_total,car_amount_plan,deviation_car_amount,rate,plan_rate,deviation_rate,advice_out,advice_car,file_path,area,ps)
+    values
+    (%s,%s,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%s,%s,%d,%d,%d,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%s,%s,%s)"""%("'"+str(date)+"'","'"+str(start_date)+"'","'"+str(end_date)+"'",days,days_gone,days_remain,out_total,plan_out,plan_car,day_out_total,car_take,car_amount,"'"+zhachang+"'","'"+str(distance)+"'",digger_amount,day_car_out,day_out,"'"+manager+"'",plan_day_out,deviation_out,out_remain,plan_out_remain,deviation_remain,car_amount_total,car_amount_plan,deviation_car_amount,rate,plan_rate,deviation_rate,advice_out,advice_car,"'"+file_path+"'","'"+ps+"'","'"+area+"'")
 
     cursor.execute(insert)
     conn.commit()
@@ -193,8 +185,8 @@ def select():
         "advice_out" :i[30],
         "advice_car" :i[31],
         "file_path":i[32],
-        "area":i[33],
-        "ps":i[34]
+        "area":i[34],
+        "ps":i[33]
         }
 
         list.append(dict)
@@ -268,6 +260,242 @@ def page():
     info = cursor.fetchall()
 
     return json.dumps(len(info))
+
+# ---------------------------------------------------华丽分割线-------------------------------------------------------------------
+# ---------------------------------------------------华丽分割线-------------------------------------------------------------------
+# ---------------------------------------------------华丽分割线-------------------------------------------------------------------
+# ---------------------------------------------------华丽分割线-------------------------------------------------------------------
+
+# 土石方图表页
+
+# 累计出土方量计划值与实际值对比
+@app.route("/real_vs_plan/total")
+def r_vs_p_total():
+    # 数据库操作
+    search = "select date,day_out_total,plan_day_out from yuelai__tushifang order by date"
+    cursor.execute(search)
+    info = cursor.fetchall()
+
+    x = []
+    real =[]
+    plan=[]
+
+    for i in info:
+        x.append(i[0].strftime('%Y-%m-%d'))
+        real.append(i[1])
+        plan.append(i[2])
+
+    dict = {
+        "data":{
+            "x":x,
+            "real":real,
+            "plan":plan
+        }
+    }
+
+    return json.dumps(dict)
+
+# 每日出土方量计划值与实际值对比
+@app.route("/real_vs_plan/day")
+def r_vs_p_day():
+    # 数据库操作
+    search = "select date,day_out,plan_out,advice_out from yuelai__tushifang order by date"
+    cursor.execute(search)
+    info = cursor.fetchall()
+
+    x = []
+    real =[]
+    plan=[]
+    advice=[0]
+
+    for i in info:
+        x.append(i[0].strftime('%Y-%m-%d'))
+        real.append(i[1])
+        plan.append(i[2])
+        advice.append(i[3])
+
+    dict = {
+        "data":{
+            "x":x,
+            "real":real,
+            "plan":plan,
+            "advice":advice[:-1]
+        }
+    }
+
+    return json.dumps(dict)
+
+# 环形 & 扇形 图表
+# 1. 实际累计出土方量 vs 计划累计出土方量(环)
+@app.route("/circle/real_vs_plan")
+def circle_r_vs_p():
+    # 数据库操作
+    search = "select date,day_out_total,plan_day_out from yuelai__tushifang order by date desc limit 1"
+    cursor.execute(search)
+    info = cursor.fetchall()
+
+    real =[]
+    plan=[]
+
+    for i in info:
+        real.append(i[1])
+        plan.append(i[2])
+
+    dict = {
+        "data":{
+            "real":real,
+            "plan":plan
+        }
+    }
+
+    return json.dumps(dict)
+# 2. 实际累计出土方量占比 vs 已用工期占比(环)
+@app.route("/circle/rate_vs_daysrate")
+def circle_rate_vs_daysrate():
+    # 数据库操作
+    search = "select rate,days,days_gone from yuelai__tushifang order by date desc limit 1"
+    cursor.execute(search)
+    info = cursor.fetchall()
+
+    rate = []
+    daysrate = []
+    for i in info:
+        rate.append(i[0]/100)
+        daysrate.append((i[2]/float(i[1])))
+    dict = {
+        "data":{
+            "rate":rate,
+            "daysrate":daysrate
+        }
+    }
+
+    return json.dumps(dict)
+# 3. 实际累计出土方量 vs 实际剩余土石方量(饼)
+@app.route("/pie/out_vs_remain")
+def pie_out_vs_remain():
+    # 数据库操作
+    search = "select day_out_total,out_remain from yuelai__tushifang order by date desc limit 1"
+    cursor.execute(search)
+    info = cursor.fetchall()
+
+    dict = {
+        "data":{
+            "out":info[0][0],
+            "remain":info[0][1]
+        }
+    }
+
+    return json.dumps(dict)
+# 4. 已用工期 vs 土石方总工期
+@app.route("/pie/days_vs_gone")
+def pie_days_vs_gone():
+    # 数据库操作
+    search = "select days,days_gone from yuelai__tushifang order by date desc limit 1"
+    cursor.execute(search)
+    info = cursor.fetchall()
+
+    dict = {
+        "data":{
+            "days":info[0][0],
+            "days_gone":info[0][1]
+        }
+    }
+
+    return json.dumps(dict)
+
+# 每周数据分析图表需求说明
+# 每周实际出土方量对比
+@app.route("/week/out")
+def week_out():
+    # 数据库操作
+    search = "select date,day_out from yuelai__tushifang order by date desc limit 14"
+    cursor.execute(search)
+    info = cursor.fetchall()
+
+    x=[]
+    y=[]
+    for i in info:
+        date = i[0].strftime('%a')
+        x.append(date)
+        y.append(i[1])
+
+    dict = {
+        "data":{
+            "x":x[0:7],
+            "y":y[0:7],
+            "y_1":y[7:]
+        }
+    }
+
+    return json.dumps(dict)
+# 每周实际累计出土方量对比
+@app.route("/week/out_total")
+def week_out_total():
+    # 数据库操作
+    search = "select date,day_out_total from yuelai__tushifang order by date desc limit 14"
+    cursor.execute(search)
+    info = cursor.fetchall()
+
+    x=[]
+    y=[]
+    for i in info:
+        date = i[0].strftime('%a')
+        x.append(date)
+        y.append(i[1])
+
+
+    dict = {
+        "data":{
+            "x":x[0:7],
+            "y":y[0:7],
+            "y_1":y[7:]
+        }
+    }
+
+    return json.dumps(dict)
+
+# 工期分析图表
+# 已用vs土石方工期
+@app.route("/watch/days_gone")
+def watch_days_gone():
+    # 数据库操作
+    search = "select days_gone,days from yuelai__tushifang order by date desc limit 1"
+    cursor.execute(search)
+    info = cursor.fetchall()
+
+    dict = {
+        "data":{
+            "days_gone":info[0][0],
+            "days":info[0][1],
+            "rate": (info[0][0]/float(info[0][1]))*100
+        }
+    }
+
+    return json.dumps(dict)
+# 已用vs总工期
+@app.route("/watch/total")
+def watch_total():
+    # 数据库操作
+    search = "select days_gone from yuelai__tushifang order by date desc limit 1"
+    cursor.execute(search)
+    info = cursor.fetchall()
+    days=750
+
+
+
+    dict = {
+        "data":{
+            "days_gone":info[0][0],
+            "total":days,
+            "rate": (info[0][0]/float(days))*100
+        }
+
+    }
+
+    return json.dumps(dict)
+
+
+
 
 
 application = app
