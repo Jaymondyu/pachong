@@ -157,16 +157,16 @@ def index_safe():
             month_now_solved.append(j)
     for k in month_1_before:
         if k["rectificate"] == "是":
-            month_now_solved.append(k)
+            month_1_before_solved.append(k)
     for l in month_2_before:
         if l["rectificate"] == "是":
-            month_now_solved.append(l)
+            month_2_before_solved.append(l)
     for m in month_3_before:
         if m["rectificate"] == "是":
-            month_now_solved.append(m)
+            month_3_before_solved.append(m)
     for n in month_4_before:
         if n["rectificate"] == "是":
-            month_now_solved.append(n)
+            month_4_before_solved.append(n)
 
     y = {
         "total": [len(month_4_before), len(month_3_before), len(month_2_before), len(month_1_before), len(month_now)],
@@ -224,16 +224,16 @@ def index_quality():
             month_now_solved.append(j)
     for k in month_1_before:
         if k["rectificate"] == "是":
-            month_now_solved.append(k)
+            month_1_before_solved.append(k)
     for l in month_2_before:
         if l["rectificate"] == "是":
-            month_now_solved.append(l)
+            month_2_before_solved.append(l)
     for m in month_3_before:
         if m["rectificate"] == "是":
-            month_now_solved.append(m)
+            month_3_before_solved.append(m)
     for n in month_4_before:
         if n["rectificate"] == "是":
-            month_now_solved.append(n)
+            month_4_before_solved.append(n)
 
     y = {
         "total": [len(month_4_before), len(month_3_before), len(month_2_before), len(month_1_before), len(month_now)],
@@ -2278,17 +2278,200 @@ def page():
 #---------------------------------------------------------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# 江苏园博园大屏
-
-@app.route("/jiangsu/pic")
-def jiangsu_pic():
-    return render_template("jiangsu_pic.html")
+# 重庆市残疾人康复中心项目大屏
 
 
+# 驾驶舱
+@app.route("/canlian")
+def canlian():
+    return render_template("index_canlian.html")
 
+# 项目概况
+@app.route("/canlian/index/intro")
+def canlian_intro():
+    dict = {"data":{
+        "data": """        重庆市残疾人康复中心 （一期）工程位于大渡口区大渡口组团H分区H15-15-3号宗地。项目投资：项目总投资16992.04万元。其中工程费14111.53万元，工程建设其他费2071.36万元，预备费809.15万元。资金来源：中央预算内投资3200万元，市预算内统筹资金1000万元，市残疾人就业保障金12793万元。
+        本项目总用地面积31587平方米，建筑密度12.74%，容积率0.662，绿地率38.89%。拟建总建筑面积为30394.41平方米，其中地上建筑面积20907.12平方米，地下建筑面积9487.29平方米。停车位254个（其中地上车位76个，地下车位178个）。项目主要建设内容包括2栋建筑（1#楼，2#楼）。1#楼主要包括：餐厅、影像检验、信息中心、辅具用房、听力康复业务用房、管理用房；2#楼主要包括：康复门诊、社区医疗、康复理疗业务用房；地下建筑包括：车库、设备用房、医疗辅助用房。
+        """
+    }}
+    return json.dumps(dict)
 
+# 效果图预览
+@app.route("/canlian/index/pic")
+def canlian_pic():
+    list={
+       "data":{"data":[{"url":"http://183.66.213.82:8888/screen/static/canlian_pic/1.jpg"},{"url":"http://183.66.213.82:8888/screen/static/canlian_pic/2.jpg"},{"url":"http://183.66.213.82:8888/screen/static/canlian_pic/3.jpg"},{"url":"http://183.66.213.82:8888/screen/static/canlian_pic/4.jpg"},{"url":"http://183.66.213.82:8888/screen/static/canlian_pic/5.jpg"},{"url":"http://183.66.213.82:8888/screen/static/canlian_pic/6.jpg"},{"url":"http://183.66.213.82:8888/screen/static/canlian_pic/7.jpg"}]}
+    }
+    return json.dumps(list)
 
+# 参建单位
+@app.route("/canlian/index/company")
+def canlian_company():
+    list = {"data":[
+        {
+            "unit": "建设单位",
+            "company": "重庆市残疾人联合会"
+        },
+        {
+            "unit": "项目管理+BIM单位",
+            "company": "林同棪国际工程咨询（中国）有限公司"
+        }, {
+            "unit": "设计单位",
+            "company": "中煤科工集团重庆设计研究院有限公司"
+        }, {
+            "unit": "勘察单位",
+            "company": "深圳市工勘岩土集团有限公司"
+        }, {
+            "unit": "施工单位",
+            "company": "重庆建工住房建设有限公司"
+        }, {
+            "unit": "监理单位",
+            "company": "河南新恒丰工程咨询有限公司"
+        }, {
+            "unit": "财务审计单位",
+            "company": "重庆渝证会计师事务所有限公司"
+        },{
+            "unit": "造价审计单位",
+            "company": "重庆恒诺建设工程咨询有限公司"
+        }
+    ]}
+    return json.dumps(list)
 
+# 进度
+@app.route("/canlian/index/jindu")
+def canlian_jindu():
+
+    list = [
+        {"data": 0,
+         "name":"土建工程"},
+        {"data":0,
+         "name":"机电工程"},
+        {"data":0,
+         "name":"精装工程"},
+        {"data": 0,
+         "name":"室外工程"},
+    ]
+    return json.dumps(list)
+
+# 无人机地址
+@app.route("/canlian/index/wurenji")
+def canlian_wurenji():
+    dict = {"data":
+        {"data":"https://720yun.com/t/7fvknefq0pl"}
+    }
+    return json.dumps(dict)
+
+# 模型(左)地址
+@app.route("/canlian/index/iframe_left")
+def canlian_iframe_left():
+    dict = {"data":
+        {"data":"http://www.tylinbim.com/4DAnalog/qrshare/s.action?newUrl=JjEBzi"}
+    }
+    return json.dumps(dict)
+
+# 模型(右)地址
+@app.route("/canlian/index/iframe_right")
+def canlian_iframe_right():
+    dict = {"data":
+        {"data":"http://www.tylinbim.com/4DAnalog/qrshare/s.action?newUrl=Nfe2e2"}
+    }
+    return json.dumps(dict)
+
+# 产值统计
+@app.route("/canlian/index/chanzhi")
+def canlian_index_renyuan():
+    dict = {
+        "x":["8月第1周","8月第2周","8月第3周","8月第4周"],
+        "y":[{"name":"计划产值","data":[200,400,450,500]},{"name":"实际产值","data":[150,350,400,450]}]
+    }
+    return json.dumps(dict)
+
+# 质量&安全问题
+@app.route("/canlian/index/zhiliang_anquan")
+def canlian_index_safe():
+    # 日期确认
+    datetime_now = datetime.datetime.now()
+    this_month = datetime.datetime.now().strftime('%Y-%m')
+    last_1_month = (datetime_now - relativedelta(months=1)).strftime('%Y-%m')
+    last_2_month = (datetime_now - relativedelta(months=2)).strftime('%Y-%m')
+    last_3_month = (datetime_now - relativedelta(months=3)).strftime('%Y-%m')
+    last_4_month = (datetime_now - relativedelta(months=4)).strftime('%Y-%m')
+    month_now = []
+    month_1_before = []
+    month_2_before = []
+    month_3_before = []
+    month_4_before = []
+    # 安全部分
+
+    url_1 = "http://www.tylinbim.com/wui/safeProList"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+    for i in dataList_1:
+        if str(i["checkTime"][0:7]) == this_month:
+            month_now.append(i)
+        elif str(i["checkTime"][0:7]) == last_1_month:
+            month_1_before.append(i)
+        elif str(i["checkTime"][0:7]) == last_2_month:
+            month_2_before.append(i)
+        elif str(i["checkTime"][0:7]) == last_3_month:
+            month_3_before.append(i)
+        elif str(i["checkTime"][0:7]) == last_4_month:
+            month_4_before.append(i)
+        else:
+            pass
+
+    month_now_solved = []
+    month_1_before_solved = []
+    month_2_before_solved = []
+    month_3_before_solved = []
+    month_4_before_solved = []
+    for j in month_now:
+        if j["rectificate"] == "是":
+            month_now_solved.append(j)
+    for k in month_1_before:
+        if k["rectificate"] == "是":
+            month_1_before_solved.append(k)
+    for l in month_2_before:
+        if l["rectificate"] == "是":
+            month_2_before_solved.append(l)
+    for m in month_3_before:
+        if m["rectificate"] == "是":
+            month_3_before_solved.append(m)
+    for n in month_4_before:
+        if n["rectificate"] == "是":
+            month_4_before_solved.append(n)
+
+    y = [
+        {"name":"问题总数","data": [len(month_4_before), len(month_3_before), len(month_2_before), len(month_1_before), len(month_now)]},
+        {"name":"已解决","data": [len(month_4_before_solved), len(month_3_before_solved), len(month_2_before_solved),len(month_1_before_solved), len(month_now_solved)]}
+    ]
+    x = [last_4_month, last_3_month, last_2_month, last_1_month, this_month]
+
+    dict = {"y": y, "x": x}
+
+    return json.dumps(dict)
+
+# 天气
+@app.route("/canlian/index/weather")
+def canlian_index_weather():
+    # 数据库查询
+    sql_weather = "select pm2p5,pm10,noise,temperature from environment order by id desc LIMIT 1"
+    cursor.execute(sql_weather)
+    enviroment = cursor.fetchall()
+    # 获取剩余天数
+    days = requests.get("http://183.66.213.82:8888/shenzhen/date/begin?d=2018-09-26")
+    days = days.text
+    days = int(days[10:-2])
+    # 整合
+    list = {"data":{
+        "pm2p5": enviroment[0][0],
+        "pm10": enviroment[0][1],
+        "noise": enviroment[0][2],
+        "temperature": enviroment[0][3],
+        "days": days
+    }}
+    return json.dumps(list)
 
 
 

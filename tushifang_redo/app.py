@@ -26,6 +26,9 @@ def show():
 @app.route("/down")
 def down():
     return render_template("down.html")
+@app.route("/data")
+def data():
+    return render_template("data.html")
 
 # 上传渣票打包文件
 @app.route("/img",methods=["POST"])
@@ -341,10 +344,15 @@ def circle_r_vs_p():
         real.append(i[1])
         plan.append(i[2])
 
+    left_real = out_total-real[0]
+    left_plan = out_total-plan[0]
+
     dict = {
         "data":{
             "real":real,
-            "plan":plan
+            "plan":plan,
+            "left_real":left_real,
+            "left_plan":left_plan
         }
     }
 
@@ -353,21 +361,24 @@ def circle_r_vs_p():
 @app.route("/circle/rate_vs_daysrate")
 def circle_rate_vs_daysrate():
     # 数据库操作
-    search = "select rate,days,days_gone from yuelai__tushifang order by date desc limit 1"
+    search = "select day_out_total,days,days_gone from yuelai__tushifang order by date desc limit 1"
     cursor.execute(search)
     info = cursor.fetchall()
 
     rate = []
     daysrate = []
     for i in info:
-        rate.append(i[0]/100)
-        daysrate.append((i[2]/float(i[1])))
+        rate.append(i[0]/float(out_total)*100)
+        daysrate.append((i[2]/float(i[1]))*100)
     dict = {
         "data":{
             "rate":rate,
-            "daysrate":daysrate
+            "daysrate":daysrate,
+            "left_rate":100-rate[0],
+            "left_daysrate":100-daysrate[0]
         }
     }
+
 
     return json.dumps(dict)
 # 3. 实际累计出土方量 vs 实际剩余土石方量(饼)

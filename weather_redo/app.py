@@ -13,6 +13,9 @@ sys.setdefaultencoding('utf8')
 
 app = Flask(__name__)
 
+conn = mysql.connector.connect(host='183.66.213.82',port="8803",user= 'tylin',password ='Tylin@123',database ='weather_database',auth_plugin='mysql_native_password') #连接数据库，创建Flask_app数据库
+cursor = conn.cursor()
+
 # 7天天气预报
 @app.route("/yuelai/7d")
 def yuelai_7d():
@@ -61,19 +64,112 @@ def yuelai_now():
     respone = respone.content
 
     temp = re.findall(r'<span class="temp">(.*?)</span>',respone)[0]
+    weather = re.findall(r'<div class="weather dis">(.*?)</div>',respone)[0]
+    maxtemp = re.findall(r'<div id="maxTempDiv"><img src="http://i.tq121.com.cn/i/weather2017/max.png"><span>(.*?)</span></div>',respone)[0].replace("℃","")
+    wind = re.findall(r'<p><img src="http://i.tq121.com.cn/i/weather2017/windIcon.png"><span>(.*?)</span></p>',respone)[0]
+    humity = re.findall(r'<p><img src="http://i.tq121.com.cn/i/weather2017/sdIcon.png"><span>(.*?)</span></p>',respone)[0]
 
-    return temp
+    dict ={
+        "data":{
+            "temp":int(temp),
+            "weather":weather,
+            "maxtemp":int(maxtemp),
+            "wind":wind,
+            "humity":humity
+        }
+    }
 
+    return json.dumps(dict)
 
+# 天气预警
+@app.route("/yuelai/alart")
+def yuelai_alart():
+    url = "http://forecast.weather.com.cn/town/weathern/101040700026.shtml"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'
+    }
+    respone = requests.get(url, headers=headers)
+    respone = respone.content
 
+    data_high = re.findall(r'var eventDay =(.*?);', respone)[0].replace("[", "").replace("]", "").replace('"', "")
 
+    high_7d = data_high.split(',')[1:]
+    weather_7d = re.findall(r'<p class="weather-info" title="(.*?)">', respone, re.S)
 
+    rain = 0
+    for i in weather_7d:
+        if i.find("雨")!=-1:
+            rain=rain+1
+    high = 0
+    for l in high_7d:
+        if int(l) >=35:
+            high = high +1
 
+    dict = {
+        "data":{
+            "rain":rain,
+            "high":high,
+            "wind":0,
+            "typhoon":0
+        }
+    }
 
+    return json.dumps(dict)
 
+# 录入
+@app.route("/yuelai/insert",methods=["POST"])
+def yuelai_insert():
+    data = request.get_json()
 
+    date = data["date"]
+    weather = data["weather"]
+    hightemp = data["hightemp"]
 
+    # 判断是否有重复数据
+    sql_try = "select * from yuelai where date = "+ "'"+date+"'"
+    cursor.execute(sql_try)
+    result_try = cursor.fetchall()
 
+    if result_try == []:
+        sql_insert = """
+                        insert into yuelai (date,weather,high_temp) values (%s,%s,%d)
+                    """%("'"+date+"'","'"+weather+"'",hightemp)
+        cursor.execute(sql_insert)
+        conn.commit()
+        alart = "已录入新数据"
+    else:
+        sql_update ="""
+                        update yuelai set weather = (%s) where date = (%s)
+        """%("'"+weather+"'","'"+date+"'")
+        cursor.execute(sql_update)
+        conn.commit()
+        alart = "已修改数据"
+
+    return alart
+
+# 展示
+@app.route("/yuelai/show",methods=["POST"])
+def yuelai_show():
+    data = request.get_json()
+    date = data["date"]
+    sql_search = "SELECT date,weather,high_temp from yuelai where DATE_FORMAT(date,'%Y-%m')="+'"'+date+'"'+" order by date"
+    cursor.execute(sql_search)
+    info = cursor.fetchall()
+    list = []
+    for i in info:
+        date = i[0].strftime('%Y-%m-%d')
+        weather = i[1]
+        hightemp = i[2]
+
+        dict = {
+            "date":date,
+            "weather":weather,
+            "hightemp":hightemp
+        }
+
+        list.append(dict)
+
+    return json.dumps(list)
 
 
 

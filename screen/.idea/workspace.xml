@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b6467536-7c9d-4ec6-82ce-4f62959766d6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../tushifang_redo/data_insert.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../weather_redo/.idea/weather_redo.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../weather_redo/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tushifang_redo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tushifang_redo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tushifang_redo/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tushifang_redo/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tushifang_redo/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tushifang_redo/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../weather_redo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../weather_redo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../weather_redo/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/../weather_redo/app.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,8 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5825">
-              <caret line="1549" column="18" lean-forward="true" selection-start-line="1549" selection-start-column="18" selection-end-line="1549" selection-end-column="18" />
+            <state relative-caret-position="306">
+              <caret line="2367" column="80" selection-start-line="2367" selection-start-column="80" selection-end-line="2367" selection-end-column="80" />
               <folding>
                 <element signature="e#14#61#0" expanded="true" />
                 <element signature="e#1037#1569#0" />
@@ -68,6 +64,28 @@
                 <element signature="e#44607#45005#0" />
                 <element signature="e#45084#45572#0" />
                 <element signature="e#46389#46940#0" />
+                <element signature="e#47014#47199#0" />
+                <element signature="e#47263#48053#0" />
+                <element signature="e#48120#48614#0" />
+                <element signature="e#48684#49322#0" />
+                <element signature="e#49385#49651#0" />
+                <element signature="e#49722#49823#0" />
+                <element signature="e#49904#50036#0" />
+                <element signature="e#50119#50251#0" />
+                <element signature="e#50346#53259#0" />
+                <element signature="e#53347#56454#0" />
+                <element signature="e#56542#59655#0" />
+                <element signature="e#59753#62778#0" />
+                <element signature="e#62874#65981#0" />
+                <element signature="e#66046#67133#0" />
+                <element signature="e#67216#71371#0" />
+                <element signature="e#71580#72074#0" />
+                <element signature="e#72151#72417#0" />
+                <element signature="e#72765#73403#0" />
+                <element signature="e#72760#73068#0" />
+                <element signature="e#73343#73444#0" />
+                <element signature="e#73740#73872#0" />
+                <element signature="e#73666#73851#0" />
               </folding>
             </state>
           </provider>
@@ -100,10 +118,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="-1928" />
+    <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="height" value="1096" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -199,15 +217,15 @@
       <workItem from="1567558006797" duration="26981000" />
       <workItem from="1568881620232" duration="6531000" />
       <workItem from="1569201224562" duration="21918000" />
-      <workItem from="1570496849507" duration="3180000" />
+      <workItem from="1570496849507" duration="13032000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="159776000" />
+    <option name="totallyTimeSpent" value="169628000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27771854" />
@@ -215,7 +233,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49946696" visible="true" weight="0.31527627" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946696" visible="true" weight="0.31464174" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -239,7 +257,7 @@
     <option name="version" value="1" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/screen$app.coverage" NAME="app Coverage Results" MODIFIED="1569564139960" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/screen$app.coverage" NAME="app Coverage Results" MODIFIED="1570601949425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/templates/index.html">
@@ -254,8 +272,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5825">
-          <caret line="1549" column="18" lean-forward="true" selection-start-line="1549" selection-start-column="18" selection-end-line="1549" selection-end-column="18" />
+        <state relative-caret-position="306">
+          <caret line="2367" column="80" selection-start-line="2367" selection-start-column="80" selection-end-line="2367" selection-end-column="80" />
           <folding>
             <element signature="e#14#61#0" expanded="true" />
             <element signature="e#1037#1569#0" />
@@ -300,6 +318,28 @@
             <element signature="e#44607#45005#0" />
             <element signature="e#45084#45572#0" />
             <element signature="e#46389#46940#0" />
+            <element signature="e#47014#47199#0" />
+            <element signature="e#47263#48053#0" />
+            <element signature="e#48120#48614#0" />
+            <element signature="e#48684#49322#0" />
+            <element signature="e#49385#49651#0" />
+            <element signature="e#49722#49823#0" />
+            <element signature="e#49904#50036#0" />
+            <element signature="e#50119#50251#0" />
+            <element signature="e#50346#53259#0" />
+            <element signature="e#53347#56454#0" />
+            <element signature="e#56542#59655#0" />
+            <element signature="e#59753#62778#0" />
+            <element signature="e#62874#65981#0" />
+            <element signature="e#66046#67133#0" />
+            <element signature="e#67216#71371#0" />
+            <element signature="e#71580#72074#0" />
+            <element signature="e#72151#72417#0" />
+            <element signature="e#72765#73403#0" />
+            <element signature="e#72760#73068#0" />
+            <element signature="e#73343#73444#0" />
+            <element signature="e#73740#73872#0" />
+            <element signature="e#73666#73851#0" />
           </folding>
         </state>
       </provider>
