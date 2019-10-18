@@ -34,23 +34,22 @@ def get_data(url):
     _data['日期'] = dates
     _data['天气'] = conditions
     _data['温度'] = temps
-    _data['风力风向'] = wind
 
     return _data
 
 
-data_1_mouth = get_data('http://www.tianqihoubao.com/lishi/shenzhen/month/201901.html')
-data_2_mouth = get_data('http://www.tianqihoubao.com/lishi/shenzhen/month/201902.html')
-data_3_mouth = get_data('http://www.tianqihoubao.com/lishi/shenzhen/month/201903.html')
-data_4_mouth = get_data('http://www.tianqihoubao.com/lishi/shenzhen/month/201904.html')
-data_5_mouth = get_data('http://www.tianqihoubao.com/lishi/shenzhen/month/201905.html')
-data_6_mouth = get_data('http://www.tianqihoubao.com/lishi/shenzhen/month/201906.html')
-data_7_mouth = get_data('http://www.tianqihoubao.com/lishi/shenzhen/month/201907.html')
-data_8_mouth = get_data('http://www.tianqihoubao.com/lishi/shenzhen/month/201908.html')
+data_1_mouth = get_data('http://www.tianqihoubao.com/lishi/beipei/month/201907.html')
+data_2_mouth = get_data('http://www.tianqihoubao.com/lishi/beipei/month/201908.html')
+data_3_mouth = get_data('http://www.tianqihoubao.com/lishi/beipei/month/201909.html')
+data_4_mouth = get_data('http://www.tianqihoubao.com/lishi/beipei/month/201910.html')
+# data_5_mouth = get_data('http://www.tianqihoubao.com/lishi/beipei/month/201905.html')
+# data_6_mouth = get_data('http://www.tianqihoubao.com/lishi/beipei/month/201906.html')
+# data_7_mouth = get_data('http://www.tianqihoubao.com/lishi/beipei/month/201907.html')
+# data_8_mouth = get_data('http://www.tianqihoubao.com/lishi/beipei/month/201908.html')
 
 
 # 将几个表格进行上下拼接
-data = pd.concat([data_1_mouth,data_2_mouth,data_3_mouth,data_4_mouth,data_5_mouth,data_6_mouth,data_7_mouth,data_8_mouth]).reset_index(drop=True)
+data = pd.concat([data_1_mouth,data_2_mouth,data_3_mouth,data_4_mouth]).reset_index(drop=True)
 
 #保存数据
-data.to_csv('shenzhen.csv',index=False,encoding='utf-8')
+data.to_csv('beipei.csv',index=False,encoding='utf-8')

@@ -2,10 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6c62a103-31c8-493f-8dbd-244f98696c97" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../Gomoku/.idea/Gomoku.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gomoku/corner_widget.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gomoku/game.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gomoku/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gomoku/window.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../screen/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../screen/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../screen/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/../screen/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../spider jiangjin/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../spider jiangjin/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../spiderman_modle/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../spiderman_modle/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../spiderman_modle/model_spiderman.py" beforeDir="false" afterPath="$PROJECT_DIR$/../spiderman_modle/model_spiderman.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tushifang_redo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tushifang_redo/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tushifang_redo/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tushifang_redo/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../weather spider/spider.py" beforeDir="false" afterPath="$PROJECT_DIR$/../weather spider/spider.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../数据分析与挖掘/.ipynb_checkpoints/数据分析与挖掘-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../数据分析与挖掘/.ipynb_checkpoints/数据分析与挖掘-checkpoint.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../数据分析与挖掘/数据分析与挖掘.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../数据分析与挖掘/数据分析与挖掘.ipynb" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,19 +27,24 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="278">
-              <caret line="172" lean-forward="true" selection-start-line="172" selection-end-line="172" />
+            <state relative-caret-position="384">
+              <caret line="119" column="45" lean-forward="true" selection-start-line="119" selection-start-column="45" selection-end-line="119" selection-end-column="45" />
               <folding>
                 <element signature="e#14#61#0" expanded="true" />
-                <element signature="e#323#1862#0" />
-                <element signature="e#1932#3020#0" />
-                <element signature="e#3081#3932#0" />
-                <element signature="e#4273#5082#0" />
-                <element signature="e#5138#5362#0" />
+                <element signature="e#1014#2688#0" />
+                <element signature="e#2747#3835#0" />
+                <element signature="e#3896#4798#0" />
+                <element signature="e#4876#5667#0" />
+                <element signature="e#5741#6267#0" />
+                <element signature="e#6888#8503#0" />
+                <element signature="e#8566#9780#0" />
+                <element signature="e#9805#10476#0" />
+                <element signature="e#10558#11355#0" />
+                <element signature="e#11433#11961#0" />
               </folding>
             </state>
           </provider>
@@ -51,22 +69,11 @@
       </list>
     </option>
   </component>
-  <component name="ProjectConfigurationFiles">
-    <option name="files">
-      <list>
-        <option value="$PROJECT_DIR$/.idea/weather_redo.iml" />
-        <option value="$PROJECT_DIR$/.idea/misc.xml" />
-        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
-        <option value="$PROJECT_DIR$/.idea/modules.xml" />
-        <option value="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" />
-      </list>
-    </option>
-  </component>
   <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="-1928" />
+    <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="height" value="1096" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -74,6 +81,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -85,13 +93,12 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../tushifang_redo" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -147,67 +154,86 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1570520313582</updated>
-      <workItem from="1570520327194" duration="17015000" />
+      <workItem from="1570520327194" duration="25771000" />
+      <workItem from="1571014875178" duration="14402000" />
+      <workItem from="1571362223377" duration="5097000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17015000" />
+    <option name="totallyTimeSpent" value="45270000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2553305" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Database Changes" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Python Console" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3434453" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3281412" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="Database" />
-      <window_info anchor="right" id="R Packages" />
-      <window_info anchor="right" id="SciView" />
-      <window_info anchor="right" id="R Graphics" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32936078" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Database Changes" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32936078" />
+      <window_info anchor="bottom" id="Python Console" order="12" weight="0.32936078" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" />
+      <window_info anchor="right" id="R Graphics" order="4" />
+      <window_info anchor="right" id="R Packages" order="5" />
+      <window_info anchor="right" id="Database" order="6" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/weather_redo$app.coverage" NAME="app Coverage Results" MODIFIED="1570599552003" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/weather_redo$app.coverage" NAME="app Coverage Results" MODIFIED="1571362791889" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/flask/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/flask/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="1934" selection-start-line="1934" selection-end-line="1934" />
+        <state relative-caret-position="-4219">
+          <caret line="102" column="6" selection-start-line="102" selection-start-column="6" selection-end-line="102" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="172" lean-forward="true" selection-start-line="172" selection-end-line="172" />
+        <state relative-caret-position="384">
+          <caret line="119" column="45" lean-forward="true" selection-start-line="119" selection-start-column="45" selection-end-line="119" selection-end-column="45" />
           <folding>
             <element signature="e#14#61#0" expanded="true" />
-            <element signature="e#323#1862#0" />
-            <element signature="e#1932#3020#0" />
-            <element signature="e#3081#3932#0" />
-            <element signature="e#4273#5082#0" />
-            <element signature="e#5138#5362#0" />
+            <element signature="e#1014#2688#0" />
+            <element signature="e#2747#3835#0" />
+            <element signature="e#3896#4798#0" />
+            <element signature="e#4876#5667#0" />
+            <element signature="e#5741#6267#0" />
+            <element signature="e#6888#8503#0" />
+            <element signature="e#8566#9780#0" />
+            <element signature="e#9805#10476#0" />
+            <element signature="e#10558#11355#0" />
+            <element signature="e#11433#11961#0" />
           </folding>
         </state>
       </provider>

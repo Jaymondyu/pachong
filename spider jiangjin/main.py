@@ -12,22 +12,9 @@ def get_cookies():
 	'''
 
     #  data中内容 是 Data Form中的内容
-	url = "http://www.tylinbim.com/login/VerifyLogin.jsp"
+	url = "https://www.mikecrm.com/contact.php"
 	data = {
-        "loginfile": "/wui/theme/ecology8/page/login.jsp?templateId=5&logintype=1&gopage=",
-        "logintype": "1",
-        "fontName": "微软雅黑",
-        "message": "",
-        "gopage": "",
-        "formmethod": "post",
-        "rnd": "",
-        "serial": "",
-        "username": "",
-        "isie": "false",
-        "islanguid": "7",
-        "loginid": "ltyzy",
-        "userpassword": "lty1234",
-        "submit": "立即登录",
+		"d": '{"cvs":{"al":1,"a":"zf2211@163.com","p1":"098795f5e186dd0aa122b3c945045069","p2":"0987b59cfce7a2725dae8a855b03a90c"}}'
 	}
 	r = requests.post(url, data=data)
 
@@ -40,10 +27,11 @@ def find_Doc(url):
     #     print(k,v)
 
         # get内容时 要把cookie带上
-    response = requests.get(url, cookies=cookies)
+    data={"d":'{"cvs":{"i":200412098}}'}
+    response = requests.get(url, cookies=cookies,data=data)
 
     html = response.content#.decode('utf-8')
 
     print(html)
 
-find_Doc('http://www.tylinbim.com/weaver/weaver.common.util.taglib.SplitPageXmlServlet?tableInstanceId=&tableString=A10DD11BF5E66C0075F87F40208E1C22&pageIndex=0&orderBy=null&otype=null&mode=run&customParams=null&selectedstrs=&pageId=Doc:list')
+find_Doc('https://www.mikecrm.com/handler/web/form_submit/handleGetListFormSubmitSummary.php')

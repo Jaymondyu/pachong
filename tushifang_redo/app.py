@@ -52,6 +52,7 @@ plan_out = out_total / days         # 计划每日出土方量(=总土石方量/
 car_take = 18               #核载量
 plan_car = plan_out / car_take  # 计划每日出土车数 (=计划每日出土方量/运渣车核载量（方))
 
+
 # 累计出土方量调取方法
 def leiji(date):
     search = "select day_out from yuelai__tushifang where date <" + "'" + str(date) + "'"
@@ -443,7 +444,7 @@ def week_out():
 @app.route("/week/out_total")
 def week_out_total():
     # 数据库操作
-    search = "select date,day_out_total from yuelai__tushifang order by date desc limit 14"
+    search = "select date,day_out from yuelai__tushifang order by date desc limit 14"
     cursor.execute(search)
     info = cursor.fetchall()
 

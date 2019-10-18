@@ -13,6 +13,11 @@ sys.setdefaultencoding('utf8')
 
 app = Flask(__name__)
 
+
+#############################################################################################################################################################
+####################################################悦来晴雨表###############################################################################################
+#############################################################################################################################################################
+
 conn = mysql.connector.connect(host='183.66.213.82',port="8803",user= 'tylin',password ='Tylin@123',database ='weather_database',auth_plugin='mysql_native_password') #连接数据库，创建Flask_app数据库
 cursor = conn.cursor()
 
@@ -43,12 +48,7 @@ def yuelai_7d():
     weather_7d = re.findall(r'<p class="weather-info" title="(.*?)">', respone, re.S)
 
     dict_7d = {
-        "data": {
-            "x": [today, after_1_day, after_2_day, after_3_day, after_4_day, after_5_day, after_6_day],
-            "high": high_7d,
-            "low": low_7d,
-            "weather": weather_7d
-        }
+        "data":[[today,high_7d[0],weather_7d[0],low_7d[0]],[after_1_day,high_7d[1],weather_7d[1],low_7d[1]],[after_2_day,high_7d[2],weather_7d[2],low_7d[2]],[after_3_day,high_7d[3],weather_7d[3],low_7d[3]],[after_4_day,high_7d[4],weather_7d[4],low_7d[4]],[after_5_day,high_7d[5],weather_7d[5],low_7d[5]],[after_6_day,high_7d[6],weather_7d[6],low_7d[6]]]
     }
 
     return json.dumps(dict_7d)
@@ -124,6 +124,8 @@ def yuelai_insert():
     date = data["date"]
     weather = data["weather"]
     hightemp = data["hightemp"]
+    state = data["state"]
+    reason = data["reason"]
 
     # 判断是否有重复数据
     sql_try = "select * from yuelai where date = "+ "'"+date+"'"
@@ -132,15 +134,15 @@ def yuelai_insert():
 
     if result_try == []:
         sql_insert = """
-                        insert into yuelai (date,weather,high_temp) values (%s,%s,%d)
-                    """%("'"+date+"'","'"+weather+"'",hightemp)
+                        insert into yuelai (date,weather,high_temp,state,reason) values (%s,%s,%d,%d,%d)
+                    """%("'"+date+"'","'"+weather+"'",hightemp,state,reason)
         cursor.execute(sql_insert)
         conn.commit()
         alart = "已录入新数据"
     else:
         sql_update ="""
-                        update yuelai set weather = (%s) where date = (%s)
-        """%("'"+weather+"'","'"+date+"'")
+                        update yuelai set weather = (%s),high_temp=(%d),state=(%d),reason=(%d) where date = (%s)
+        """%("'"+weather+"'",hightemp,state,reason,"'"+date+"'")
         cursor.execute(sql_update)
         conn.commit()
         alart = "已修改数据"
@@ -152,7 +154,7 @@ def yuelai_insert():
 def yuelai_show():
     data = request.get_json()
     date = data["date"]
-    sql_search = "SELECT date,weather,high_temp from yuelai where DATE_FORMAT(date,'%Y-%m')="+'"'+date+'"'+" order by date"
+    sql_search = "SELECT date,weather,high_temp,state,reason from yuelai where DATE_FORMAT(date,'%Y-%m')="+'"'+date+'"'+" order by date"
     cursor.execute(sql_search)
     info = cursor.fetchall()
     list = []
@@ -160,6 +162,171 @@ def yuelai_show():
         date = i[0].strftime('%Y-%m-%d')
         weather = i[1]
         hightemp = i[2]
+        state = i[3]
+        reason = i[4]
+
+        dict = {
+            "date":date,
+            "weather":weather,
+            "hightemp":hightemp,
+            "state":state,
+            "reason":reason
+        }
+
+        list.append(dict)
+
+    return json.dumps(list)
+
+# 页面
+@app.route("/yuelai")
+def yuelai_page():
+    return render_template("yuelai.html")
+
+
+#############################################################################################################################################################
+####################################################江津晴雨表###############################################################################################
+#############################################################################################################################################################
+
+# 7天天气预报
+@app.route("/jiangjin/7d")
+def jiangjin_7d():
+    url = "https://wis.qq.com/weather/common?source=pc&weather_type=observe%7Cforecast_1h%7Cforecast_24h%7Cindex%7Calarm%7Climit%7Ctips%7Crise&province=%E9%87%8D%E5%BA%86&city=%E9%87%8D%E5%BA%86&county=%E6%B1%9F%E6%B4%A5&callback=jQuery111300454957025127154_1571031806969&_=1571031806980"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36',
+        "Referer": "https://tianqi.qq.com/index.htm"
+    }
+    respone = requests.get(url, headers=headers)
+    respone = respone.content.replace('jQuery111300454957025127154_1571031806969(','').replace(')','')
+    respone = json.loads(respone)
+    respone = respone['data']['forecast_24h']
+
+    today = [respone["1"]["time"],respone["1"]["max_degree"],respone["1"]["day_weather"],respone["1"]["min_degree"]]
+    d1 = [respone["2"]["time"],respone["2"]["max_degree"],respone["2"]["day_weather"],respone["2"]["min_degree"]]
+    d2 = [respone["3"]["time"],respone["3"]["max_degree"],respone["3"]["day_weather"],respone["3"]["min_degree"]]
+    d3 = [respone["4"]["time"],respone["4"]["max_degree"],respone["4"]["day_weather"],respone["4"]["min_degree"]]
+    d4 = [respone["5"]["time"],respone["5"]["max_degree"],respone["5"]["day_weather"],respone["5"]["min_degree"]]
+    d5 = [respone["6"]["time"],respone["6"]["max_degree"],respone["6"]["day_weather"],respone["6"]["min_degree"]]
+    d6 = [respone["7"]["time"],respone["7"]["max_degree"],respone["7"]["day_weather"],respone["7"]["min_degree"]]
+
+    dict_7d = {"data":[today,d1,d2,d3,d4,d5,d6]}
+
+    return json.dumps(dict_7d)
+
+# 实时天气信息
+@app.route("/jiangjin/now")
+def jiangjin_now():
+    url = "http://d1.weather.com.cn/sk_2d/101040500.html?_=1571023248676"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36',
+        "Referer": "http://www.weather.com.cn/weather1dn/101040500.shtml"
+    }
+    respone = requests.get(url, headers=headers)
+    respone = respone.content.replace("var dataSK = ","")
+    respone = json.loads(respone)
+
+    url_1 = "http://d1.weather.com.cn/dingzhi/101040500.html?_=1571023248678"
+    respone_1 = requests.get(url_1, headers=headers)
+    respone_1 = respone_1.content
+    respone_1 = re.findall('var cityDZ101040500 ={"weatherinfo":(.*?)};',respone_1)[0]
+    respone_1 = json.loads(respone_1)
+
+
+
+    temp = respone["temp"],
+    weather = respone["weather"],
+    maxtemp = respone_1["temp"],
+    wind = respone["WD"] + respone["WS"],
+    humity = "相对湿度"+respone["SD"]
+
+    dict ={
+        "data":{
+            "temp":int(temp[0]),
+            "weather":weather[0],
+            "maxtemp":int(maxtemp[0].replace("℃","")),
+            "wind":wind[0],
+            "humity":humity
+        }
+    }
+
+    return json.dumps(dict)
+
+# 天气预警
+@app.route("/jiangjin/alart")
+def jiangjin_alart():
+    url = "http://183.66.213.82:8888/weatherlist/jiangjin/7d"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'
+    }
+    respone = requests.get(url, headers=headers)
+    respone = respone.content
+    respone = json.loads(respone)
+
+    rain = 0
+    high = 0
+
+    for i in respone["data"]:
+        if i[2].find("雨")!=-1:
+            rain=rain+1
+        if int(i[1]) >=35:
+            high = high +1
+
+
+    dict = {
+        "data":{
+            "rain":rain,
+            "high":high,
+            "wind":0,
+            "typhoon":0
+        }
+    }
+
+    return json.dumps(dict)
+
+# 录入
+@app.route("/jiangjin/insert",methods=["POST"])
+def jiangjin_insert():
+    data = request.get_json()
+
+    date = data["date"]
+    weather = data["weather"]
+    hightemp = data["hightemp"]
+
+    # 判断是否有重复数据
+    sql_try = "select * from jiangjin where date = "+ "'"+date+"'"
+    cursor.execute(sql_try)
+    result_try = cursor.fetchall()
+
+    if result_try == []:
+        sql_insert = """
+                        insert into jiangjin (date,weather,high_temp) values (%s,%s,%d)
+                    """%("'"+date+"'","'"+weather+"'",hightemp)
+        cursor.execute(sql_insert)
+        conn.commit()
+        alart = "已录入新数据"
+    else:
+        sql_update ="""
+                        update jiangjin set weather = (%s),high_temp=(%d) where date = (%s)
+        """%("'"+weather+"'",hightemp,"'"+date+"'")
+        cursor.execute(sql_update)
+        conn.commit()
+        alart = "已修改数据"
+
+    return alart
+
+# 展示
+@app.route("/jiangjin/show",methods=["POST"])
+def jiangjin_show():
+    data = request.get_json()
+    date = data["date"]
+    sql_search = "SELECT date,weather,high_temp from jiangjin where DATE_FORMAT(date,'%Y-%m')="+'"'+date+'"'+" order by date"
+    cursor.execute(sql_search)
+    info = cursor.fetchall()
+    list = []
+    for i in info:
+        date = i[0].strftime('%Y-%m-%d')
+        weather = i[1]
+        hightemp = i[2]
+
 
         dict = {
             "date":date,
@@ -171,8 +338,12 @@ def yuelai_show():
 
     return json.dumps(list)
 
+# 页面
+@app.route("/jiangjin")
+def jiangjin_page():
+    return render_template("jiangjin.html")
 
 
 application = app
 if __name__ == '__main__':
-	app.run(host="0.0.0.0",port=8888, debug=True)
+	app.run(host="0.0.0.0",port=8808, debug=True)

@@ -61,8 +61,10 @@ def index_renyuan():
                     when department = "重庆联文建筑劳务有限公司" then 2
                     end s
                     FROM
-                        (select name,department, DATE_FORMAT(attendancetime, '%Y-%m-%d') as attendancetime from access
+                        (select access.name,department_person.department, DATE_FORMAT(attendancetime, '%Y-%m-%d') as attendancetime from access,department_person
                     WHERE
+                        access.name=department_person.name
+	                    and
                         DATE_FORMAT(attendancetime, '%Y-%m-%d') BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY) AND DATE_FORMAT(CURRENT_DATE, '%Y-%m-%d')
                     AND entry = 1
                     group by 1,2,3
@@ -127,6 +129,7 @@ def index_safe():
     month_2_before = []
     month_3_before = []
     month_4_before = []
+    month_long = []
     # 安全部分
 
     url_1 = "http://www.tylinbim.com/wui/safeProList"
@@ -146,6 +149,12 @@ def index_safe():
             month_4_before.append(i)
         else:
             pass
+
+    for nnd in dataList_1:
+        if str(nnd["checkTime"][0:7]) != last_4_month:
+            if int(str(datetime.datetime.strptime(str(nnd["checkTime"][0:7]),'%Y-%m') - datetime.datetime.strptime(last_4_month,'%Y-%m')).replace(" days, 0:00:00",""))<0:
+                month_long.append(nnd)
+
 
     month_now_solved = []
     month_1_before_solved = []
@@ -171,7 +180,10 @@ def index_safe():
     y = {
         "total": [len(month_4_before), len(month_3_before), len(month_2_before), len(month_1_before), len(month_now)],
         "solved": [len(month_4_before_solved), len(month_3_before_solved), len(month_2_before_solved),
-                   len(month_1_before_solved), len(month_now_solved)]
+                   len(month_1_before_solved), len(month_now_solved)],
+        "ALL": [len(month_long)+len(month_4_before),len(month_long)+len(month_4_before)+len(month_3_before),len(month_long)+len(month_4_before)+len(month_3_before)+len(month_2_before),
+                len(month_long)+len(month_4_before)+len(month_3_before)+len(month_2_before)+len(month_1_before),
+                len(month_long)+len(month_4_before)+len(month_3_before)+len(month_2_before)+len(month_1_before)+len(month_now)]
     }
     x = [last_4_month, last_3_month, last_2_month, last_1_month, this_month]
 
@@ -194,6 +206,7 @@ def index_quality():
     month_2_before = []
     month_3_before = []
     month_4_before = []
+    month_long = []
     # 安全部分
 
     url_1 = "http://www.tylinbim.com/wui/qualityProList"
@@ -213,6 +226,11 @@ def index_quality():
             month_4_before.append(i)
         else:
             pass
+
+    for nnd in dataList_1:
+        if str(nnd["checkTime"][0:7]) != last_4_month:
+            if int(str(datetime.datetime.strptime(str(nnd["checkTime"][0:7]),'%Y-%m') - datetime.datetime.strptime(last_4_month,'%Y-%m')).replace(" days, 0:00:00",""))<0:
+                month_long.append(nnd)
 
     month_now_solved = []
     month_1_before_solved = []
@@ -238,7 +256,12 @@ def index_quality():
     y = {
         "total": [len(month_4_before), len(month_3_before), len(month_2_before), len(month_1_before), len(month_now)],
         "solved": [len(month_4_before_solved), len(month_3_before_solved), len(month_2_before_solved),
-                   len(month_1_before_solved), len(month_now_solved)]
+                   len(month_1_before_solved), len(month_now_solved)],
+        "ALL": [len(month_long) + len(month_4_before), len(month_long) + len(month_4_before) + len(month_3_before),
+                len(month_long) + len(month_4_before) + len(month_3_before) + len(month_2_before),
+                len(month_long) + len(month_4_before) + len(month_3_before) + len(month_2_before) + len(month_1_before),
+                len(month_long) + len(month_4_before) + len(month_3_before) + len(month_2_before) + len(
+                    month_1_before) + len(month_now)]
     }
     x = [last_4_month, last_3_month, last_2_month, last_1_month, this_month]
 
@@ -321,13 +344,14 @@ def company():
 @app.route("/jiangjin/renyuan/guanli")
 def guanli():
     sql_guanli = """SELECT 
-            access.name, personnel.role, personnel.telephone, if(entry=1,'进场','出场') as entry, DATE_FORMAT(attendancetime,'%Y-%m-%d %H:%i:%s') as attendancetime, access.department 
-            from access,personnel 
-            where access.name=personnel.name 
+            access.name, personnel.role, personnel.telephone, if(entry=1,'进场','出场') as entry, DATE_FORMAT(attendancetime,'%Y-%m-%d %H:%i:%s') as attendancetime, department_person.department 
+            from access,personnel,department_person 
+            where access.name=personnel.name
+            and access.name=department_person.name
             and 
             DATE_FORMAT(attendancetime,'%Y-%m-%d') = date_format(CURRENT_DATE,'%Y-%m-%d') 
             AND
-             access.department in ('重庆建工住宅建设有限公司','林同棪【重庆】国际工程技术有限公司')"""
+             department_person.department in ('重庆建工住宅建设有限公司','林同棪【重庆】国际工程技术有限公司')"""
 
     cursor.execute(sql_guanli)
     guanli = cursor.fetchall()
@@ -349,12 +373,14 @@ def guanli():
 def laowu():
     sql_laowu = """
                 SELECT 
-                name, department,if(entry=1,'进场','出场') as entry, DATE_FORMAT(attendancetime,'%Y-%m-%d %H:%i:%s') as attendancetime 
-                from access 
-                where 
+                access.name, department_person.department,if(entry=1,'进场','出场') as entry, DATE_FORMAT(attendancetime,'%Y-%m-%d %H:%i:%s') as attendancetime 
+                from access,department_person 
+                where
+								access.name=department_person.name
+								and
                 DATE_FORMAT(attendancetime,'%Y-%m-%d') = date_format(CURRENT_DATE,'%Y-%m-%d') 
                 AND 
-                department in ('重庆联文建筑劳务有限公司')
+                department_person.department in ('重庆联文建筑劳务有限公司')
     """
     cursor.execute(sql_laowu)
     guanli = cursor.fetchall()
@@ -373,10 +399,13 @@ def laowu():
 @app.route("/jiangjin/renyuan/zhuanyefenbao")
 def zhuanyefenbao():
     sql_zhuanyefenbao = """
-            SELECT name, department,if(entry=1,'进场','出场') as entry, DATE_FORMAT(attendancetime,'%Y-%m-%d %H:%i:%s') as attendancetime 
-            from access 
-            where DATE_FORMAT(attendancetime,'%Y-%m-%d') = date_format(CURRENT_DATE,'%Y-%m-%d') 
-            AND department in ('重庆正旋基础有限公司','重庆名庆防水工程有限公司','重庆力杰消防工程有限公司')
+            SELECT access.name, department_person.department,if(entry=1,'进场','出场') as entry, DATE_FORMAT(attendancetime,'%Y-%m-%d %H:%i:%s') as attendancetime 
+            from access,department_person  
+            where 
+						access.name=department_person.name
+						and
+						DATE_FORMAT(attendancetime,'%Y-%m-%d') = date_format(CURRENT_DATE,'%Y-%m-%d') 
+            AND department_person.department in ('重庆正旋基础有限公司','重庆名庆防水工程有限公司','重庆力杰消防工程有限公司')
 
     """
     cursor.execute(sql_zhuanyefenbao)
@@ -396,7 +425,7 @@ def zhuanyefenbao():
 @app.route("/jiangjin/renyuan/renyuantongji")
 def renyuantongji():
     sql_renyuantongji = """
-        SELECT
+  SELECT
 	count(*) AS y,
 	DATE_FORMAT(attendancetime, '%m-%d') AS x,
 	CASE
@@ -414,8 +443,10 @@ WHEN department = "重庆力杰消防工程有限公司" THEN
 	6
 END s
 FROM
-	(select name,department, DATE_FORMAT(attendancetime, '%Y-%m-%d') as attendancetime from access
+	(select access.name,department_person.department, DATE_FORMAT(attendancetime, '%Y-%m-%d') as attendancetime from access,department_person
 WHERE
+	access.name=department_person.name
+	and
 	DATE_FORMAT(attendancetime, '%Y-%m-%d') BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY) AND DATE_FORMAT(CURRENT_DATE, '%Y-%m-%d')
 AND entry = 1
 group by 1,2,3
@@ -1452,46 +1483,11 @@ def safe_unsolved_state():
 
 
 # 晴雨表
-@app.route("/jiangjin/weather_table/editdata",methods=["POST"])
-def jiangjin_EditData():
-
-    data = request.get_json()
-    project_name = "江津滨江新城"
-    date = data["date"]
-    weather = data["weather"]
-    warning = data["warning"]
-
-    sql_insert = """
-                insert into weather_table (project_name,date,weather,warning) values ("%s","%s",%d,%d)
-    """%(project_name,date,weather,warning)
-
-
-    conn_yuelai_event.cursor(sql_insert)
-    conn_yuelai_event.commit()
-
-    return "200"
-
-@app.route("/jiangjin/weather_table/data")
+@app.route("/jiangjin/weather_list")
 def jiangjin_weather_data():
 
-    sql_table = """
-                    SELECT date,weather,warning from weather_table where project_name = '江津滨江新城'
-    """
-
-    cursor_yuelai_event.execute(sql_table)
-    result = cursor_yuelai_event.fetchall()
-
-    list = []
-    for i in result:
-        date = i[0].strftime('%Y-%m-%d')
-        weather = i[1]
-        warning = i[2]
-        dict = {"date":date,"weather":weather,"warning":warning}
-        list.append(dict)
-
-    final_dict = {"data":list}
-    return json.dumps(final_dict)
-
+    dict = {"data":{"url":"http://183.66.213.82:8888/weatherlist/jiangjin"}}
+    return json.dumps(dict)
 
 
 
@@ -2271,7 +2267,50 @@ def page():
     return json.dumps(dict)
 
 
+# 智慧工地数据接受接口
+conn_yuelai_data = mysql.connector.connect(host='183.66.213.82',port="8803",user= 'tylin',password ='Tylin@123',database ='yuelai_data',auth_plugin='mysql_native_password') #连接数据库，创建Flask_app数据库
+cursor_yuelai_data = conn_yuelai_data.cursor()
+# 人员
+@app.route('/yuelai/data_person',methods=['POST'])
+def data_person():
+    data = request.get_json()
+    data = '"'+str(data)+'"'
 
+    sql = "insert into test (person) values(%s)"%data
+    cursor_yuelai_data.execute(sql)
+    conn_yuelai_data.commit()
+    print sql
+    return "已收到数据"
+# 环境
+@app.route('/yuelai/data_environment',methods=['POST'])
+def data_environment():
+    data = request.get_json()
+    deviceSerial = data["deviceSerial"]
+    recordtime = data["recordTime"]
+    temperature = float(data["temperature"])
+    humidity = float(data["humidity"])
+    pm2p5 = float(data["pm2p5"])
+    pm10 = float(data["pm10"])
+    noise = float(data["noise"])
+    windspeed = float(data["windSpeed"])
+    winddirection = float(data["windDirection"])
+
+
+    sql = "insert into environment (deviceSerial,recordtime,temperature,humidity,pm2p5,pm10,noise,windspeed,winddirection) values(%s,%s,%f,%f,%f,%f,%f,%f,%f)"%("'"+deviceSerial+"'","'"+recordtime+"'",temperature,humidity,pm2p5,pm10,noise,windspeed,winddirection)
+    cursor_yuelai_data.execute(sql)
+    conn_yuelai_data.commit()
+
+    return "已收到数据"
+# 监控
+@app.route('/yuelai/data_cam',methods=['POST'])
+def data_cam():
+    data = request.get_json()
+    data = '"'+str(data)+'"'
+
+    sql = "insert into test (cam) values(%s)"%data
+    cursor_yuelai_data.execute(sql)
+    conn_yuelai_data.commit()
+    return "已收到数据"
 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2460,7 +2499,7 @@ def canlian_index_weather():
     cursor.execute(sql_weather)
     enviroment = cursor.fetchall()
     # 获取剩余天数
-    days = requests.get("http://183.66.213.82:8888/shenzhen/date/begin?d=2018-09-26")
+    days = requests.get("http://183.66.213.82:8888/shenzhen/date/begin?d=2019-06-30")
     days = days.text
     days = int(days[10:-2])
     # 整合
