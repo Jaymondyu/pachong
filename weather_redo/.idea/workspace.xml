@@ -2,23 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6c62a103-31c8-493f-8dbd-244f98696c97" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../Gomoku/.idea/Gomoku.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Gomoku/corner_widget.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Gomoku/game.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Gomoku/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Gomoku/window.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../screen/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../screen/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../screen/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/../screen/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../spider jiangjin/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../spider jiangjin/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../spiderman_modle/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../spiderman_modle/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../spiderman_modle/model_spiderman.py" beforeDir="false" afterPath="$PROJECT_DIR$/../spiderman_modle/model_spiderman.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tushifang_redo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../tushifang_redo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tushifang_redo/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tushifang_redo/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../weather spider/spider.py" beforeDir="false" afterPath="$PROJECT_DIR$/../weather spider/spider.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../数据分析与挖掘/.ipynb_checkpoints/数据分析与挖掘-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../数据分析与挖掘/.ipynb_checkpoints/数据分析与挖掘-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../数据分析与挖掘/数据分析与挖掘.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../数据分析与挖掘/数据分析与挖掘.ipynb" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -69,7 +53,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -156,12 +140,12 @@
       <updated>1570520313582</updated>
       <workItem from="1570520327194" duration="25771000" />
       <workItem from="1571014875178" duration="14402000" />
-      <workItem from="1571362223377" duration="5097000" />
+      <workItem from="1571362223377" duration="5166000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="45270000" />
+    <option name="totallyTimeSpent" value="45339000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -181,7 +165,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3281412" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3281412" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
