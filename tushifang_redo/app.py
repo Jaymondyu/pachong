@@ -12,6 +12,22 @@ conn = mysql.connector.connect(host='183.66.213.82',port="8803",user= 'tylin',pa
 cursor = conn.cursor()
 
 
+# sql = "SELECT date FROM yuelai__tushifang"
+# cursor.execute(sql)
+# date_all = cursor.fetchall()
+#
+# for date in date_all:
+#     sql = "SELECT SUM(day_out) FROM yuelai__tushifang where date <= '%s'"%(datetime.datetime.strftime(date[0], '%Y-%m-%d'))
+#     # print(sql)
+#     cursor.execute(sql)
+#     sum_out = cursor.fetchone()[0]
+#     # print sum_out
+#
+#     sql = "UPDATE yuelai__tushifang SET day_out_total = '%s' where date ='%s'"%(sum_out,datetime.datetime.strftime(date[0], '%Y-%m-%d'))
+#     print(sql)
+#     cursor.execute(sql)
+#     conn.commit()
+
 app = Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -55,23 +71,19 @@ plan_car = plan_out / car_take  # 计划每日出土车数 (=计划每日出土�
 
 # 累计出土方量调取方法
 def leiji(date):
-    search = "select day_out from yuelai__tushifang where date <" + "'" + str(date) + "'"
+    search = "select sum(day_out) from yuelai__tushifang where date <" + "'" + str(date) + "'"
     cursor.execute(search)
     result = cursor.fetchall()
-    sum = 0
-    for i in result:
-        sum = sum + i[0]
-    return sum
+
+    return result[0][0]
 
 # 实际累计出土车数
 def leiji_che(date):
-    search = "select day_car_out from yuelai__tushifang where date <" + "'" + str(date) + "'"
+    search = "select sum(day_car_out) from yuelai__tushifang where date <" + "'" + str(date) + "'"
     cursor.execute(search)
     result = cursor.fetchall()
-    sum = 0
-    for i in result:
-        sum = sum + i[0]
-    return sum
+
+    return result[0][0]
 
 
 # 向数据库中写入数据

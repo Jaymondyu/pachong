@@ -50,7 +50,6 @@ def yuelai_7d():
     dict_7d = {
         "data":[[today,high_7d[0],weather_7d[0],low_7d[0]],[after_1_day,high_7d[1],weather_7d[1],low_7d[1]],[after_2_day,high_7d[2],weather_7d[2],low_7d[2]],[after_3_day,high_7d[3],weather_7d[3],low_7d[3]],[after_4_day,high_7d[4],weather_7d[4],low_7d[4]],[after_5_day,high_7d[5],weather_7d[5],low_7d[5]],[after_6_day,high_7d[6],weather_7d[6],low_7d[6]]]
     }
-
     return json.dumps(dict_7d)
 
 # 实时天气信息
@@ -120,29 +119,37 @@ def yuelai_alart():
 @app.route("/yuelai/insert",methods=["POST"])
 def yuelai_insert():
     data = request.get_json()
-
+    judgment = 0
     date = data["date"]
     weather = data["weather"]
     hightemp = data["hightemp"]
     state = data["state"]
     reason = data["reason"]
 
+    if data["weather"].find("雨")!=-1:
+        judgment = 1
+    if data["hightemp"] >= 35:
+        judgment = 2
+    if data["weather"].find("雨")!=-1 and data["hightemp"] >= 35:
+        judgment = 3
+
+
     # 判断是否有重复数据
-    sql_try = "select * from yuelai where date = "+ "'"+date+"'"
+    sql_try = "select * from yuelai_ where date = "+ "'"+date+"'"
     cursor.execute(sql_try)
     result_try = cursor.fetchall()
 
     if result_try == []:
         sql_insert = """
-                        insert into yuelai (date,weather,high_temp,state,reason) values (%s,%s,%d,%d,%d)
-                    """%("'"+date+"'","'"+weather+"'",hightemp,state,reason)
+                        insert into yuelai_ (date,weather,high_temp,state,reason,judgment) values (%s,%s,%d,%d,%d,%d)
+                    """%("'"+date+"'","'"+weather+"'",hightemp,state,reason,judgment)
         cursor.execute(sql_insert)
         conn.commit()
         alart = "已录入新数据"
     else:
         sql_update ="""
-                        update yuelai set weather = (%s),high_temp=(%d),state=(%d),reason=(%d) where date = (%s)
-        """%("'"+weather+"'",hightemp,state,reason,"'"+date+"'")
+                        update yuelai_ set weather = (%s),state=(%d),reason=(%d),judgment=(%d) where date = (%s)
+        """%("'"+weather+"'",state,reason,judgment,"'"+date+"'")
         cursor.execute(sql_update)
         conn.commit()
         alart = "已修改数据"
@@ -154,10 +161,44 @@ def yuelai_insert():
 def yuelai_show():
     data = request.get_json()
     date = data["date"]
-    sql_search = "SELECT date,weather,high_temp,state,reason from yuelai where DATE_FORMAT(date,'%Y-%m')="+'"'+date+'"'+" order by date"
+    sql_search = "SELECT date,weather,high_temp,state,reason,judgment from yuelai_ where DATE_FORMAT(date,'%Y-%m')="+'"'+date+'"'+" order by date"
     cursor.execute(sql_search)
     info = cursor.fetchall()
     list = []
+    for i in info:
+        date = i[0].strftime('%Y-%m-%d')
+        weather = i[1]
+        hightemp = i[2]
+        state = i[3]
+        reason = i[4]
+        judgment = i[5]
+
+        dict = {
+            "date":date,
+            "weather":weather,
+            "hightemp":hightemp,
+            "state":state,
+            "reason":reason,
+            "judgment":judgment
+        }
+
+        list.append(dict)
+
+    return json.dumps(list)
+
+#统计
+@app.route("/yuelai/count",methods=["POST"])
+def yuelai_count():
+    data = request.get_json()
+    date = data["date"]
+    sql_search = "SELECT date,weather,high_temp,state,reason from yuelai_ where DATE_FORMAT(date,'%Y-%m')="+'"'+date+'"'+" order by date"
+    cursor.execute(sql_search)
+    info = cursor.fetchall()
+    list = []
+    rain = 0
+    high = 0
+    stop = 0
+    error =0
     for i in info:
         date = i[0].strftime('%Y-%m-%d')
         weather = i[1]
@@ -168,14 +209,27 @@ def yuelai_show():
         dict = {
             "date":date,
             "weather":weather,
-            "hightemp":hightemp,
-            "state":state,
-            "reason":reason
+            "hightemp":int(hightemp),
+            "state":int(state),
+            "reason":int(reason)
         }
 
         list.append(dict)
 
-    return json.dumps(list)
+    for j in list:
+        if j["weather"].find("雨")!=-1:
+            rain=rain+1
+        if j["hightemp"] >= 35:
+            high = high+1
+        if j["state"]== 2:
+            stop = stop+1
+        if j["state"]== 1:
+            error = error+1
+    dict = {
+        "data":{"rain":rain,"hightemp":high,"stop":stop,"error":error}
+    }
+
+    return json.dumps(dict)
 
 # 页面
 @app.route("/yuelai")
