@@ -271,9 +271,15 @@ def index_quality():
 # 进度
 @app.route("/jiangjin/index/jindu")
 def jindu():
+    now_date = datetime.datetime.today().strftime('%Y-%m-%d')
+    urn = "http://183.66.213.82:8888/processandprice_jiangjin/getprocessandprice_jiangjin?time=" + now_date
+    result = (requests.get(urn)).content
+    result = json.loads(result)
+    jiegou = float(result["price_finish"])/float(result["price_inall"])
+    jiegou = int(jiegou*100)
 
     list = [
-        {"data": 43.57,
+        {"data": jiegou,
          "name":"结构工程"},
         {"data":3.39,
          "name":"建筑工程"},
@@ -287,28 +293,6 @@ def jindu():
          "name":"景观工程"}
     ]
     return json.dumps(list)
-# 进度上传
-@app.route("/jiangjin/index/jindu_insert",methods=["POST"])
-def jindu_insert():
-    data = request.get_json()
-    tujian = data["tujian"]
-    xuanwazhuang = data["xuanwazhuang"]
-    wakongzhuang = data["wakongzhuang"]
-    jidian = data["jidian"]
-    muqiang = data["muqiang"]
-    jingzhuang = data["jingzhuang"]
-    shiwaigongcheng = data["shiwaigongcheng"]
-
-    insert = """
-        insert into jiangjin_screen (tujian,xuanwazhuang,wakongzhuang,jidian,muqiang,jingzhuang,shiwaigongcheng)
-        values (%d,%d,%d,%d,%d,%d,%d)
-    """%(tujian,xuanwazhuang,wakongzhuang,jidian,muqiang,jingzhuang,shiwaigongcheng)
-
-    cursor.execute(insert)
-    conn.commit()
-
-
-    return "data inserted"
 
 # 项目概况
 @app.route("/jiangjin/index/intro")
@@ -1498,7 +1482,9 @@ def jiangjin_weather_data():
 
 # 悦来会展总部基地项目大屏
 
-
+# 悦来data数据库
+conn_yuelai_data = mysql.connector.connect(host='183.66.213.82',port="8803",user= 'tylin',password ='Tylin@123',database ='yuelai_data',auth_plugin='mysql_native_password') #连接数据库，创建Flask_app数据库
+cursor_yuelai_data = conn_yuelai_data.cursor()
 
 
 
@@ -1511,8 +1497,8 @@ def yuelai():
 def yuelai_index_weather():
     # 数据库查询
     sql_weather = "select pm2p5,pm10,noise,temperature from environment order by id desc LIMIT 1"
-    cursor.execute(sql_weather)
-    enviroment = cursor.fetchall()
+    cursor_yuelai_data.execute(sql_weather)
+    enviroment = cursor_yuelai_data.fetchall()
     # 获取剩余天数
     days = requests.get("http://183.66.213.82:8888/shenzhen/date/begin?d=2019-07-01")
     days = days.text
@@ -2267,20 +2253,85 @@ def page():
     return json.dumps(dict)
 
 
-# 智慧工地数据接受接口
-conn_yuelai_data = mysql.connector.connect(host='183.66.213.82',port="8803",user= 'tylin',password ='Tylin@123',database ='yuelai_data',auth_plugin='mysql_native_password') #连接数据库，创建Flask_app数据库
-cursor_yuelai_data = conn_yuelai_data.cursor()
+# 监控页面
+@app.route("/yuelai/cam")
+def yuelai_cam():
+    namelist = []
+    urllist = []
+    url = []
+
+    list = [{u'installName':u"施工大门",
+             u'coverUrl': u'http://120.79.164.6:18007/cover/f867433bdfb24797aebdb857270e0fd4.jpg', u'videoId': u'3604',
+             u'getPlayUrl': u'http://47.112.142.114:18008/api/video/get-video-play-url-for-external?cameraNo='},
+            {u'installName': u'员工通道',
+             u'coverUrl': u'http://120.79.164.6:18007/cover/a64d3bcc55264568b55a6483c3468857.jpg', u'videoId': u'3605',
+             u'getPlayUrl': u'http://47.112.142.114:18008/api/video/get-video-play-url-for-external?cameraNo='},
+            {u'installName': u'大门内',
+             u'coverUrl': u'http://120.79.164.6:18007/cover/f53f02e0ec12493189353eab41270173.jpg', u'videoId': u'3606',
+             u'getPlayUrl': u'http://47.112.142.114:18008/api/video/get-video-play-url-for-external?cameraNo='},
+            {u'installName': u'施工现场一',
+             u'coverUrl': u'http://120.79.164.6:18007/cover/7303b4b6feff4bf69d52375351477758.jpg', u'videoId': u'3607',
+             u'getPlayUrl': u'http://47.112.142.114:18008/api/video/get-video-play-url-for-external?cameraNo='},
+            {u'installName': u'施工现场二',
+             u'coverUrl': u'http://120.79.164.6:18007/cover/5863698cf0db49f59518e727bfffdd5d.jpg', u'videoId': u'3608',
+             u'getPlayUrl': u'http://47.112.142.114:18008/api/video/get-video-play-url-for-external?cameraNo='},
+            {u'installName': u'施工现场三',
+             u'coverUrl': u'http://120.79.164.6:18007/cover/d2cb4e8c8ac64d8790d843f015a42c92.jpg', u'videoId': u'3609',
+             u'getPlayUrl': u'http://47.112.142.114:18008/api/video/get-video-play-url-for-external?cameraNo='},
+            {u'installName': u'项目部大门',
+             u'coverUrl': u'http://120.79.164.6:18007/cover/2322134acafc4dd68419c5eb65353bb5.jpg', u'videoId': u'3610',
+             u'getPlayUrl': u'http://47.112.142.114:18008/api/video/get-video-play-url-for-external?cameraNo='},
+            {u'installName': u'施工现场四',
+             u'coverUrl': u'http://120.79.164.6:18007/cover/fbd20387d729450d847ab29fb66d76ba.jpg', u'videoId': u'3611',
+             u'getPlayUrl': u'http://47.112.142.114:18008/api/video/get-video-play-url-for-external?cameraNo='},
+            {u'installName': u'施工现场五',
+             u'coverUrl': u'http://120.79.164.6:18007/cover/78852868f887409e9664b180b9585dca.jpg', u'videoId': u'3826',
+             u'getPlayUrl': u'http://47.112.142.114:18008/api/video/get-video-play-url-for-external?cameraNo='},
+            {u'installName': u'项目部后门',
+             u'coverUrl': u'http://120.79.164.6:18007/cover/d90c0a87be3d40e48ca24cde8c0be9c7.jpg', u'videoId': u'3827',
+             u'getPlayUrl': u'http://47.112.142.114:18008/api/video/get-video-play-url-for-external?cameraNo='}]
+    for i in list:
+        namelist.append(i["installName"])
+        urllist.append(str(i["getPlayUrl"]) + str(i["videoId"]))
+    # print namelist
+    # print urllist
+
+    for j in urllist:
+        data = requests.get(j)
+        data = json.loads(data.content)
+        data = data["data"]["playUrl"]
+        url.append(data)
+
+    finallist=[]
+    for k in range(10):
+        dict = {"name":namelist[k],"url":url[k]}
+        finallist.append(dict)
+
+    final = {"data":finallist}
+
+    return json.dumps(final)
+
+
+
 # 人员
 @app.route('/yuelai/data_person',methods=['POST'])
 def data_person():
     data = request.get_json()
-    data = '"'+str(data)+'"'
+    personName = data["personName"]
+    positionName = data["positionName"]
+    inOut = int(data["inOut"])
+    companyName = data["companyName"]
+    pictureUrl = data["pictureUrl"]
+    accessTime = data["time"]
 
-    sql = "insert into test (person) values(%s)"%data
+
+    sql = "insert into access (personName,positionName,inOrout,companyName,pictureUrl,accessTime) values(%s,%s,%d,%s,%s,%s)"%("'"+personName+"'","'"+positionName+"'",inOut,"'"+companyName+"'","'"+pictureUrl+"'","'"+accessTime+"'")
     cursor_yuelai_data.execute(sql)
     conn_yuelai_data.commit()
-    print sql
     return "已收到数据"
+
+
+
 # 环境
 @app.route('/yuelai/data_environment',methods=['POST'])
 def data_environment():
@@ -2300,16 +2351,6 @@ def data_environment():
     cursor_yuelai_data.execute(sql)
     conn_yuelai_data.commit()
 
-    return "已收到数据"
-# 监控
-@app.route('/yuelai/data_cam',methods=['POST'])
-def data_cam():
-    data = request.get_json()
-    data = '"'+str(data)+'"'
-
-    sql = "insert into test (cam) values(%s)"%data
-    cursor_yuelai_data.execute(sql)
-    conn_yuelai_data.commit()
     return "已收到数据"
 
 
@@ -2381,7 +2422,7 @@ def canlian_company():
 def canlian_jindu():
 
     list = [
-        {"data": 0,
+        {"data": 5,
          "name":"土建工程"},
         {"data":0,
          "name":"机电工程"},
@@ -2420,8 +2461,8 @@ def canlian_iframe_right():
 @app.route("/canlian/index/chanzhi")
 def canlian_index_renyuan():
     dict = {
-        "x":["8月第1周","8月第2周","8月第3周","8月第4周"],
-        "y":[{"name":"计划产值","data":[200,400,450,500]},{"name":"实际产值","data":[150,350,400,450]}]
+        "x":["2019.5","2019.6","2019.7","2019.8","2019.8","2019.10"],
+        "y":[{"name":"计划产值","data":[347.1573,11.5737,195.98072,193.561038,180.201926,189.676911]},{"name":"实际产值","data":[347.1573,11.5737,195.98072,193.561038,180.201926,189.676911]}]
     }
     return json.dumps(dict)
 
@@ -2495,9 +2536,14 @@ def canlian_index_safe():
 @app.route("/canlian/index/weather")
 def canlian_index_weather():
     # 数据库查询
+    conn = mysql.connector.connect(host='183.66.213.82', port="8803", user='tylin', password='Tylin@123',
+                                               database='canlian_data',
+                                               auth_plugin='mysql_native_password')  # 连接数据库，创建Flask_app数据库
+    cursor = conn.cursor()
     sql_weather = "select pm2p5,pm10,noise,temperature from environment order by id desc LIMIT 1"
     cursor.execute(sql_weather)
     enviroment = cursor.fetchall()
+    conn.close()
     # 获取剩余天数
     days = requests.get("http://183.66.213.82:8888/shenzhen/date/begin?d=2019-06-30")
     days = days.text
@@ -2512,7 +2558,768 @@ def canlian_index_weather():
     }}
     return json.dumps(list)
 
+# 天气接口
+@app.route('/canlian/data_environment',methods=['POST'])
+def canlian_data_environment():
+    data = request.get_json()
+    deviceSerial = data["deviceSerial"]
+    recordtime = data["recordtime"]
+    temperature = float(data["temperature"])
+    humidity = float(data["humidity"])
+    pm2p5 = float(data["pm2p5"])
+    pm10 = float(data["pm10"])
+    noise = float(data["noise"])
+    windspeed = float(data["Windspeed"])
+    winddirection = float(data["winddirection"])
 
+    conn = mysql.connector.connect(host='183.66.213.82', port="8803", user='tylin', password='Tylin@123',database='canlian_data', auth_plugin='mysql_native_password')  # 连接数据库，创建Flask_app数据库
+    cursor = conn.cursor()
+
+    sql = "insert into environment (deviceSerial,recordtime,temperature,humidity,pm2p5,pm10,noise,windspeed,winddirection) values(%s,%s,%f,%f,%f,%f,%f,%f,%f)" % ("'" + deviceSerial + "'", "'" + recordtime + "'", temperature, humidity, pm2p5, pm10, noise, windspeed,winddirection)
+    cursor.execute(sql)
+    conn.commit()
+    conn.close()
+
+    return "已收到数据"
+
+# 人员接口
+@app.route('/canlian/data_person',methods=['POST'])
+def canlian_data_person():
+    data = request.get_json()
+    personName = data["personName"]
+    positionName = data["positionName"]
+    inOut = int(data["inOut"])
+    companyName = data["companyName"]
+    pictureUrl = data["pictureUrl"]
+    accessTime = data["time"]
+
+    conn = mysql.connector.connect(host='183.66.213.82', port="8803", user='tylin', password='Tylin@123',database='canlian_data', auth_plugin='mysql_native_password')  # 连接数据库，创建Flask_app数据库
+    cursor = conn.cursor()
+    sql = "insert into access (personName,positionName,inOrout,companyName,pictureUrl,accessTime) values(%s,%s,%d,%s,%s,%s)"%("'"+personName+"'","'"+positionName+"'",inOut,"'"+companyName+"'","'"+pictureUrl+"'","'"+accessTime+"'")
+    cursor.execute(sql)
+    conn.commit()
+    conn.close()
+    return "已收到数据"
+
+
+
+# 质量安全接口
+# 质量管理
+# 饼状图
+@app.route("/canlian/quality/circle")
+def canlian_quality_circle():
+
+    url_1 = "http://www.tylinbim.com/4DAnalog/ltyCL/quality.action"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    solved = []
+    unsolved =[]
+    for i in dataList_1:
+        if i["rectificate"] == "是":
+            solved.append(i)
+        else:
+            unsolved.append(i)
+    solved_bad =[]
+    solved_normal = []
+    for j in solved:
+        if j["serverity"] == "严重":
+            solved_bad.append(j)
+        else:
+            solved_normal.append(j)
+    unsolved_bad =[]
+    unsolved_normal = []
+    for k in unsolved:
+        if k["serverity"] == "严重":
+            unsolved_bad.append(k)
+        else:
+            unsolved_normal.append(k)
+
+    dict = {"data":{"total":len(dataList_1),"solved":len(solved),"unsolved":len(unsolved),"solved_normal":len(solved_normal),"solved_bad":len(solved_bad),"unsolved_normal":len(unsolved_normal),"unsolved_bad":len(unsolved_bad)}}
+
+
+    return json.dumps(dict)
+
+# 本周质量问题统计
+@app.route("/canlian/quality/week_question_state")
+def canlian_quality_week_question_state():
+    url_1 = "http://www.tylinbim.com/4DAnalog/ltyCL/quality.action"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    datetime_now = datetime.datetime.now()
+    today = datetime_now.strftime("%Y-%m-%d")
+    last_1_day = (datetime_now - relativedelta(days=1)).strftime("%Y-%m-%d")
+    last_2_day = (datetime_now - relativedelta(days=2)).strftime("%Y-%m-%d")
+    last_3_day = (datetime_now - relativedelta(days=3)).strftime("%Y-%m-%d")
+    last_4_day = (datetime_now - relativedelta(days=4)).strftime("%Y-%m-%d")
+    last_5_day = (datetime_now - relativedelta(days=5)).strftime("%Y-%m-%d")
+    last_6_day = (datetime_now - relativedelta(days=6)).strftime("%Y-%m-%d")
+
+    today_list = []
+    last_1_day_list = []
+    last_2_day_list = []
+    last_3_day_list = []
+    last_4_day_list = []
+    last_5_day_list = []
+    last_6_day_list = []
+
+    today_solved_list = []
+    last_1_day_solved_list = []
+    last_2_day_solved_list = []
+    last_3_day_solved_list = []
+    last_4_day_solved_list = []
+    last_5_day_solved_list = []
+    last_6_day_solved_list = []
+
+    for i in dataList_1:
+        if i["checkTime"] == today:
+            today_list.append(i)
+            if i["rectificate"] == "是":
+                today_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_1_day:
+            last_1_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_1_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_2_day:
+            last_2_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_2_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_3_day:
+            last_3_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_3_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_4_day:
+            last_4_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_4_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_5_day:
+            last_5_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_5_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_6_day:
+            last_6_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_6_day_solved_list.append(i)
+            else:
+                pass
+        else:
+            pass
+
+    d1 = (datetime_now - relativedelta(days=6)).strftime("%m/%d")
+    d2 = (datetime_now - relativedelta(days=5)).strftime("%m/%d")
+    d3 = (datetime_now - relativedelta(days=4)).strftime("%m/%d")
+    d4 = (datetime_now - relativedelta(days=3)).strftime("%m/%d")
+    d5 = (datetime_now - relativedelta(days=2)).strftime("%m/%d")
+    d6 = (datetime_now - relativedelta(days=1)).strftime("%m/%d")
+    d7 = datetime_now.strftime("%m/%d")
+
+    dict = {
+        "data": {
+            "x": [d1, d2, d3, d4, d5, d6, d7],
+            "total": [len(last_6_day_list), len(last_5_day_list), len(last_4_day_list), len(last_3_day_list),
+                      len(last_2_day_list), len(last_1_day_list), len(today_list)],
+            "solved": [len(last_6_day_solved_list), len(last_5_day_solved_list), len(last_4_day_solved_list),
+                       len(last_3_day_solved_list), len(last_2_day_solved_list), len(last_1_day_solved_list),
+                       len(today_solved_list)]}
+    }
+
+    return json.dumps(dict)
+
+# 累计质量问题统计
+@app.route("/canlian/quality/week_question")
+def canlian_quality_week_question():
+    url_1 = "http://www.tylinbim.com/4DAnalog/ltyCL/quality.action"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    datetime_now = datetime.datetime.now()
+    today = datetime_now.strftime("%Y-%m")
+    last_1_day = (datetime_now - relativedelta(months=1)).strftime("%Y-%m")
+    last_2_day = (datetime_now - relativedelta(months=2)).strftime("%Y-%m")
+    last_3_day = (datetime_now - relativedelta(months=3)).strftime("%Y-%m")
+    last_4_day = (datetime_now - relativedelta(months=4)).strftime("%Y-%m")
+    last_5_day = (datetime_now - relativedelta(months=5)).strftime("%Y-%m")
+    last_6_day = (datetime_now - relativedelta(months=6)).strftime("%Y-%m")
+
+    today_list = []
+    last_1_day_list = []
+    last_2_day_list = []
+    last_3_day_list = []
+    last_4_day_list = []
+    last_5_day_list = []
+    last_6_day_list = []
+    last_list=[]
+
+    today_solved_list = []
+    last_1_day_solved_list = []
+    last_2_day_solved_list = []
+    last_3_day_solved_list = []
+    last_4_day_solved_list = []
+    last_5_day_solved_list = []
+    last_6_day_solved_list = []
+    last_solved_list=[]
+
+    for i in dataList_1:
+        if i["checkTime"][:-3] == today:
+            today_list.append(i)
+            if i["rectificate"] == "是":
+                today_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"][:-3] == last_1_day:
+            last_1_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_1_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"][:-3] == last_2_day:
+            last_2_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_2_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"][:-3] == last_3_day:
+            last_3_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_3_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"][:-3] == last_4_day:
+            last_4_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_4_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"][:-3] == last_5_day:
+            last_5_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_5_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"][:-3] == last_6_day:
+            last_6_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_6_day_solved_list.append(i)
+            else:
+                pass
+        else:
+            last_list.append(i)
+            if i["rectificate"] == "是":
+                last_solved_list.append(i)
+            else:
+                pass
+
+    m1 = (datetime_now - relativedelta(months=6)).strftime("%Y-%m")
+    m2 = (datetime_now - relativedelta(months=5)).strftime("%Y-%m")
+    m3 = (datetime_now - relativedelta(months=4)).strftime("%Y-%m")
+    m4 = (datetime_now - relativedelta(months=3)).strftime("%Y-%m")
+    m5 = (datetime_now - relativedelta(months=2)).strftime("%Y-%m")
+    m6 = (datetime_now - relativedelta(months=1)).strftime("%Y-%m")
+    m7 = datetime_now.strftime("%Y-%m")
+
+    dict = {
+        "data": {
+            "x": [m1, m2, m3, m4, m5, m6, m7],
+            "total": [len(last_6_day_list)+len(last_list), len(last_5_day_list)+len(last_6_day_list)+len(last_list), len(last_4_day_list)+len(last_5_day_list)+len(last_6_day_list)+len(last_list), len(last_3_day_list)+len(last_4_day_list)+len(last_5_day_list)+len(last_6_day_list)+len(last_list),
+                      len(last_2_day_list)+len(last_3_day_list)+len(last_4_day_list)+len(last_5_day_list)+len(last_6_day_list)+len(last_list), len(last_1_day_list)+len(last_2_day_list)+len(last_3_day_list)+len(last_4_day_list)+len(last_5_day_list)+len(last_6_day_list)+len(last_list), len(today_list)+len(last_1_day_list)+len(last_2_day_list)+len(last_3_day_list)+len(last_4_day_list)+len(last_5_day_list)+len(last_6_day_list)+len(last_list)],
+            "solved": [len(last_6_day_solved_list)+len(last_solved_list), len(last_5_day_solved_list)+len(last_6_day_solved_list)+len(last_solved_list), len(last_4_day_solved_list)+len(last_5_day_solved_list)+len(last_6_day_solved_list)+len(last_solved_list),
+                       len(last_3_day_solved_list)+len(last_4_day_solved_list)+len(last_5_day_solved_list)+len(last_6_day_solved_list)+len(last_solved_list), len(last_2_day_solved_list)+len(last_3_day_solved_list)+len(last_4_day_solved_list)+len(last_5_day_solved_list)+len(last_6_day_solved_list)+len(last_solved_list), len(last_1_day_solved_list)+len(last_2_day_solved_list)+len(last_3_day_solved_list)+len(last_4_day_solved_list)+len(last_5_day_solved_list)+len(last_6_day_solved_list)+len(last_solved_list),
+                       len(today_solved_list)+len(last_1_day_solved_list)+len(last_2_day_solved_list)+len(last_3_day_solved_list)+len(last_4_day_solved_list)+len(last_5_day_solved_list)+len(last_6_day_solved_list)+len(last_solved_list)]}
+    }
+    return json.dumps(dict)
+
+# 累计施工质量问题对比
+@app.route("/canlian/quality/team")
+def canlian_quality_team():
+
+    url_1 = "http://www.tylinbim.com/4DAnalog/ltyCL/quality.action"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+    gangjin = []
+    muban = []
+    qizhuan = []
+    fangshui = []
+    jiaoshoujia = []
+    nuantong = []
+    xiaofang = []
+    jipaishui = []
+    qiangruodian = []
+    tadiao = []
+    hunningtu = []
+    dianhan = []
+    unknow = []
+
+    for i in dataList_1:
+        if i["team"] == "钢筋班组":
+            gangjin.append(i)
+        elif i["team"] == "模板班组":
+            muban.append(i)
+        elif i["team"] == "砌砖班组":
+            qizhuan.append(i)
+        elif i["team"] == "防水班组":
+            fangshui.append(i)
+        elif i["team"] == "脚手架班组":
+            jiaoshoujia.append(i)
+        elif i["team"] == "暖通班组":
+            nuantong.append(i)
+        elif i["team"] == "消防班组":
+            xiaofang.append(i)
+        elif i["team"] == "给排水班组":
+            jipaishui.append(i)
+        elif i["team"] == "强弱电班组":
+            qiangruodian.append(i)
+        elif i["team"] == "塔吊班组":
+            tadiao.append(i)
+        elif i["team"] == "混凝土班组":
+            hunningtu.append(i)
+        elif i["team"] == "电焊班组":
+            dianhan.append(i)
+        else:
+            unknow.append(i)
+
+    dict ={"data":{
+                   "x":["钢筋","模板","砌砖","防水","脚手架","暖通","消防","给排水","强弱电","塔吊","混凝土","电焊","未划分"],
+                   "y":[len(gangjin),len(muban),len(qizhuan),len(fangshui),len(jiaoshoujia),len(nuantong),len(xiaofang),len(jipaishui),len(qiangruodian),len(tadiao),len(hunningtu),len(dianhan),len(unknow)]
+          }}
+
+    return json.dumps(dict)
+
+# 本周质量问题定位
+@app.route("/canlian/quality/location")
+def canlian_qulity_location():
+    url_1 = "http://www.tylinbim.com/4DAnalog/ltyCL/quality.action"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    datetime_now = datetime.datetime.now()
+    today = datetime_now.strftime("%Y-%m-%d")
+    last_1_day = (datetime_now - relativedelta(days=1)).strftime("%Y-%m-%d")
+    last_2_day = (datetime_now - relativedelta(days=2)).strftime("%Y-%m-%d")
+    last_3_day = (datetime_now - relativedelta(days=3)).strftime("%Y-%m-%d")
+    last_4_day = (datetime_now - relativedelta(days=4)).strftime("%Y-%m-%d")
+    last_5_day = (datetime_now - relativedelta(days=5)).strftime("%Y-%m-%d")
+    last_6_day = (datetime_now - relativedelta(days=6)).strftime("%Y-%m-%d")
+
+    today_list = []
+    last_1_day_list = []
+    last_2_day_list = []
+    last_3_day_list = []
+    last_4_day_list = []
+    last_5_day_list = []
+    last_6_day_list = []
+
+    for i in dataList_1:
+        if i["checkTime"] == today:
+            today_list.append(i)
+        elif i["checkTime"] == last_1_day:
+            last_1_day_list.append(i)
+        elif i["checkTime"] == last_2_day:
+            last_2_day_list.append(i)
+        elif i["checkTime"] == last_3_day:
+            last_3_day_list.append(i)
+        elif i["checkTime"] == last_4_day:
+            last_4_day_list.append(i)
+        elif i["checkTime"] == last_5_day:
+            last_5_day_list.append(i)
+        elif i["checkTime"] == last_6_day:
+            last_6_day_list.append(i)
+        else:
+            pass
+
+    weeklist = today_list + last_1_day_list + last_2_day_list + last_3_day_list + last_4_day_list + last_5_day_list + last_6_day_list
+    x_list=[]
+    for j in weeklist:
+        if j["subDivision"] == "":
+            j["subDivision"] = "未分组"
+        x_list.append(j["subDivision"])
+    x_list = list(set(x_list))
+    y_list = []
+    y_finiallist =[]
+    for mm in x_list:
+        for nn in weeklist:
+            if nn["subDivision"] == mm:
+                y_list.append(mm)
+    for k in x_list:
+        y_finiallist.append(y_list.count(k))
+
+    return json.dumps({"data":{"x":x_list,"y":y_finiallist}})
+
+
+# 安全管理
+# 饼状图
+@app.route("/canlian/safe/circle")
+def canlian_safe_circle():
+
+    url_1 = "http://www.tylinbim.com/4DAnalog/ltyCL/safety.action"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    solved = []
+    unsolved =[]
+    for i in dataList_1:
+        if i["rectificate"] == "是":
+            solved.append(i)
+        else:
+            unsolved.append(i)
+    solved_bad =[]
+    solved_normal = []
+    for j in solved:
+        if j["serverity"] == "严重":
+            solved_bad.append(j)
+        else:
+            solved_normal.append(j)
+    unsolved_bad =[]
+    unsolved_normal = []
+    for k in unsolved:
+        if k["serverity"] == "严重":
+            unsolved_bad.append(k)
+        else:
+            unsolved_normal.append(k)
+
+    dict = {"data":{"total":len(dataList_1),"solved":len(solved),"unsolved":len(unsolved),"solved_normal":len(solved_normal),"solved_bad":len(solved_bad),"unsolved_normal":len(unsolved_normal),"unsolved_bad":len(unsolved_bad)}}
+
+
+    return json.dumps(dict)
+
+# 本周安全问题统计
+@app.route("/canlian/safe/week_question_state")
+def canlian_safe_week_question_state():
+    url_1 = "http://www.tylinbim.com/4DAnalog/ltyCL/safety.action"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    datetime_now = datetime.datetime.now()
+    today = datetime_now.strftime("%Y-%m-%d")
+    last_1_day = (datetime_now - relativedelta(days=1)).strftime("%Y-%m-%d")
+    last_2_day = (datetime_now - relativedelta(days=2)).strftime("%Y-%m-%d")
+    last_3_day = (datetime_now - relativedelta(days=3)).strftime("%Y-%m-%d")
+    last_4_day = (datetime_now - relativedelta(days=4)).strftime("%Y-%m-%d")
+    last_5_day = (datetime_now - relativedelta(days=5)).strftime("%Y-%m-%d")
+    last_6_day = (datetime_now - relativedelta(days=6)).strftime("%Y-%m-%d")
+
+    today_list = []
+    last_1_day_list = []
+    last_2_day_list = []
+    last_3_day_list = []
+    last_4_day_list = []
+    last_5_day_list = []
+    last_6_day_list = []
+
+    today_solved_list = []
+    last_1_day_solved_list = []
+    last_2_day_solved_list = []
+    last_3_day_solved_list = []
+    last_4_day_solved_list = []
+    last_5_day_solved_list = []
+    last_6_day_solved_list = []
+
+    for i in dataList_1:
+        if i["checkTime"] == today:
+            today_list.append(i)
+            if i["rectificate"] == "是":
+                today_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_1_day:
+            last_1_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_1_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_2_day:
+            last_2_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_2_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_3_day:
+            last_3_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_3_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_4_day:
+            last_4_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_4_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_5_day:
+            last_5_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_5_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"] == last_6_day:
+            last_6_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_6_day_solved_list.append(i)
+            else:
+                pass
+        else:
+            pass
+
+    d1 = (datetime_now - relativedelta(days=6)).strftime("%m/%d")
+    d2 = (datetime_now - relativedelta(days=5)).strftime("%m/%d")
+    d3 = (datetime_now - relativedelta(days=4)).strftime("%m/%d")
+    d4 = (datetime_now - relativedelta(days=3)).strftime("%m/%d")
+    d5 = (datetime_now - relativedelta(days=2)).strftime("%m/%d")
+    d6 = (datetime_now - relativedelta(days=1)).strftime("%m/%d")
+    d7 = datetime_now.strftime("%m/%d")
+
+    dict = {
+        "data": {
+            "x": [d1, d2, d3, d4, d5, d6, d7],
+            "total": [len(last_6_day_list), len(last_5_day_list), len(last_4_day_list), len(last_3_day_list),
+                      len(last_2_day_list), len(last_1_day_list), len(today_list)],
+            "solved": [len(last_6_day_solved_list), len(last_5_day_solved_list), len(last_4_day_solved_list),
+                       len(last_3_day_solved_list), len(last_2_day_solved_list), len(last_1_day_solved_list),
+                       len(today_solved_list)]}
+    }
+
+    return json.dumps(dict)
+
+# 累计安全问题统计
+@app.route("/canlian/safe/week_question")
+def canlian_safe_week_question():
+    url_1 = "http://www.tylinbim.com/4DAnalog/ltyCL/safety.action"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    datetime_now = datetime.datetime.now()
+    today = datetime_now.strftime("%Y-%m")
+    last_1_day = (datetime_now - relativedelta(months=1)).strftime("%Y-%m")
+    last_2_day = (datetime_now - relativedelta(months=2)).strftime("%Y-%m")
+    last_3_day = (datetime_now - relativedelta(months=3)).strftime("%Y-%m")
+    last_4_day = (datetime_now - relativedelta(months=4)).strftime("%Y-%m")
+    last_5_day = (datetime_now - relativedelta(months=5)).strftime("%Y-%m")
+    last_6_day = (datetime_now - relativedelta(months=6)).strftime("%Y-%m")
+
+    today_list = []
+    last_1_day_list = []
+    last_2_day_list = []
+    last_3_day_list = []
+    last_4_day_list = []
+    last_5_day_list = []
+    last_6_day_list = []
+    last_list=[]
+
+    today_solved_list = []
+    last_1_day_solved_list = []
+    last_2_day_solved_list = []
+    last_3_day_solved_list = []
+    last_4_day_solved_list = []
+    last_5_day_solved_list = []
+    last_6_day_solved_list = []
+    last_solved_list=[]
+
+    for i in dataList_1:
+        if i["checkTime"][:-3] == today:
+            today_list.append(i)
+            if i["rectificate"] == "是":
+                today_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"][:-3] == last_1_day:
+            last_1_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_1_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"][:-3] == last_2_day:
+            last_2_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_2_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"][:-3] == last_3_day:
+            last_3_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_3_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"][:-3] == last_4_day:
+            last_4_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_4_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"][:-3] == last_5_day:
+            last_5_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_5_day_solved_list.append(i)
+            else:
+                pass
+        elif i["checkTime"][:-3] == last_6_day:
+            last_6_day_list.append(i)
+            if i["rectificate"] == "是":
+                last_6_day_solved_list.append(i)
+            else:
+                pass
+        else:
+            last_list.append(i)
+            if i["rectificate"] == "是":
+                last_solved_list.append(i)
+            else:
+                pass
+
+    m1 = (datetime_now - relativedelta(months=6)).strftime("%Y-%m")
+    m2 = (datetime_now - relativedelta(months=5)).strftime("%Y-%m")
+    m3 = (datetime_now - relativedelta(months=4)).strftime("%Y-%m")
+    m4 = (datetime_now - relativedelta(months=3)).strftime("%Y-%m")
+    m5 = (datetime_now - relativedelta(months=2)).strftime("%Y-%m")
+    m6 = (datetime_now - relativedelta(months=1)).strftime("%Y-%m")
+    m7 = datetime_now.strftime("%Y-%m")
+
+    dict = {
+        "data": {
+            "x": [m1, m2, m3, m4, m5, m6, m7],
+            "total": [len(last_6_day_list)+len(last_list), len(last_5_day_list)+len(last_6_day_list)+len(last_list), len(last_4_day_list)+len(last_5_day_list)+len(last_6_day_list)+len(last_list), len(last_3_day_list)+len(last_4_day_list)+len(last_5_day_list)+len(last_6_day_list)+len(last_list),
+                      len(last_2_day_list)+len(last_3_day_list)+len(last_4_day_list)+len(last_5_day_list)+len(last_6_day_list)+len(last_list), len(last_1_day_list)+len(last_2_day_list)+len(last_3_day_list)+len(last_4_day_list)+len(last_5_day_list)+len(last_6_day_list)+len(last_list), len(today_list)+len(last_1_day_list)+len(last_2_day_list)+len(last_3_day_list)+len(last_4_day_list)+len(last_5_day_list)+len(last_6_day_list)+len(last_list)],
+            "solved": [len(last_6_day_solved_list)+len(last_solved_list), len(last_5_day_solved_list)+len(last_6_day_solved_list)+len(last_solved_list), len(last_4_day_solved_list)+len(last_5_day_solved_list)+len(last_6_day_solved_list)+len(last_solved_list),
+                       len(last_3_day_solved_list)+len(last_4_day_solved_list)+len(last_5_day_solved_list)+len(last_6_day_solved_list)+len(last_solved_list), len(last_2_day_solved_list)+len(last_3_day_solved_list)+len(last_4_day_solved_list)+len(last_5_day_solved_list)+len(last_6_day_solved_list)+len(last_solved_list), len(last_1_day_solved_list)+len(last_2_day_solved_list)+len(last_3_day_solved_list)+len(last_4_day_solved_list)+len(last_5_day_solved_list)+len(last_6_day_solved_list)+len(last_solved_list),
+                       len(today_solved_list)+len(last_1_day_solved_list)+len(last_2_day_solved_list)+len(last_3_day_solved_list)+len(last_4_day_solved_list)+len(last_5_day_solved_list)+len(last_6_day_solved_list)+len(last_solved_list)]}
+    }
+    return json.dumps(dict)
+
+# 累计施工安全问题对比
+@app.route("/canlian/safe/team")
+def canlian_safe_team():
+
+    url_1 = "http://www.tylinbim.com/4DAnalog/ltyCL/safety.action"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+    gangjin = []
+    muban = []
+    qizhuan = []
+    fangshui = []
+    jiaoshoujia = []
+    nuantong = []
+    xiaofang = []
+    jipaishui = []
+    qiangruodian = []
+    tadiao = []
+    hunningtu = []
+    dianhan = []
+    unknow = []
+
+    for i in dataList_1:
+        if i["team"] == "钢筋班组":
+            gangjin.append(i)
+        elif i["team"] == "模板班组":
+            muban.append(i)
+        elif i["team"] == "砌砖班组":
+            qizhuan.append(i)
+        elif i["team"] == "防水班组":
+            fangshui.append(i)
+        elif i["team"] == "脚手架班组":
+            jiaoshoujia.append(i)
+        elif i["team"] == "暖通班组":
+            nuantong.append(i)
+        elif i["team"] == "消防班组":
+            xiaofang.append(i)
+        elif i["team"] == "给排水班组":
+            jipaishui.append(i)
+        elif i["team"] == "强弱电班组":
+            qiangruodian.append(i)
+        elif i["team"] == "塔吊班组":
+            tadiao.append(i)
+        elif i["team"] == "混凝土班组":
+            hunningtu.append(i)
+        elif i["team"] == "电焊班组":
+            dianhan.append(i)
+        else:
+            unknow.append(i)
+
+    dict ={"data":{
+                   "x":["钢筋","模板","砌砖","防水","脚手架","暖通","消防","给排水","强弱电","塔吊","混凝土","电焊","未划分"],
+                   "y":[len(gangjin),len(muban),len(qizhuan),len(fangshui),len(jiaoshoujia),len(nuantong),len(xiaofang),len(jipaishui),len(qiangruodian),len(tadiao),len(hunningtu),len(dianhan),len(unknow)]
+          }}
+
+    return json.dumps(dict)
+
+# 本周安全问题定位
+@app.route("/canlian/safe/location")
+def canlian_safe_location():
+    url_1 = "http://www.tylinbim.com/4DAnalog/ltyCL/safety.action"
+    res_1 = requests.get(url_1)
+    data_1 = json.loads(res_1.text)
+    dataList_1 = data_1["data"]
+
+    datetime_now = datetime.datetime.now()
+    today = datetime_now.strftime("%Y-%m-%d")
+    last_1_day = (datetime_now - relativedelta(days=1)).strftime("%Y-%m-%d")
+    last_2_day = (datetime_now - relativedelta(days=2)).strftime("%Y-%m-%d")
+    last_3_day = (datetime_now - relativedelta(days=3)).strftime("%Y-%m-%d")
+    last_4_day = (datetime_now - relativedelta(days=4)).strftime("%Y-%m-%d")
+    last_5_day = (datetime_now - relativedelta(days=5)).strftime("%Y-%m-%d")
+    last_6_day = (datetime_now - relativedelta(days=6)).strftime("%Y-%m-%d")
+
+    today_list = []
+    last_1_day_list = []
+    last_2_day_list = []
+    last_3_day_list = []
+    last_4_day_list = []
+    last_5_day_list = []
+    last_6_day_list = []
+
+    for i in dataList_1:
+        if i["checkTime"] == today:
+            today_list.append(i)
+        elif i["checkTime"] == last_1_day:
+            last_1_day_list.append(i)
+        elif i["checkTime"] == last_2_day:
+            last_2_day_list.append(i)
+        elif i["checkTime"] == last_3_day:
+            last_3_day_list.append(i)
+        elif i["checkTime"] == last_4_day:
+            last_4_day_list.append(i)
+        elif i["checkTime"] == last_5_day:
+            last_5_day_list.append(i)
+        elif i["checkTime"] == last_6_day:
+            last_6_day_list.append(i)
+        else:
+            pass
+
+    weeklist = today_list + last_1_day_list + last_2_day_list + last_3_day_list + last_4_day_list + last_5_day_list + last_6_day_list
+    x_list=[]
+    for j in weeklist:
+        if j["subDivision"] == "":
+            j["subDivision"] = "未分组"
+        x_list.append(j["subDivision"])
+    x_list = list(set(x_list))
+    y_list = []
+    y_finiallist =[ ]
+    for mm in x_list:
+        for nn in weeklist:
+            if nn["subDivision"] == mm:
+                y_list.append(mm)
+    for k in x_list:
+        y_finiallist.append(y_list.count(k))
+
+    return json.dumps({"data":{"x":x_list,"y":y_finiallist}})
 
 
 
@@ -2520,4 +3327,4 @@ def canlian_index_weather():
 
 application = app
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=8888, debug=True)
+    app.run(host="0.0.0.0",port=8818, debug=True)

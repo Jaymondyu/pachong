@@ -21,6 +21,8 @@ app = Flask(__name__)
 conn = mysql.connector.connect(host='183.66.213.82',port="8803",user= 'tylin',password ='Tylin@123',database ='weather_database',auth_plugin='mysql_native_password') #连接数据库，创建Flask_app数据库
 cursor = conn.cursor()
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 # 7天天气预报
 @app.route("/yuelai/7d")
 def yuelai_7d():
@@ -125,6 +127,7 @@ def yuelai_insert():
     hightemp = data["hightemp"]
     state = data["state"]
     reason = data["reason"]
+    files = data["files"]
 
     if data["weather"].find("雨")!=-1:
         judgment = 1
@@ -141,15 +144,15 @@ def yuelai_insert():
 
     if result_try == []:
         sql_insert = """
-                        insert into yuelai_ (date,weather,high_temp,state,reason,judgment) values (%s,%s,%d,%d,%d,%d)
-                    """%("'"+date+"'","'"+weather+"'",hightemp,state,reason,judgment)
+                        insert into yuelai_ (date,weather,high_temp,state,reason,judgment,files) values (%s,%s,%d,%d,%d,%d,%s)
+                    """%("'"+date+"'","'"+weather+"'",hightemp,state,reason,judgment,"'"+files+"'")
         cursor.execute(sql_insert)
         conn.commit()
         alart = "已录入新数据"
     else:
         sql_update ="""
-                        update yuelai_ set weather = (%s),state=(%d),reason=(%d),judgment=(%d) where date = (%s)
-        """%("'"+weather+"'",state,reason,judgment,"'"+date+"'")
+                        update yuelai_ set weather = (%s),state=(%d),reason=(%d),judgment=(%d),files=(%s) where date = (%s)
+        """%("'"+weather+"'",state,reason,judgment,"'"+files+"'","'"+date+"'")
         cursor.execute(sql_update)
         conn.commit()
         alart = "已修改数据"
@@ -161,7 +164,7 @@ def yuelai_insert():
 def yuelai_show():
     data = request.get_json()
     date = data["date"]
-    sql_search = "SELECT date,weather,high_temp,state,reason,judgment from yuelai_ where DATE_FORMAT(date,'%Y-%m')="+'"'+date+'"'+" order by date"
+    sql_search = "SELECT date,weather,high_temp,state,reason,judgment,files from yuelai_ where DATE_FORMAT(date,'%Y-%m')="+'"'+date+'"'+" order by date"
     cursor.execute(sql_search)
     info = cursor.fetchall()
     list = []
@@ -172,6 +175,7 @@ def yuelai_show():
         state = i[3]
         reason = i[4]
         judgment = i[5]
+        files = i[6]
 
         dict = {
             "date":date,
@@ -179,7 +183,8 @@ def yuelai_show():
             "hightemp":hightemp,
             "state":state,
             "reason":reason,
-            "judgment":judgment
+            "judgment":judgment,
+            "files":files
         }
 
         list.append(dict)
@@ -236,6 +241,20 @@ def yuelai_count():
 def yuelai_page():
     return render_template("yuelai.html")
 
+# 上传打包文件
+@app.route("/yuelai/files",methods=["POST"])
+def test():
+    try:
+        img = request.files.get("files")
+        path = basedir + "/static/file/"
+        file_path = path + img.filename
+        img.save(file_path)
+        location = "http://183.66.213.82:8888/weatherlist/static/file/"+ img.filename
+        dict={"state":0,"location":location}
+        return json.dumps(dict)
+    except Exception,err:
+        dict = {"state":1,"err":err}
+        return json.dumps(dict)
 
 #############################################################################################################################################################
 ####################################################江津晴雨表###############################################################################################

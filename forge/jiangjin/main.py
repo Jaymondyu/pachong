@@ -57,8 +57,12 @@ def select():
 	id = flask.request.args.get("id")
 	if id == "1":
 		return '[{"url": "%s"}]' % 'http://183.66.213.82:8888/jiangjin/1'
-	else:
-		return '[{"url": "%s"}]' % 'http://183.66.213.82:8888/jiangjin/'
+	if id == '0':
+		return '[{"url": "%s"}]' % 'http://183.66.213.82:8888/jiangjin'
+
+@app.route("/map")
+def map():
+	return flask.render_template("map.html")
 
 @app.route("/token")
 def AccessToken():
