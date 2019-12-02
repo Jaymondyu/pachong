@@ -72,7 +72,7 @@ def yuelai_now():
 
     dict ={
         "data":{
-            "temp":int(temp),
+            "temp":int(float(temp)),
             "weather":weather,
             "maxtemp":int(maxtemp),
             "wind":wind,
@@ -240,6 +240,12 @@ def yuelai_count():
 @app.route("/yuelai")
 def yuelai_page():
     return render_template("yuelai.html")
+
+@app.route("/yuelai_show")
+def yuelai_show_page():
+    return render_template("yuelai_show.html")
+
+
 
 # 上传打包文件
 @app.route("/yuelai/files",methods=["POST"])
